@@ -9,7 +9,7 @@ A beginner-friendly, HTML guide that can be opened in your browser to installing
 - AMD CPU + NVIDIA GPU
 
 > **Note:** This tutorial uses Norwegian keymaps and locale/timezone settings.  
-> Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).
+> Simply replace those with your own (e.g. keymap, `LANG`, `TZ`). Replace my hostname of `bigboy` with yours, same as my user name `lars`.
 
 ---
 
