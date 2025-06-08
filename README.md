@@ -1,2 +1,2 @@
-# archtutorial
-Tutorial for Arch systems
+# Arch Linux Tutorial
+This is a noob friendly tutorial for Arch Linux that is formatted in html, can be downloaded and opened in a browser for easy to follow steps. Since I am Norwegian it has some Norwegian specific things like keymaps and my local for timezone, simply replace that with yours. This system uses systemd autoloading for GPT partitions, meaning you do not use fstab and it automatically discovers and mounts your partitions! The system uses KDE Plasma with systemd boot, Wayland, and NVIDIA. It aims to be as lean as possible to set up a desktop where you can build from. EXT4 is used for root and home.
