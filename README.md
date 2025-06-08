@@ -1,2 +1,22 @@
 # Arch Linux Tutorial
-This is a noob friendly tutorial for Arch Linux that is formatted in html, can be downloaded and opened in a browser for easy to follow steps. Since I am Norwegian it has some Norwegian specific things like keymaps and my local for timezone, simply replace that with yours. This system uses systemd autoloading for GPT partitions, meaning you do not use fstab and it automatically discovers and mounts your partitions! The system uses KDE Plasma with systemd boot, Wayland, AMD CPU, and NVIDIA. It aims to be as lean as possible to set up a desktop where you can build from. EXT4 is used for root and home. So some stuff is a bit opinionated to what I like, but if all you want is a system and you don't care and you have NVIDIA and AMD you can simply follow it.
+
+A beginner-friendly, HTML-ready guide to installing Arch Linux with:
+
+- systemd-automount for GPT partitions (no  `fstab` edits!)
+- KDE Plasma on Wayland
+- systemd-boot
+- EXT4 for `/` and `/home`
+- AMD CPU + NVIDIA GPU
+
+> **Note:** This tutorial uses Norwegian keymaps and locale/timezone settings.  
+> Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).
+
+---
+
+## Prerequisites
+
+- A bootable Arch Linux USB (written with `dd` or similar)
+- Internet connection
+- UEFI system
+
+---
