@@ -352,12 +352,11 @@ mount /dev/disk/by-partlabel/home /mnt/home</code></pre>
 reflector --country Norway --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 <span class="comment"># Install minimal base system</span>
-pacstrap -K /mnt base linux linux-headers linux-firmware amd-ucode nano</code></pre>
+pacstrap -K /mnt base linux linux-firmware amd-ucode nano</code></pre>
             
             <div class="package-list">
                 <div class="package-item"><strong>base</strong> - Essential base system</div>
                 <div class="package-item"><strong>linux</strong> - Linux kernel</div>
-                <div class="package-item"><strong>linux-headers</strong> - Kernel headers</div>
                 <div class="package-item"><strong>linux-firmware</strong> - Hardware firmware</div>
                 <div class="package-item"><strong>amd-ucode</strong> - AMD microcode</div>
                 <div class="package-item"><strong>nano</strong> - Text editor</div>
@@ -423,7 +422,7 @@ pacman -S --needed \
   networkmanager \
   pipewire pipewire-alsa pipewire-pulse wireplumber \
   plasma-meta dolphin konsole \
-  sddm \
+  sddm linux-headers \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
   git curl wget \
