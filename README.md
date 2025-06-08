@@ -1,6 +1,6 @@
 # Arch Linux Tutorial
 
-A beginner-friendly, HTML-ready guide to installing Arch Linux with:
+A beginner-friendly, HTML guide that can be opened in your browser to installing Arch Linux with:
 
 - systemd-automount for GPT partitions (no  `fstab` edits!)
 - KDE Plasma on Wayland
