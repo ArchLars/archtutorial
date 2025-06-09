@@ -347,8 +347,11 @@ mount /dev/disk/by-label/home /mnt/home</code></pre>
 
         <div class="section">
             <h2>Step 3: Install Base System</h2>
-            <p>Update mirrorlist for optimal download speeds and install the base system:</p>
-            <pre><code><span class="comment"># Update mirrorlist with fastest mirrors</span>
+            <p>Install reflector, update mirrorlist for optimal download speeds and install the base system:</p>
+            <pre><code><span class="comment"># Install reflector in live environment</span>
+pacman -Sy reflector
+
+<span class="comment"># Update mirrorlist with fastest mirrors</span>
 reflector --country Norway --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 <span class="comment"># Install minimal base system</span>
@@ -455,7 +458,8 @@ linux   /vmlinuz-linux
 initrd  /amd-ucode.img
 initrd  /initramfs-linux.img
 options root=gpt-auto
-EOF</code></pre>
+EOF
+</code></pre>
 
             <h3>4.9 Configure Zram (Compressed Swap)</h3>
             <pre><code><span class="comment"># Configure zram</span>
@@ -463,7 +467,10 @@ cat << EOF > /etc/systemd/zram-generator.conf
 [zram0]
 zram-size = min(ram / 2, 4096)
 compression-algorithm = zstd
-EOF</code></pre>
+EOF
+
+<span class="comment"># Enable zram service</span>
+systemctl enable systemd-zram-setup@zram0.service</code></pre>
 
             <h3>4.10 Enable Essential Services</h3>
             <pre><code><span class="comment"># Enable network and display manager</span>
@@ -486,16 +493,13 @@ reboot</code></pre>
             <h2>Post-Installation Verification</h2>
             <p>After rebooting, verify everything is working correctly:</p>
             <pre><code><span class="comment"># Check mounted filesystems</span>
-findmnt -o TARGET,SOURCE,FSTYPE | grep -E '/ |/home'
+findmnt -o TARGET,SOURCE,FSTYPE | grep -E '/ |/home|/boot'
 
 <span class="comment"># Verify NVIDIA drivers are loaded</span>
 lsmod | grep nvidia
 
 <span class="comment"># Check zram is active</span>
-swapon -s
-
-<span class="comment"># Enable zram service (if not done automatically)</span>
-sudo systemctl enable --now systemd-zram-setup@zram0.service</code></pre>
+swapon -s</code></pre>
 
             <div class="verification">
                 <h3>Expected Results</h3>
