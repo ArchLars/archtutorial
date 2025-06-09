@@ -321,7 +321,7 @@ timedatectl set-ntp true</code></pre>
                 <strong>Partition Layout:</strong>
                 <ul>
                     <li><code>/dev/nvme0n1p1</code> - 1GB EFI System Partition</li>
-                    <li><code>/dev/nvme0n1p2</code> - 20GB Root partition</li>
+                    <li><code>/dev/nvme0n1p2</code> - 40GB Root partition</li>
                     <li><code>/dev/nvme0n1p3</code> - Remaining space for Home partition</li>
                 </ul>
             </div>
@@ -334,15 +334,15 @@ timedatectl set-ntp true</code></pre>
 d=/dev/nvme0n1; mkfs.fat -F32 -n EFI ${d}p1 && mkfs.ext4 -L root ${d}p2 && mkfs.ext4 -L home ${d}p3
 
 <span class="comment"># Mount root partition first</span>
-mount /dev/disk/by-partlabel/root /mnt
+mount /dev/disk/by-label/root /mnt
 
 <span class="comment"># Create and mount EFI directory</span>
 mkdir -p /mnt/boot
-mount /dev/disk/by-partlabel/EFI /mnt/boot
+mount /dev/disk/by-label/EFI /mnt/boot
 
 <span class="comment"># Create and mount home directory</span>
 mkdir /mnt/home
-mount /dev/disk/by-partlabel/home /mnt/home</code></pre>
+mount /dev/disk/by-label/home /mnt/home</code></pre>
         </div>
 
         <div class="section">
