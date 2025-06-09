@@ -380,7 +380,7 @@ hwclock --systohc</code></pre>
             <h3>4.3 Configure Locale</h3>
             <pre><code><span class="comment"># Edit locale generation file</span>
 nano /etc/locale.gen
-<span class="comment"># Uncomment: en_US.UTF-8 UTF-8</span>
+Uncomment: en_US.UTF-8 UTF-8
 
 <span class="comment"># Generate locales</span>
 locale-gen
@@ -412,7 +412,7 @@ passwd lars
 
 <span class="comment"># Enable sudo for wheel group</span>
 EDITOR=nano visudo
-<span class="comment"># Uncomment: %wheel ALL=(ALL:ALL) ALL</span></code></pre>
+Uncomment: %wheel ALL=(ALL:ALL) ALL</span></code></pre>
 
             <h3>4.6 Install Desktop Environment and Drivers</h3>
 			
@@ -477,8 +477,8 @@ EOF
 systemctl enable systemd-zram-setup@zram0.service</code></pre>
 
             <h3>4.10 Enable Essential Services</h3>
-            <pre><code><span class="comment"># Enable network and display manager</span>
-systemctl enable NetworkManager sddm</code></pre>
+            <pre><code><span class="comment"># Enable network, display manager and timesyncd</span>
+systemctl enable NetworkManager sddm systemd-timesyncd</code></pre>
         </div>
 
         <div class="section">
