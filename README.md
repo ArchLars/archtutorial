@@ -98,14 +98,6 @@ reflector --country Norway --country Germany --age 12 --protocol https --sort ra
 pacstrap /mnt base linux linux-firmware amd-ucode nano sudo zsh
 ```
 
-**Packages installed:**
-
-* `base`
-* `linux`
-* `linux-firmware`
-* `amd-ucode`
-* `nano`
-
 ## Step 4: System Configuration
 
 ### 4.1 Enter the New System
