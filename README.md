@@ -238,9 +238,6 @@ cat << EOF > /etc/systemd/zram-generator.conf
 zram-size = min(ram / 2, 4096)
 compression-algorithm = zstd
 EOF
-
-# Enable zram service
-systemctl enable systemd-zram-setup@zram0.service
 ```
 
 ### 4.10 Enable Essential Services
