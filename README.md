@@ -1,7 +1,11 @@
 # Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting of GPT Partitions)
 
 A HTML guide that can be opened in your browser to installing Arch Linux. The guide is for 
-**"NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!** - Your drives will automount with GUIDs using `systemd-gpt-auto-generator` which I find much more convenient, stable and secure. - It's worth familiarizing yourself with how this works before following my guide.
+
+#**"NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!** 
+
+
+Your drives will automount entirely by using GUIDs and `systemd-gpt-auto-generator` which I find much more convenient, stable and secure. - It's worth familiarizing yourself with how this works before following my guide.
 
 ---
 
