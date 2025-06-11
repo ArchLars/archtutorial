@@ -128,13 +128,17 @@ hwclock --systohc
 ```bash
 # Edit locale generation file
 nano /etc/locale.gen
-# Uncomment: en_US.UTF-8 UTF-8
+Uncomment: en_US.UTF-8 UTF-8
+Uncomment: nb_NO.UTF-8 UTF-8 # Optional if you need second language
 
 # Generate locales
 locale-gen
 
 # Set system locale
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+cat << EOF > /etc/locale.conf
+LANG=en_US.UTF-8
+LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific default as I do (DD/MM/Y and 00:00)
+EOF
 
 # Set console keymap
 echo "KEYMAP=no-latin1" > /etc/vconsole.conf
