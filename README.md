@@ -185,7 +185,7 @@ pacman -Syu
 pacman -S --needed \
   networkmanager \
   pipewire pipewire-alsa pipewire-pulse wireplumber \
-  plasma-meta dolphin konsole plasma-wayland-session \
+  plasma-meta dolphin konsole \
   sddm linux-headers \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
