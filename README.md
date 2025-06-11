@@ -25,7 +25,7 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 ---
 
 
-# Quick Version for lazy bones:
+## Non-HTML Version:
 
 **GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
 
