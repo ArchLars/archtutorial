@@ -144,8 +144,8 @@ EOF
 echo "KEYMAP=no-latin1" > /etc/vconsole.conf 
 
 # Persist console keymap and configure X11 keymap. Optional unless u have a specific type of non-US keyboard
-localectl set-keymap --no-convert no-latin1
 localectl set-x11-keymap no pc105 latin1
+localectl set-keymap --no-convert no-latin1
 ```
 
 ### 4.4 Set Hostname and Hosts
