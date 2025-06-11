@@ -8,7 +8,7 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 - zsh default shell
 - systemd-boot
 - EXT4 for `/` and `/home`
-- AMD CPU + NVIDIA GPU
+- AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
 
 modeset is set by default, and according to the wiki fbdev is unnecessary now so I will not set those. Check the wiki before install. POST-INSTALL GUIDE IS WIP.
 
