@@ -141,7 +141,11 @@ LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific 
 EOF
 
 # Set console keymap
-echo "KEYMAP=no-latin1" > /etc/vconsole.conf
+echo "KEYMAP=no-latin1" > /etc/vconsole.conf # This and below is optional unless u have a specific type of non-US keyboard
+
+# Persist console keymap and configure X11 keymap
+localectl set-keymap --no-convert no-latin1
+localectl set-x11-keymap no pc105 latin1
 ```
 
 ### 4.4 Set Hostname and Hosts
