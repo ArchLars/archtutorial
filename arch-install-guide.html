@@ -353,7 +353,7 @@ mount /dev/disk/by-label/home /mnt/home</code></pre>
 reflector --country Norway --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 <span class="comment"># Install minimal base system</span>
-pacstrap -K /mnt base linux linux-firmware amd-ucode nano sudo zsh</code></pre>
+pacstrap /mnt base linux linux-firmware amd-ucode nano sudo zsh</code></pre>
             
             <div class="package-list">
                 <div class="package-item"><strong>base</strong> - Essential base system</div>
@@ -420,10 +420,7 @@ Uncomment: %wheel ALL=(ALL:ALL) ALL</span></code></pre>
 
             <h3>4.6 Install Desktop Environment and Drivers</h3>
 			
-            <pre><code><span class="comment"># Update mirrorlist one last time with fastest mirrors</span>
-reflector --country Norway --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-			
-<span class="comment"># Update package database</span>
+            <pre><code><span class="comment"># Update package database</span>
 pacman -Syu
 
 <span class="comment"># Install essential packages</span>
