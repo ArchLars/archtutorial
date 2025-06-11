@@ -1,8 +1,8 @@
-# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting of GPT Partitions)
+# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting)
 
-A HTML guide that can be opened in your browser to installing Arch Linux. The guide is for 
+This is a beautifully formatted HTML guide that can be opened in your browser to installing Arch Linux.
 
-##**NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!** 
+##**NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
 
 
 Your drives will automount entirely by using GUIDs and `systemd-gpt-auto-generator` which I find much more convenient, stable and secure. - It's worth familiarizing yourself with how this works before following my guide.
@@ -11,7 +11,7 @@ Your drives will automount entirely by using GUIDs and `systemd-gpt-auto-generat
 
 ### INTRODUCTION - How GPT Auto-Mounting Works
 
-Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type GUIDs, eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in /etc/fstab or on the kernel command line unnecessary.
+Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type GUIDs, eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary.
 
 ### The GUIDs
 
@@ -35,12 +35,12 @@ Boot Loader Dependency: The boot loader must set the LoaderDevicePartUUID EFI va
 First Partition Rule: systemd mounts the first partition of each type it finds. If you have multiple 8302 partitions on the same disk, **then only the first one gets auto-mounted.**
 No Multi-Disk Support: This won't work on systems where the root filesystem is distributed across multiple disks (like BTRFS RAID).
 
-Why This Approach Rocks
+Pros:
 
 Portability: Your disk image can boot on different hardware without fstab changes
 Self-Describing: The partition table contains all mounting information
 Container-Friendly: Tools like systemd-nspawn can automatically set up filesystems from GPT images
-Reduced Maintenance: No broken boots from typos in `/etc/fstab`
+Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
 
 
 ## Specs:
