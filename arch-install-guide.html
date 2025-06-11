@@ -381,16 +381,25 @@ hwclock --systohc</code></pre>
             <pre><code><span class="comment"># Edit locale generation file</span>
 nano /etc/locale.gen
 Uncomment: en_US.UTF-8 UTF-8
+Uncomment: nb_NO.UTF-8 UTF-8 # Optional if you need second language		    
 
 <span class="comment"># Generate locales</span>
 locale-gen
 
 <span class="comment"># Set system locale</span>
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+cat << EOF > /etc/locale.conf
+LANG=en_US.UTF-8
+LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
+EOF
 
 <span class="comment"># Set console keymap</span>
 echo "KEYMAP=no-latin1" > /etc/vconsole.conf</code></pre>
 
+
+<span class="comment"># Persist console keymap and configure X11 keymap. Optional unless u have a specific type of non-US keyboard</span>
+localectl set-x11-keymap no pc105 latin1
+localectl set-keymap --no-convert no-latin1</code></pre>
+		
             <h3>4.4 Set Hostname and Hosts</h3>
             <pre><code><span class="comment"># Set hostname</span>
 echo "bigboy" > /etc/hostname
