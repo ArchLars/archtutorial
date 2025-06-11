@@ -28,7 +28,7 @@ systemd won't auto-mount these, giving you control over when and where they moun
 
 ---
 
-# Important Limitations & Caveats:
+# - CONS: -
 
 Same Disk Only: Auto-mounting only works for partitions on the same physical disk as your root partition.
 
@@ -38,7 +38,7 @@ First Partition Rule: systemd mounts the first partition of each type it finds. 
 
 No Multi-Disk Support: This won't work on systems where the root filesystem is distributed across multiple disks (like BTRFS RAID).
 
-# The Benefits:
+# - PROS: -
 
 Portability: Your disk image can boot on different hardware without `fstab` changes
 
@@ -48,8 +48,9 @@ Container-Friendly: Tools like systemd-nspawn can automatically set up filesyste
 
 Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
 
+---
 
-## Specs:
+## What we will be using/setting:
 
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
@@ -61,11 +62,11 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 
 modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS WIP, FOLLOW BY OWN VOLITION.
 
-**Note:** This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).  
+*Protip:* This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).  
 
-**Note:** This tutorial assumes you have a **NVME SSD,** which are named `/dev/nvme0n1`. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all instances of `nvme0n1` and remove the `p` from  `${d}p1` in the formatting.
+**NOTE:** **This tutorial assumes you have a NVME SSD,** which are named `/dev/nvme0n1`. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all instances of `nvme0n1` and remove the `p` from  `${d}p1` in the formatting.
 
-**Sidenote:** Unless you like the name, replace my hostname (basically the name of your rig) of `bigboy` with yours, same as my user name `lars` if your name ain't Lars. Though if it is, cool. Hi!
+*Sidenote:* Unless you like the name, replace my hostname (basically the name of your rig) of `bigboy` with yours, same as my user name `lars` if your name ain't Lars. Though if it is, cool. Hi!
 
 
 ## Prerequisites
