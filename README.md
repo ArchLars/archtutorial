@@ -1,8 +1,47 @@
-# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland)
+# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting of GPT Partitions)
 
-A HTML guide that can be opened in your browser to installing Arch Linux with:
+A HTML guide that can be opened in your browser to installing Arch Linux. The guide is for 
+**"NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!** - Your drives will automount with GUIDs using `systemd-gpt-auto-generator` which I find much more convenient, stable and secure. - It's worth familiarizing yourself with how this works before following my guide.
 
-- systemd-automount for GPT partitions **NOTE:** THERE ARE NO  `fstab` edits! Your drives will automount due to GUIDs, it's worth familiarizing yourself with this before following my guide.
+---
+
+### INTRODUCTION - How GPT Auto-Mounting Works
+
+Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type GUIDs, eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in /etc/fstab or on the kernel command line unnecessary.
+
+### The GUIDs
+
+When you use the partition type codes in this guide:
+- `EF00` (EFI System Partition)
+- `8304` (Linux x86-64 root)  
+- `8302` (Linux /home)
+
+systemd automatically creates mount units based on these partition type GUIDs. Each hex code corresponds to a specific 128-bit GUID that tells the system exactly what that partition is for. The system recognizes this GUID and then mounts accordingly like a modern system should, similar to other universal types of partitioning on other systems.
+For extra storage you can use the generic Linux filesystem code:
+- `8300`
+
+systemd won't auto-mount these, giving you control over when and where they mount which again to me is ideal, if need be you can mount them on boot with a systemd service. This allows you to avoid `fstab` issues forever. No more random issues where it's suddenly overwritten for some reason or anything else, mounting is seperate and automated.
+
+---
+
+Important Limitations & Caveats
+
+Same Disk Only: Auto-mounting only works for partitions on the same physical disk as your root partition.
+Boot Loader Dependency: The boot loader must set the LoaderDevicePartUUID EFI variable for root partition detection to work. systemd-boot (used in this guide) supports this.
+First Partition Rule: systemd mounts the first partition of each type it finds. If you have multiple 8302 partitions on the same disk, **then only the first one gets auto-mounted.**
+No Multi-Disk Support: This won't work on systems where the root filesystem is distributed across multiple disks (like BTRFS RAID).
+
+Why This Approach Rocks
+
+Portability: Your disk image can boot on different hardware without fstab changes
+Self-Describing: The partition table contains all mounting information
+Container-Friendly: Tools like systemd-nspawn can automatically set up filesystems from GPT images
+Reduced Maintenance: No broken boots from typos in `/etc/fstab`
+
+
+## Specs:
+
+- systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
 - NVME SSD
 - zsh default shell
@@ -10,7 +49,7 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 - EXT4 for `/` and `/home`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
 
-modeset is set by default, and according to the wiki fbdev is unnecessary now so I will not set those. Check the wiki before install. POST-INSTALL GUIDE IS WIP.
+modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS WIP, FOLLOW BY OWN VOLITION.
 
 > **Note:** This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).  
 > It assumes **NVME SSD,** which uses `/dev/nvme0n1` partitions. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all `nvme0n1` with that.
@@ -27,13 +66,13 @@ modeset is set by default, and according to the wiki fbdev is unnecessary now so
 ---
 
 
-## Non-HTML Version:
+### TUTORIAL PROPER - Non-HTML Version
 
 **GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
 
 > **Prerequisites:** This guide assumes you have an AMD processor with NVIDIA graphics. For Intel CPUs, replace `amd-ucode` with `intel-ucode` throughout the installation.
 
----
+
 
 ## Step 0: Boot from ISO
 
