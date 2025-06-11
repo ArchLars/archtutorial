@@ -14,7 +14,6 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 > It assumes **NVME SSD,** which uses `/dev/nvme0n1` partitions. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all `nvme0n1` with that.
 >  Replace my hostname of `bigboy` with yours, same as my user name `lars`.
 
----
 
 ## Prerequisites
 
@@ -23,7 +22,10 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 - UEFI system
 
 
-# Quick Version (if you dont want to look at my html ☹️)
+---
+
+
+# Quick Version for lazy bones:
 
 **GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
 
