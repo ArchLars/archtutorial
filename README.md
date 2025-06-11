@@ -90,7 +90,7 @@ mount /dev/disk/by-label/home /mnt/home
 
 ## Step 3: Install Base System
 
-Update mirrorlist for optimal download speeds and install the base system:
+Update mirrorlist for optimal download speeds and install the base system, obv replace Norway and Germany:
 
 ```bash
 # Update mirrorlist with fastest mirrors
