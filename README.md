@@ -137,7 +137,7 @@ locale-gen
 # Set system locale
 cat << EOF > /etc/locale.conf
 LANG=en_US.UTF-8
-LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific default as I do (DD/MM/Y and 00:00)
+LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
 EOF
 
 # Set console keymap
@@ -283,7 +283,7 @@ swapon -s
 > **Expected Results:**
 >
 > * KDE Plasma (Wayland) login screen should appear
-> * Zram swap active for better performance
+> * Zram swap active
 > * Auto-mounted root and home partitions
 > * NVIDIA drivers loaded and functional
 > * Network connectivity via NetworkManager
