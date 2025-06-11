@@ -176,9 +176,6 @@ EDITOR=nano visudo
 ### 4.6 Install Desktop Environment and Drivers
 
 ```bash
-# Update mirrorlist again
-reflector --country Norway --country Germany --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
 # Update package database
 pacman -Syu
 
