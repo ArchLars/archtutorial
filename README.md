@@ -1,8 +1,8 @@
-# Quick Arch Linux Tutorial
+# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland)
 
 A HTML guide that can be opened in your browser to installing Arch Linux with:
 
-- systemd-automount for GPT partitions (no  `fstab` edits!)
+- systemd-automount for GPT partitions **NOTE:** THERE ARE NO  `fstab` edits! Your drives will automount due to GUIDs, it's worth familiarizing yourself with this before following my guide.
 - KDE Plasma on Wayland
 - NVME SSD
 - zsh default shell
