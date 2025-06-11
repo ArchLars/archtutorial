@@ -251,7 +251,8 @@ pacman -S --needed \
 nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 # Remove 'kms' from HOOKS=()
-# Remove 'base' and 'udev' from HOOKS=() and add 'systemd' (!IMPORTANT! - Otherwise your system won't boot!)
+# Remove 'base' and 'udev' from HOOKS=() and add 'systemd'
+(!IMPORTANT! - Otherwise your system won't boot!)
 
 # Regenerate initramfs
 mkinitcpio -P
