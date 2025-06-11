@@ -247,7 +247,7 @@ systemctl enable systemd-zram-setup@zram0.service
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd
+systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service
 ```
 
 ## Step 5: Complete Installation
