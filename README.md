@@ -140,10 +140,10 @@ LANG=en_US.UTF-8
 LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
 EOF
 
-# Set console keymap
-echo "KEYMAP=no-latin1" > /etc/vconsole.conf # This and below is optional unless u have a specific type of non-US keyboard
+# Set console keymap. 
+echo "KEYMAP=no-latin1" > /etc/vconsole.conf 
 
-# Persist console keymap and configure X11 keymap
+# Persist console keymap and configure X11 keymap. Optional unless u have a specific type of non-US keyboard
 localectl set-keymap --no-convert no-latin1
 localectl set-x11-keymap no pc105 latin1
 ```
