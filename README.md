@@ -22,7 +22,6 @@ A HTML guide that can be opened in your browser to installing Arch Linux with:
 - Internet connection
 - UEFI system
 
----
 
 # Quick Version (if you dont want to look at my html ☹️)
 
