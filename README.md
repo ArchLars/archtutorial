@@ -103,7 +103,7 @@ timedatectl set-ntp true
 
 ## Step 1: Partition the NVMe Drive
 
-Create a GPT partition table with three partitions:
+Create a GPT partition table with three partitions AFTER checking your drive name with `lsblk -l` :
 
 ```bash
 sgdisk --zap-all \
@@ -119,12 +119,13 @@ sgdisk --zap-all \
 * `/dev/nvme0n1p2` — 40GB Root partition
 * `/dev/nvme0n1p3` — Remaining space for Home partition
 
+
 ## Step 2: Format and Mount Partitions
 
 Create filesystems and mount them in the correct order:
 
 ```bash
-# Format partitions
+# Format partitions, if you want you can use this one line command I wrote, or line by line
 d=/dev/nvme0n1; mkfs.fat -F32 -n EFI ${d}p1 && mkfs.ext4 -L root ${d}p2 && mkfs.ext4 -L home ${d}p3
 
 # Mount root partition first
@@ -240,7 +241,7 @@ pacman -S --needed \
   sddm linux-headers \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
-  git curl wget \
+  git wget \
   base-devel
 ```
 
@@ -267,7 +268,7 @@ bootctl install
 # Configure bootloader
 cat << EOF > /boot/loader/loader.conf
 default arch
-timeout 3
+timeout 10
 console-mode max
 editor no
 EOF
