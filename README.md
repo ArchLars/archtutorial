@@ -20,7 +20,7 @@ When you use the partition type codes in this guide:
 - `8304` (Linux x86-64 root)  
 - `8302` (Linux /home)
 
-systemd automatically creates mount units based on these partition type GUIDs. Each hex code corresponds to a specific 128-bit GUID that tells the system exactly what that partition is for. The system recognizes this GUID and then mounts accordingly like a modern system should, similar to other universal types of partitioning on other systems.
+systemd automatically creates mount units based on these partition type GUIDs. Each hex code corresponds to a specific 128-bit GUID that tells the system exactly what that partition is for. The system recognizes these GUIDs and then mounts accordingly, just like a modern system should. This approach is similar to how partitioning works on other systems.
 For extra storage you can use the generic Linux filesystem code:
 - `8300`
 
