@@ -1,6 +1,6 @@
 # Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting)
 
-This is a beautifully formatted HTML guide that can be opened in your browser for installing an automounting Arch Linux.
+This is a beautifully formatted HTML guide that can be opened in your browser for installing an automounting Arch Linux. Mostly written for myself but maybe someone else could get some use out of it too!
 
 ##**NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
 
