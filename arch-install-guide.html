@@ -410,6 +410,10 @@ passwd
 useradd -m -G wheel,audio,video,input lars
 passwd lars
 
+<span class="comment"># Set zsh as default shell for user and root</span>
+chsh -s /usr/bin/zsh lars
+chsh -s /usr/bin/zsh		    
+
 <span class="comment"># Enable sudo for wheel group</span>
 EDITOR=nano visudo
 Uncomment: %wheel ALL=(ALL:ALL) ALL</span></code></pre>
