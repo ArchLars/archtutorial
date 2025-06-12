@@ -126,8 +126,11 @@ sgdisk --zap-all \
 Create filesystems and mount them in the correct order:
 
 ```bash
-# Format partitions, if you want you can use this one line command I wrote, or line by line
-d=/dev/nvme0n1; mkfs.fat -F32 -n EFI ${d}p1 && mkfs.ext4 -L root ${d}p2 && mkfs.ext4 -L home ${d}p3
+# Format partitions
+d=/dev/nvme0n1
+mkfs.fat -F32 -n EFI ${d}p1 && \
+mkfs.ext4 -L root ${d}p2 && \
+mkfs.ext4 -L home ${d}p3
 
 # Mount root partition first
 mount /dev/disk/by-label/root /mnt
