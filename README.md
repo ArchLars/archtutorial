@@ -187,12 +187,19 @@ LANG=en_US.UTF-8
 LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
 EOF
 
-# Set console keymap. 
+# Set console keymap. This even U.S keyboards has to set!
 echo "KEYMAP=no-latin1" > /etc/vconsole.conf 
 
-# Persist console keymap and configure X11 keymap. Optional unless u have a specific type of non-US keyboard
-localectl set-x11-keymap no pc105 latin1
-localectl set-keymap --no-convert no-latin1
+# Persist configure X11 keymap for non U.S keyboards
+cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
+Section "InputClass"
+    Identifier "system-keyboard"
+    MatchIsKeyboard "on"
+    Option "XkbLayout" "no"
+    Option "XkbModel" "pc105"
+    Option "XkbVariant" "latin1"
+EndSection
+EOF
 ```
 
 ### 4.4 Set Hostname and Hosts
