@@ -246,7 +246,7 @@ pacman -Syu
 # Install essential packages
 pacman -S --needed \
   networkmanager \
-  pipewire pipewire-alsa pipewire-pulse wireplumber \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole \
   sddm linux-headers \
   nvidia-open nvidia-utils \
