@@ -200,7 +200,6 @@ Section "InputClass"
     MatchIsKeyboard "on"
     Option "XkbLayout" "no"
     Option "XkbModel" "pc105"
-    Option "XkbVariant" "latin1"
 EndSection
 EOF
 ```
