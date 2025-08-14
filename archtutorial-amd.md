@@ -144,13 +144,13 @@ EOF
 
 ```bash
 # Set hostname
-echo "BluePoint" > /etc/hostname
+echo "MiniBlue" > /etc/hostname
 
 # Configure hosts file
 cat << EOF > /etc/hosts
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   BluePoint.localdomain BluePoint
+127.0.1.1   MiniBlue.localdomain MiniBlue
 EOF
 ```
 
@@ -243,7 +243,7 @@ EOF
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service
+systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer
 ```
 
 ## Step 5: Complete Installation
