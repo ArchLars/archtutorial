@@ -26,6 +26,16 @@ loadkeys no-latin1
 # Verify UEFI firmware
 ls /sys/firmware/efi/efivars && echo "UEFI firmware detected"
 
+# Ensure your network interface is listed and enabled, for example with ip-link:
+ip link
+
+# Wireless
+iwctl
+[iwd]# device list
+[iwd]# station *name* scan
+[iwd]# station name connect *SSID*
+To exit the interactive prompt, send EOF by pressing Ctrl+d
+
 # Sync system clock
 timedatectl set-ntp true
 ```
