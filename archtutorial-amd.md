@@ -184,7 +184,7 @@ pacman -S --needed \
   networkmanager \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole \
-  sddm linux-headers \
+  sddm linux-lts-headers \
   mesa vulkan-radeon \
   zram-generator pacman-contrib \
   git wget \
