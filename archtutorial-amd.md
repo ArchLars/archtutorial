@@ -183,7 +183,7 @@ pacman -Syu
 pacman -S --needed \
   networkmanager \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole \
+  plasma-meta dolphin konsole xdg-desktop-portal-gtk \
   sddm linux-lts-headers \
   mesa vulkan-radeon \
   zram-generator pacman-contrib \
