@@ -197,7 +197,6 @@ pacman -S --needed \
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
 # MODULES=(amdgpu radeon)
-# Remove 'kms' from HOOKS=()
 # Remove 'base' and 'udev' from HOOKS=() and add 'systemd'
 (!IMPORTANT! - Otherwise your system won't boot!)
 
