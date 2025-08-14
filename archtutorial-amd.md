@@ -224,7 +224,7 @@ title   Arch Linux
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw amdgpu.si_support=1 amdgpu.cik_support=1 radeon.si_support=0 radeon.cik_support=0
+options rw amdgpu.cik_support=1 radeon.cik_support=0
 EOF
 ```
 
