@@ -245,7 +245,7 @@ pacman -Syu
 
 # Install essential packages
 pacman -S --needed \
-  networkmanager \
+  networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-kde \
   sddm linux-headers \
