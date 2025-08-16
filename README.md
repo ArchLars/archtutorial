@@ -247,7 +247,7 @@ pacman -Syu
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole xdg-desktop-portal-kde \
+  plasma-meta dolphin konsole xdg-desktop-portal-gtk \
   sddm linux-headers \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
