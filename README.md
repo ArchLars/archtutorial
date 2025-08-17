@@ -308,7 +308,7 @@ EOF
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service
+systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer
 ```
 
 ## Step 5: Complete Installation
