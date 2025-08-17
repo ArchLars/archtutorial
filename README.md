@@ -248,7 +248,7 @@ pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk \
-  sddm linux-headers \
+  sddm linux-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
@@ -302,6 +302,14 @@ cat << EOF > /etc/systemd/zram-generator.conf
 zram-size = min(ram / 2, 4096)
 compression-algorithm = zstd
 EOF
+```
+
+```bash
+sudo nano /etc/sysctl.d/99-zram.conf
+vm.swappiness              = 180
+vm.watermark_boost_factor  = 0
+vm.watermark_scale_factor  = 125
+vm.page-cluster            = 0
 ```
 
 ### 4.10 Enable Essential Services
