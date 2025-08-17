@@ -251,7 +251,7 @@ pacman -S --needed \
   sddm linux-headers \
   nvidia-open nvidia-utils \
   zram-generator pacman-contrib \
-  git wget \
+  git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
   base-devel
 ```
 
