@@ -279,7 +279,7 @@ bootctl install
 cat << EOF > /boot/loader/loader.conf
 default arch
 timeout 10
-console-mode max
+console-mode auto
 editor no
 EOF
 
@@ -289,7 +289,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /amd-ucode.img
 initrd  /initramfs-linux.img
-options rw quiet loglevel=3
+options rw
 EOF
 ```
 
