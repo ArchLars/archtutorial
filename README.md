@@ -305,11 +305,12 @@ EOF
 ```
 
 ```bash
-sudo nano /etc/sysctl.d/99-zram.conf
+cat << EOF > /etc/sysctl.d/99-zram.conf
 vm.swappiness              = 180
 vm.watermark_boost_factor  = 0
 vm.watermark_scale_factor  = 125
 vm.page-cluster            = 0
+EOF
 ```
 
 ### 4.10 Enable Essential Services
