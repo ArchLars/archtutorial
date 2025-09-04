@@ -287,7 +287,7 @@ title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw zswap.max_pool_percent=25
+options rw rootflags=noatime zswap.max_pool_percent=25
 EOF
 
 # Create boot entry for LTS kernel backup
@@ -296,11 +296,31 @@ title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw zswap.max_pool_percent=25
+options rw rootflags=noatime zswap.max_pool_percent=25
 EOF
 
 # Update boot entries
 bootctl update
+```
+
+### noatime on home partition
+
+Create a drop-in that overrides the auto-generated home.mount unit’s Options=.
+```bash
+sudo systemctl edit home.mount
+```
+
+Add:
+
+```ini
+[Mount]
+Options=noatime
+```
+
+Reload:
+
+```bash
+sudo systemctl daemon-reload
 ```
 
 ### 4.9 Configure Zswap
