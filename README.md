@@ -247,7 +247,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
   sddm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils \
+  nvidia-open-dkms nvidia-utils gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-espeak gstreamer-vaapi \
   pacman-contrib python-pip xfsprogs \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
   base-devel
