@@ -465,7 +465,7 @@ nano ~/.zshrcs
 # Add to plugins
 (git zsh-syntax-highlighting zsh-autosuggestions)
 
-PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
+PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
 # Reload
