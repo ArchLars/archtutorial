@@ -463,6 +463,7 @@ PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
 # Reload
+```bash
 source ~/.zshrc
 ```
 
