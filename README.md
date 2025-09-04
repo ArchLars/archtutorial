@@ -496,6 +496,7 @@ governor='performance'
 ```
 
 # Enable and verify
+```bash
 sudo systemctl enable --now cpupower.service
 cpupower frequency-info
 ```
