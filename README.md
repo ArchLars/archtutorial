@@ -151,7 +151,13 @@ Update mirrorlist for optimal download speeds and install the base system, obv r
 
 ```bash
 # Update mirrorlist with fastest mirrors
-reflector --country Norway --country Germany --age 12 --protocol https --sort age --save /etc/pacman.d/mirrorlist
+reflector \                                      
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \
+      --age 12 \
+      --protocol https \
+      --sort rate \
+      --latest 10 \
+      --save /etc/pacman.d/mirrorlist
 
 # Install minimal base system
 pacstrap /mnt base linux linux-lts linux-firmware amd-ucode nano sudo zsh
