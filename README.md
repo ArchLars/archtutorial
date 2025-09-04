@@ -16,7 +16,6 @@ Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and m
 When you use the partition type codes in this guide:
 - `EF00` (EFI System Partition)
 - `8304` (Linux x86-64 root)  
-- `8302` (Linux /home)
 
 systemd automatically creates mount units based on these partition type GUIDs. Each hex code corresponds to a specific 128-bit GUID that tells the system exactly what that partition is for. The system recognizes these GUIDs and then mounts accordingly, just like a modern system should. This approach is similar to how partitioning works on other systems.
 For extra storage you can use the generic Linux filesystem code:
@@ -109,15 +108,13 @@ Create a GPT partition table with three partitions AFTER checking your drive nam
 sgdisk --zap-all /dev/nvme0n1
 
 sgdisk -n1:0:+1G -t1:EF00 -c1:"EFI system" /dev/nvme0n1
-sgdisk -n2:0:+60G -t2:8304 -c2:"Linux root" /dev/nvme0n1
-sgdisk -n3:0:0 -t3:8302 -c3:"Linux home" /dev/nvme0n1
+sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
 ```
 
 **Partition Layout:**
 
 * `/dev/nvme0n1p1` — 1GB EFI System Partition
-* `/dev/nvme0n1p2` — 60GB Root partition
-* `/dev/nvme0n1p3` — Remaining space for Home partition
+* `/dev/nvme0n1p2` — Root partition
 
 
 ## Step 2: Format and Mount Partitions
@@ -129,7 +126,6 @@ Create filesystems and mount them in the correct order:
 d=/dev/nvme0n1
 mkfs.fat -F32 -n EFI ${d}p1
 mkfs.ext4 -L root ${d}p2
-mkfs.ext4 -L home ${d}p3
 
 # Mount root partition first
 mount /dev/disk/by-label/root /mnt
@@ -137,10 +133,6 @@ mount /dev/disk/by-label/root /mnt
 # Create and mount EFI directory
 mkdir -p /mnt/boot
 mount /dev/disk/by-label/EFI /mnt/boot
-
-# Create and mount home directory
-mkdir /mnt/home
-mount /dev/disk/by-label/home /mnt/home
 ```
 
 ## Step 3: Install Base System
@@ -301,26 +293,6 @@ EOF
 
 # Update boot entries
 bootctl update
-```
-
-### noatime on home partition
-
-Create a drop-in that overrides the auto-generated home.mount unit’s Options=.
-```bash
-sudo systemctl edit home.mount
-```
-
-Add:
-
-```ini
-[Mount]
-Options=noatime
-```
-
-Reload:
-
-```bash
-sudo systemctl daemon-reload
 ```
 
 ### 4.9 Configure Zswap
