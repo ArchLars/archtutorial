@@ -431,7 +431,7 @@ Basic packages:
 ```bash
 yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
-noto-fonts-cjk noto-fonts-extra ttf-dejavu \
+noto-fonts-cjk noto-fonts-extra ttf-dejavu cuda \
 python-pip kdeconnect
 
 ```
