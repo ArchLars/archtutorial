@@ -455,16 +455,43 @@ yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-hig
 # Settings → Default Applications → Terminal Emulator → kitty
 ```
 
+# Enable syntax highlighting in nano
+```bash
+# create your nano config if it does not exist
+mkdir -p ~/.config/nano
+
+# package with enhanced rules
+yay -S --needed --noconfirm nano-syntax-highlighting
+
+# enable all bundled syntaxes
+printf 'include "/usr/share/nano/*.nanorc"\ninclude "/usr/share/nano/extra/*.nanorc"\n' >> ~/.config/nano/nanorc
+echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/nanorc
+```
+
+# Show asterisks when typing your sudo password
+Use `visudo` and add the `pwfeedback` default. This is the safe way to edit sudoers.
+```bash
+# open a drop-in with visudo
+sudo visudo -f /etc/sudoers.d/pwfeedback
+
+# add exactly this line, then save and exit
+Defaults pwfeedback
+
+# test by forcing a fresh prompt
+sudo -k
+sudo true
+```
+
 ```bash
 # Copy and configure .zshrc
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
 ```bash
-nano ~/.zshrcs
+nano ~/.zshrc
 # Add to plugins
 (git zsh-syntax-highlighting zsh-autosuggestions)
-
+# Add to end of file
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
