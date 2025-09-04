@@ -238,9 +238,9 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils terminus-font \
-  pacman-contrib \
-  git wget base-devel
+  nvidia-open-dkms nvidia-utils terminus-font pkgstats \
+  pacman-contrib git wget \
+  base-devel
   
 ```
 ### 4.7 Configure NVIDIA in Initramfs
@@ -343,7 +343,7 @@ sudo sysctl --system
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer
+systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer pkgstats.timer
 ```
 
 ## Step 5: Complete Installation
