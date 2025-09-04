@@ -188,7 +188,8 @@ LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific 
 EOF
 
 # Set console keymap. This even U.S keyboards has to set!
-echo "KEYMAP=no-latin1" > /etc/vconsole.conf 
+echo "KEYMAP=no-latin1" > /etc/vconsole.conf
+echo "FONT=ter-118n" > /etc/vconsole.conf 
 
 ```
 
@@ -237,7 +238,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils \
+  nvidia-open-dkms nvidia-utils terminus-font \
   pacman-contrib \
   git wget base-devel
   
