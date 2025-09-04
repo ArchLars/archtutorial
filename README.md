@@ -129,8 +129,8 @@ Create filesystems and mount them in the correct order:
 ```bash
 # Format partitions
 d=/dev/nvme0n1
-mkfs.fat -F32 -n EFI ${d}p1 && \
-mkfs.xfs -L root ${d}p2 && \
+mkfs.fat -F32 -n EFI ${d}p1
+mkfs.xfs -L root ${d}p2
 mkfs.xfs -L home ${d}p3
 
 # Mount root partition first
