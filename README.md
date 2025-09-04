@@ -548,8 +548,8 @@ yay -S --needed --noconfirm \
 ## 6 · Daily driver apps
 
 - **Text Editor**: `yay -S --needed --noconfirm kate`  
-- **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity`  
-- **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin protonup-qt-bin`  
+- **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity reaper gwenview spotify`  
+- **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin lutris protonup-qt-bin`  
 - **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git mkinitcpio-firmware ark`
 
 Enable Nohang:
