@@ -56,7 +56,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - zsh default shell
 - systemd-boot
 - zswap
-- XFS for `/` and `/home`
+- EXT4 for `/` and `/home`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
 
 modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS WIP, FOLLOW BY OWN VOLITION.
@@ -128,8 +128,8 @@ Create filesystems and mount them in the correct order:
 # Format partitions
 d=/dev/nvme0n1
 mkfs.fat -F32 -n EFI ${d}p1
-mkfs.xfs -L root ${d}p2
-mkfs.xfs -L home ${d}p3
+mkfs.ext4 -L root ${d}p2
+mkfs.ext4 -L home ${d}p3
 
 # Mount root partition first
 mount /dev/disk/by-label/root /mnt
@@ -246,7 +246,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils \
-  pacman-contrib xfsprogs \
+  pacman-contrib \
   git wget base-devel
   
 ```
