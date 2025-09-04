@@ -484,12 +484,16 @@ vm.max_map_count = 2147483642
 ```bash
 # Package install
 yay -S --noconfirm --needed cpupower 
+```
 
+```bash
 sudo nano /etc/default/cpupower
+```
+
+```ini
 # Set:
-# governor='performance'
-# min_freq="1.5GHz"  # optional
-# max_freq="3.5GHz"  # optional
+governor='performance'
+```
 
 # Enable and verify
 sudo systemctl enable --now cpupower.service
