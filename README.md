@@ -243,7 +243,7 @@ pacman -Syu
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
+  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils \
   pacman-contrib xfsprogs \
@@ -449,11 +449,10 @@ ILoveCandy                 # add under Color
 
 ### 3.2 Shell and terminal bliss
 ```bash
-yay -S --needed --noconfirm kitty zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
+yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 
-# Launch Kitty and set it as default terminal in KDE:
-# Settings → Default Applications → Terminal Emulator
-kitty
+#  set Kitty as default terminal in KDE:
+# Settings → Default Applications → Terminal Emulator → kitty
 ```
 
 ```bash
