@@ -292,7 +292,7 @@ EOF
 
 # Create boot entry for LTS kernel backup
 cat << EOF > /boot/loader/entries/arch-lts.conf
-title   Arch Linux (LTS Kernel)
+title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
