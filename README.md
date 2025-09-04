@@ -110,15 +110,15 @@ Create a GPT partition table with three partitions AFTER checking your drive nam
 ```bash
 sgdisk --zap-all /dev/nvme0n1
 
-sgdisk -n1:0:+3G  -t1:EF00 -c1:"EFI system" /dev/nvme0n1
-sgdisk -n2:0:+80G -t2:8304 -c2:"Linux root (x86-64)" /dev/nvme0n1
+sgdisk -n1:0:+1G  -t1:EF00 -c1:"EFI system" /dev/nvme0n1
+sgdisk -n2:0:+60G -t2:8304 -c2:"Linux root (x86-64)" /dev/nvme0n1
 sgdisk -n3:0:0    -t3:8302 -c3:"Linux home" /dev/nvme0n1
 ```
 
 **Partition Layout:**
 
-* `/dev/nvme0n1p1` — 3GB EFI System Partition
-* `/dev/nvme0n1p2` — 80GB Root partition
+* `/dev/nvme0n1p1` — 1GB EFI System Partition
+* `/dev/nvme0n1p2` — 60GB Root partition
 * `/dev/nvme0n1p3` — Remaining space for Home partition
 
 
