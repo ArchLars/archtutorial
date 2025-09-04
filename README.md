@@ -482,8 +482,9 @@ sudo -k
 sudo true
 ```
 
+## Copy and configure .zshrc
+
 ```bash
-# Copy and configure .zshrc
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
