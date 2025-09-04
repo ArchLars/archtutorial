@@ -466,20 +466,6 @@ PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 source ~/.zshrc
 ```
 
-### 3.3 Kernel timer tweaks (systemd-boot)
-```bash
-# Edit loader entry
-sudo nano /boot/loader/entries/arch.conf
-
-# Modify options line, append the following to the end:
-# options   ... tsc=reliable clocksource=tsc
-
-# Re-install loader
-sudo bootctl update
-
-# Reboot later to activate
-```
-
 ### 3.4 Raise vm.max_map_count (gaming)
 ```bash
 sudo nano /etc/sysctl.d/80-gaming.conf
@@ -489,7 +475,7 @@ vm.max_map_count = 2147483642
 ### 3.6 Install and configure cpupower
 ```bash
 # Package install
-yay -S cpupower  # or: sudo pacman -S cpupower
+yay -S --noconfirm --needed cpupower 
 
 sudo nano /etc/default/cpupower
 # Set:
@@ -533,12 +519,12 @@ Uncomment in `/etc/pacman.conf`, then refresh:
 Include = /etc/pacman.d/mirrorlist
 ```
 ```bash
-yay -Syu
+yay
 ```
 
 ### 4.3 32-bit runtime
 ```bash
-yay -S lib32-nvidia-utils lib32-pipewire
+yay -S --needed --noconfirm lib32-nvidia-utils lib32-pipewire
 ```
 
 ### 4.4 Desktop integration
@@ -564,7 +550,7 @@ yay -S \
 - **Text Editor**: `yay -S --needed --noconfirm kate`  
 - **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity`  
 - **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin protonup-qt-bin`  
-- **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git`
+- **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git ark`
 
 Enable Nohang:
 ```bash
@@ -584,7 +570,7 @@ mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 ```
 
-Configure Proton GE as the default in Steam after installing from ProtonUp-Qt:
+Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
 
 1. Launch Steam and open **Settings → Steam Play**.  
 2. Tick both **Enable Steam Play** boxes.  
