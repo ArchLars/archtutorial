@@ -433,7 +433,7 @@ fastfetch # then run fastfetch
 Basic packages:
 ```bash
 yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
-gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-espeak gstreamer-vaapi 
+gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly
 ```
 
 ---
