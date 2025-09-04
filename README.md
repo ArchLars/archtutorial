@@ -302,7 +302,7 @@ initrd  /initramfs-linux-lts.img
 options rw zswap.max_pool_percent=25
 EOF
 
-# Confirm boot entries
+# Update boot entries
 bootctl update
 ```
 
