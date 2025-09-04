@@ -298,7 +298,7 @@ EOF
 
 ```bash
 # Create a swap file (zswap needs a backing swap device)
-dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
+dd if=/dev/zero of=/swapfile bs=1G count=16 status=progress
 chmod 600 /swapfile
 mkswap /swapfile
 ```
