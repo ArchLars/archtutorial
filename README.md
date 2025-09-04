@@ -428,7 +428,7 @@ cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test
 yay -S --needed --noconfirm fastfetch  # then run fastfetch
-yay -S --needed --noconfirm firefox thunderbird-esr-bin
+yay -S --needed --noconfirm firefox thunderbird-esr-bin informant
 ```
 
 ---
