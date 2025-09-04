@@ -425,7 +425,6 @@ cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test
 yay -S --needed --noconfirm fastfetch  # then run fastfetch
-
 yay -S --needed --noconfirm firefox thunderbird-esr-bin
 ```
 
@@ -442,18 +441,26 @@ ILoveCandy                 # add under Color
 
 ### 3.2 Shell and terminal bliss
 ```bash
-yay -S kitty zsh oh-my-zsh-git zsh-autocomplete zsh-syntax-highlighting
+yay -S kitty zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 
 # Launch Kitty and set it as default terminal in KDE:
 # Settings → Default Applications → Terminal Emulator
 kitty
+```
 
+```bash
 # Copy and configure .zshrc
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
-cat >> ~/.zshrc << 'EOF'
+```
+
+```bash
+nano ~/.zshrc
+# Add to bottom
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-EOF
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
+```
 
 # Reload
 source ~/.zshrc
