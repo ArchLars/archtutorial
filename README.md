@@ -563,9 +563,15 @@ yay -S \
 ## 6 · Daily driver apps
 
 - **Text Editor**: `yay -S --needed --noconfirm kate`  
-- **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv`  
+- **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity`  
 - **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin protonup-qt-bin`  
 - **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie`
+
+Set Journalctl limit:
+```bash
+/etc/systemd/journald.conf
+SystemMaxUse=50M
+```
 
 MPV hardware acceleration:
 ```bash
@@ -573,7 +579,7 @@ mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 ```
 
-Configure Proton GE as the default in Steam:
+Configure Proton GE as the default in Steam after installing from ProtonUp-Qt:
 
 1. Launch Steam and open **Settings → Steam Play**.  
 2. Tick both **Enable Steam Play** boxes.  
