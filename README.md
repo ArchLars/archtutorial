@@ -301,6 +301,9 @@ initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
 options rw zswap.max_pool_percent=25
 EOF
+
+# Confirm boot entries
+bootctl update
 ```
 
 ### 4.9 Configure Zswap
