@@ -248,11 +248,10 @@ pacman -S --needed \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils \
-  pacman-contrib python-pip xfsprogs \
-  git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
-  base-devel
+  pacman-contrib xfsprogs \
+  git wget base-devel
+  
 ```
-
 ### 4.7 Configure NVIDIA in Initramfs
 
 ```bash
@@ -260,7 +259,7 @@ pacman -S --needed \
 nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 # Remove 'kms' from HOOKS=()
-# Remove 'udev' from HOOKS=() and add 'systemd'
+# Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
 (!IMPORTANT! - Otherwise your system won't boot!)
 
 # Regenerate initramfs
@@ -433,7 +432,10 @@ fastfetch # then run fastfetch
 Basic packages:
 ```bash
 yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
-gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly
+gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
+noto-fonts-cjk noto-fonts-extra ttf-dejavu \
+python-pip
+
 ```
 
 ---
