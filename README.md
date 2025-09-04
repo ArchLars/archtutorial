@@ -592,25 +592,3 @@ reboot
 
 ---
 
-## 8 · Verification snippets
-After rebooting, verify everything is working correctly:
-
-```bash
-# Pacman tweaks
-grep -E "ParallelDownloads|ILoveCandy" /etc/pacman.conf
-
-# Kernel cmdline (after reboot)
-cat /proc/cmdline | grep -E "tsc=reliable|clocksource=tsc"
-
-# Sysctl
-sysctl vm.max_map_count vm.swappiness
-
-# cpupower
-enable=$(systemctl is-enabled cpupower) && echo "cpupower service $enable"
-
-# Hook sanity
-sudo pacman -T  # should output nothing
-```
-
----
-
