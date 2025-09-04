@@ -511,7 +511,7 @@ sudo sysctl --system
 
 ### 4.1 Firewall
 ```bash
-sudo pacman -S --needed --noconfirm firewalld python-pyqt5
+sudo pacman -S --needed --noconfirm firewalld python-pyqt6
 sudo systemctl enable --now firewalld
 sudo firewall-cmd --permanent --zone=public --add-service=kdeconnect
 sudo firewall-cmd --reload
