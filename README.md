@@ -250,7 +250,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
   sddm linux-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open nvidia-utils \
-  zram-generator pacman-contrib \
+  pacman-contrib \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
   base-devel
 ```
@@ -293,24 +293,53 @@ options rw
 EOF
 ```
 
-### 4.9 Configure Zram (Compressed Swap)
+### 4.9 Configure Zswap
 
 ```bash
-# Configure zram
-cat << EOF > /etc/systemd/zram-generator.conf
-[zram0]
-zram-size = min(ram / 2, 4096)
-compression-algorithm = zstd
-EOF
+# Create a swap file (zswap needs a backing swap device)
+dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
+chmod 600 /swapfile
+mkswap /swapfile
 ```
 
 ```bash
-cat << EOF > /etc/sysctl.d/99-zram.conf
-vm.swappiness              = 180
-vm.watermark_boost_factor  = 0
-vm.watermark_scale_factor  = 125
-vm.page-cluster            = 0
+sudo nano /etc/systemd/system/swapfile.swap
+```
+
+```ini
+[Unit]
+Description=Swap file
+
+[Swap]
+What=/swapfile
+Priority=100
+
+[Install]
+WantedBy=swap.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now swapfile.swap
+sudo swapon --show
+```
+
+You are on systemd-boot. Edit your entry (for Arch it is typically /boot/loader/entries/arch.conf or similar, check with bootctl list), then add zswap parameters to the options line:
+
+```ini
+zswap.enabled=1 zswap.compressor=zstd zswap.max_pool_percent=25 zswap.shrinker_enabled=1
+```
+
+Optimizations for desktop use:
+
+```bash
+sudo tee /etc/sysctl.d/99-zswap.conf >/dev/null << 'EOF'
+vm.swappiness = 100
+vm.page-cluster = 0
+vm.watermark_boost_factor = 0
+vm.watermark_scale_factor = 125
 EOF
+sudo sysctl --system
 ```
 
 ### 4.10 Enable Essential Services
@@ -344,14 +373,19 @@ findmnt -o TARGET,SOURCE,FSTYPE | grep -E '/ |/home|/boot'
 # Verify NVIDIA drivers are loaded
 lsmod | grep nvidia
 
-# Check zram is active
-swapon -s
+# Check zswap is active
+dmesg | grep -i zswap
+# Expect: "zswap: loaded using pool zstd/zsmalloc"
+cat /sys/module/zswap/parameters/enabled
+cat /sys/module/zswap/parameters/max_pool_percent
+cat /sys/module/zswap/parameters/shrinker_enabled
+swapon --show
 ```
 
 > **Expected Results:**
 >
 > * KDE Plasma (Wayland) login screen should appear
-> * Zram swap active
+> * Zswap swap active
 > * Auto-mounted root and home partitions
 > * NVIDIA drivers loaded and functional
 > * Network connectivity via NetworkManager
