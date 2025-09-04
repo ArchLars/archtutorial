@@ -473,6 +473,18 @@ Defaults pwfeedback
 sudo -k
 sudo true
 ```
+## Persist configure X11 keymap for non U.S keyboards
+
+```bash
+cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
+Section "InputClass"
+    Identifier "system-keyboard"
+    MatchIsKeyboard "on"
+    Option "XkbLayout" "no"
+    Option "XkbModel" "pc105"
+EndSection
+EOF
+```
 
 ## Copy and configure .zshrc
 
