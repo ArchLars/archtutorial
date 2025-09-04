@@ -494,7 +494,7 @@ sudo nano /etc/default/cpupower
 governor='performance'
 ```
 
-# Enable and verify
+### Enable and verify
 ```bash
 sudo systemctl enable --now cpupower.service
 cpupower frequency-info
