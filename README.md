@@ -454,10 +454,9 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
 ```bash
-nano ~/.zshrc
-# Add to bottom
-source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+nano ~/.zshrcs
+# Add to plugins
+(git zsh-autocomplete zsh-autosuggestions)
 
 PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
@@ -544,7 +543,7 @@ yay -S lib32-nvidia-utils lib32-pipewire
 
 ### 4.4 Desktop integration
 ```bash
-yay -S xdg-desktop-portal kdeconnect kdegraphics-thumbnailers ffmpegthumbs
+yay -S kdeconnect
 ```
 
 ---
@@ -569,7 +568,8 @@ yay -S \
 
 Set Journalctl limit:
 ```bash
-/etc/systemd/journald.conf
+/etc/systemd/journald.conf.d/00-journal-size.conf
+[Journal]
 SystemMaxUse=50M
 ```
 
