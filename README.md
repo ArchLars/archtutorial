@@ -564,7 +564,12 @@ yay -S \
 - **Text Editor**: `yay -S --needed --noconfirm kate`  
 - **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity`  
 - **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin protonup-qt-bin`  
-- **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie`
+- **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git`
+
+Enable Nohang:
+```bash
+sudo systemctl enable --now nohang-desktop.service
+```
 
 Set Journalctl limit:
 ```bash
