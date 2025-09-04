@@ -434,7 +434,7 @@ Basic packages:
 yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra ttf-dejavu \
-python-pip
+python-pip kdeconnect
 
 ```
 
@@ -451,7 +451,7 @@ ILoveCandy                 # add under Color
 
 ### 3.2 Shell and terminal bliss
 ```bash
-yay -S kitty zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
+yay -S --needed --noconfirm kitty zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 
 # Launch Kitty and set it as default terminal in KDE:
 # Settings → Default Applications → Terminal Emulator
@@ -542,16 +542,11 @@ yay
 yay -S --needed --noconfirm lib32-nvidia-utils lib32-pipewire
 ```
 
-### 4.4 Desktop integration
-```bash
-yay -S kdeconnect
-```
-
 ---
 
 ## 5 · Maintenance hooks (fire and forget)
 ```bash
-yay -S \
+yay -S --needed --noconfirm \
   pacdiff-pacman-hook-git \
   reflector-pacman-hook-git \
   paccache-hook \
@@ -575,6 +570,8 @@ sudo systemctl enable --now nohang-desktop.service
 Set Journalctl limit:
 ```bash
 /etc/systemd/journald.conf.d/00-journal-size.conf
+```
+```ini
 [Journal]
 SystemMaxUse=50M
 ```
