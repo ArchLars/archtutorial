@@ -290,13 +290,16 @@ console-mode auto
 editor no
 EOF
 
+# Confirm boot entries
+bootctl list
+
 # Create boot entry for main kernel
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /amd-ucode.img
 initrd  /initramfs-linux.img
-options rw
+options rw zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 EOF
 
 # Create boot entry for LTS kernel backup
@@ -305,7 +308,7 @@ title   Arch Linux (LTS Kernel)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw
+options rw zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 EOF
 ```
 
@@ -340,7 +343,7 @@ sudo systemctl enable --now swapfile.swap
 sudo swapon --show
 ```
 
-You are on systemd-boot. Edit your entry (for Arch it is typically /boot/loader/entries/arch.conf or similar, check with bootctl list), then add zswap parameters to the options line:
+You are on systemd-boot. Ensure the zswap parameters are on the options line:
 
 ```ini
 zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
