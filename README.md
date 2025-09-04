@@ -57,6 +57,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - NVME SSD
 - zsh default shell
 - systemd-boot
+- zswap
 - EXT4 for `/` and `/home`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
 
@@ -301,11 +302,11 @@ dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
 chmod 600 /swapfile
 mkswap /swapfile
 ```
-
+edit:
 ```bash
 sudo nano /etc/systemd/system/swapfile.swap
 ```
-
+and add:
 ```ini
 [Unit]
 Description=Swap file
@@ -317,7 +318,7 @@ Priority=100
 [Install]
 WantedBy=swap.target
 ```
-
+then:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now swapfile.swap
@@ -327,7 +328,7 @@ sudo swapon --show
 You are on systemd-boot. Edit your entry (for Arch it is typically /boot/loader/entries/arch.conf or similar, check with bootctl list), then add zswap parameters to the options line:
 
 ```ini
-zswap.enabled=1 zswap.compressor=zstd zswap.max_pool_percent=25 zswap.shrinker_enabled=1
+zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 ```
 
 Optimizations for desktop use:
