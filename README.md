@@ -160,7 +160,7 @@ reflector \
       --save /etc/pacman.d/mirrorlist
 
 # Install minimal base system
-pacstrap /mnt base linux linux-lts linux-firmware amd-ucode nano sudo zsh
+pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 ```
 
 ## Step 4: System Configuration
@@ -200,28 +200,19 @@ EOF
 # Set console keymap. This even U.S keyboards has to set!
 echo "KEYMAP=no-latin1" > /etc/vconsole.conf 
 
-# Persist configure X11 keymap for non U.S keyboards
-cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
-Section "InputClass"
-    Identifier "system-keyboard"
-    MatchIsKeyboard "on"
-    Option "XkbLayout" "no"
-    Option "XkbModel" "pc105"
-EndSection
-EOF
 ```
 
 ### 4.4 Set Hostname and Hosts
 
 ```bash
 # Set hostname
-echo "bigboy" > /etc/hostname
+echo "BigBlue" > /etc/hostname
 
 # Configure hosts file
 cat << EOF > /etc/hosts
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   bigboy.localdomain bigboy
+127.0.1.1   BigBlue.localdomain BigBlue
 EOF
 ```
 
@@ -255,7 +246,7 @@ pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
-  sddm linux-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  sddm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils \
   pacman-contrib \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
@@ -296,9 +287,9 @@ bootctl list
 # Create boot entry for main kernel
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
-linux   /vmlinuz-linux
+linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
-initrd  /initramfs-linux.img
+initrd  /initramfs-linux-zen.img
 options rw zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 EOF
 
