@@ -455,7 +455,7 @@ yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-hig
 # Settings → Default Applications → Terminal Emulator → kitty
 ```
 
-# Enable syntax highlighting in nano
+## Enable syntax highlighting in nano
 ```bash
 # create your nano config if it does not exist
 mkdir -p ~/.config/nano
@@ -468,7 +468,7 @@ printf 'include "/usr/share/nano/*.nanorc"\ninclude "/usr/share/nano/extra/*.nan
 echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/nanorc
 ```
 
-# Show asterisks when typing your sudo password
+## Show asterisks when typing your sudo password
 Use `visudo` and add the `pwfeedback` default. This is the safe way to edit sudoers.
 ```bash
 # open a drop-in with visudo
@@ -579,12 +579,12 @@ yay -S --needed --noconfirm \
 - **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin lutris protonup-qt-bin`  
 - **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git mkinitcpio-firmware ark`
 
-Enable Nohang:
+## Enable Nohang:
 ```bash
 sudo systemctl enable --now nohang-desktop.service
 ```
 
-Set Journalctl limit:
+## Set Journalctl limit:
 ```bash
 /etc/systemd/journald.conf.d/00-journal-size.conf
 ```
@@ -593,7 +593,7 @@ Set Journalctl limit:
 SystemMaxUse=50M
 ```
 
-MPV hardware acceleration:
+## MPV hardware acceleration:
 ```bash
 mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
