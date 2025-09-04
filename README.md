@@ -512,19 +512,12 @@ sudo sysctl --system
 
 ## 4 · Essential security and AUR quality of life
 
-### 4.1 Firewall (UFW)
+### 4.1 Firewall
 ```bash
-sudo pacman -S ufw
-sudo ufw default deny
-sudo ufw allow from 192.168.0.0/24
-sudo ufw limit ssh
-
-# KDE Connect
-sudo ufw allow 1714:1764/tcp
-sudo ufw allow 1714:1764/udp
-
-sudo systemctl enable --now ufw
-sudo ufw enable
+sudo pacman -S firewalld python-pyqt5
+sudo systemctl enable --now firewalld
+sudo firewall-cmd --permanent --zone=public --add-service=kdeconnect
+sudo firewall-cmd --reload
 ```
 
 ### 4.2 Enable multilib
@@ -614,9 +607,6 @@ sysctl vm.max_map_count vm.swappiness
 
 # cpupower
 enable=$(systemctl is-enabled cpupower) && echo "cpupower service $enable"
-
-# Firewall
-sudo ufw status verbose
 
 # Hook sanity
 sudo pacman -T  # should output nothing
