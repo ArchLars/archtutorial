@@ -290,7 +290,7 @@ title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
+options rw zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 EOF
 
 # Create boot entry for LTS kernel backup
@@ -299,7 +299,7 @@ title   Arch Linux (LTS Kernel)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw zswap.enabled=1 zswap.max_pool_percent=25 zswap.shrinker_enabled=1
+options rw zswap.max_pool_percent=25 zswap.shrinker_enabled=1
 EOF
 ```
 
