@@ -463,7 +463,7 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```bash
 nano ~/.zshrcs
 # Add to plugins
-(git zsh-autocomplete zsh-autosuggestions)
+(git zsh-syntax-highlighting zsh-autosuggestions)
 
 PROMPT='%F{white}%B[%F{blue}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
