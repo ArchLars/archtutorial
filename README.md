@@ -247,7 +247,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
   sddm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-espeak gstreamer-vaapi \
+  nvidia-open-dkms nvidia-utils \
   pacman-contrib python-pip xfsprogs \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
   base-devel
@@ -427,8 +427,13 @@ makepkg -si
 cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test
-yay -S --needed --noconfirm fastfetch  # then run fastfetch
-yay -S --needed --noconfirm firefox thunderbird-esr-bin informant
+yay -S --needed --noconfirm fastfetch
+fastfetch # then run fastfetch
+```
+Basic packages:
+```bash
+yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
+gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-espeak gstreamer-vaapi 
 ```
 
 ---
