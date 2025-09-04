@@ -334,12 +334,6 @@ sudo systemctl enable --now swapfile.swap
 sudo swapon --show
 ```
 
-You are on systemd-boot. Ensure the zswap parameters are on the options line:
-
-```ini
-zswap.max_pool_percent=25
-```
-
 Optimizations for desktop use:
 
 ```bash
