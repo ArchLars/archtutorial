@@ -246,7 +246,7 @@ pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
-  sddm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils \
   pacman-contrib python-pip xfsprogs \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
