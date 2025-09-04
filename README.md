@@ -154,7 +154,7 @@ Update mirrorlist for optimal download speeds and install the base system, obv r
 reflector --country Norway --country Germany --age 12 --protocol https --sort age --save /etc/pacman.d/mirrorlist
 
 # Install minimal base system
-pacstrap /mnt base linux linux-firmware amd-ucode nano sudo zsh
+pacstrap /mnt base linux linux-lts linux-firmware amd-ucode nano sudo zsh
 ```
 
 ## Step 4: System Configuration
@@ -249,8 +249,8 @@ pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole xdg-desktop-portal-gtk kio-admin \
-  sddm linux-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open nvidia-utils \
+  sddm linux-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  nvidia-open-dkms nvidia-utils \
   pacman-contrib \
   git wget noto-fonts-cjk noto-fonts-extra ttf-dejavu \
   base-devel
@@ -284,12 +284,21 @@ console-mode auto
 editor no
 EOF
 
-# Create boot entry
+# Create boot entry for main kernel
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /amd-ucode.img
 initrd  /initramfs-linux.img
+options rw
+EOF
+
+# Create boot entry for LTS kernel backup
+cat << EOF > /boot/loader/entries/arch-lts.conf
+title   Arch Linux (LTS Kernel)
+linux   /vmlinuz-linux-lts
+initrd  /amd-ucode.img
+initrd  /initramfs-linux-lts.img
 options rw
 EOF
 ```
