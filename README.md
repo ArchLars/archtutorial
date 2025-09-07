@@ -242,9 +242,9 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## 4.6 A break before we continue, you are doing well btw
+## 4.6 Info & Rest of System Install
 
-### RE:"WHY DID YOU INCLUDE X":
+### Info:
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
 all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty, plymouth and pkgstats. 
 
@@ -294,7 +294,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 
 ---
 
-# TIME TO INSTALL THE PACKAGES
+# SYSTEM INSTALLATION
 
 ```bash
 # Update package database
