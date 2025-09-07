@@ -151,10 +151,10 @@ mount /dev/disk/by-label/EFI /mnt/boot
 
 ## Step 3: Install Base System
 
-Update mirrorlist for optimal download speeds and install the base system, obv replace Norway and Germany:
+Update mirrorlist for optimal download speeds, obv replace Norway and Germany:
 
 ```bash
-# Update mirrorlist with fastest mirrors
+# Update mirrorlist before install so you install with fastest mirrors
 reflector \                                      
       --country 'Norway,Sweden,Denmark,Germany,Netherlands' \
       --age 12 \
@@ -162,10 +162,14 @@ reflector \
       --sort rate \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist
-
-# Install minimal base system
-# Important Note: When it asks you for what font to use type `11` for ttf-liberation
-# ttf-liberation is a better font than the default one that you get if you just press `Enter`
+```
+INSTALL ARCH LINUX
+```bash
+#
+# IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
+# The reason why is that it provides free, open-source font files that are metrically compatible with
+# proprietary Microsoft fonts. This ensures that documents will render with consistent layout and
+# text appearance across different systems and applications.
 #
 pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 ```
@@ -173,6 +177,13 @@ pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 ## Step 4: System Configuration
 
 ### 4.1 Enter the New System
+
+You have now successfully installed Arch Linux.
+
+Congratulations.
+Now go annoy your friends about it.
+
+But if you wanted something more, keep going:
 
 ```bash
 arch-chroot /mnt
