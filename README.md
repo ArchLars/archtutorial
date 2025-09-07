@@ -521,19 +521,9 @@ fastfetch # then run fastfetch          # -the endless questions if you want to 
 yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 ```
 
-### Copy and configure .zshrc
+### Copy .zshrc default template config
 
 ```bash
-# - Right arrow: accept a suggestion to autocomplete a command you've run before. 
-#
-# - Up arrow: recall a previous command that starts the same way. 
-#   For example, type 'sudo', then press Up, and it fills in the rest. 
-#   This is useful when installing packages, like you will in this tutorial.
-#   Every time you type 'yay', you can press Up to autofill your usual flags, 
-#   then replace the package name with something else.
-#
-# - Syntax highlighting makes commands easier to read, and helps you spot obvious mistakes. 
-
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
@@ -558,10 +548,22 @@ nano ~/.zshrc
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
-### Reload
+### Reload & Guide
 ```bash
 # Then reload zshrc like so:
 source ~/.zshrc
+
+# 
+# - Right arrow: accept a suggestion to autocomplete a command you've run before. 
+#
+# - Up arrow: recall a previous command that starts the same way. 
+#   For example, type 'sudo', then press Up, and it fills in the rest. 
+#   This is useful when installing packages, like you will in this tutorial.
+#   Every time you type 'yay', you can press Up to autofill your usual flags, 
+#   then replace the package name with something else.
+#
+# - Syntax highlighting makes commands easier to read, and helps you spot obvious mistakes.
+#
 ```
 Basic packages:
 ```bash
