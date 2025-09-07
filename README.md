@@ -565,17 +565,6 @@ source ~/.zshrc
 # - Syntax highlighting makes commands easier to read, and helps you spot obvious mistakes.
 #
 ```
-Basic packages:
-```bash
-# mainly good stuff to have.
-yay -S --needed --noconfirm firefox informant nohang-git \
-gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
-noto-fonts-cjk noto-fonts-extra systemd-timer-notify \
-python-pip kdeconnect journalctl-desktop-notification
-
-```
-
----
 
 ## 3 · System Optimisation
 
@@ -641,6 +630,15 @@ Section "InputClass"
     Option "XkbModel" "pc105"
 EndSection
 EOF
+```
+Basic packages:
+```bash
+# mainly good stuff to have.
+yay -S --needed --noconfirm firefox informant nohang-git \
+gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
+noto-fonts-cjk noto-fonts-extra systemd-timer-notify \
+python-pip kdeconnect journalctl-desktop-notification
+
 ```
 
 ### 3.4 Raise vm.max_map_count (gaming)
