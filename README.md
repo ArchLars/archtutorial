@@ -258,7 +258,7 @@ EDITOR=nano visudo
 
 ### Info:
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
-all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty, plymouth and pkgstats. 
+all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. 
 
 Here's why I included those:
 
@@ -353,7 +353,6 @@ options rw rootflags=noatime
 EOF
 
 # Create boot entry for LTS kernel backup
-# I will disable plymouth for this kernel, other options remain the same
 cat << EOF > /boot/loader/entries/arch-lts.conf
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
