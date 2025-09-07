@@ -669,12 +669,26 @@ Uncomment in `/etc/pacman.conf`, then refresh:
 Include = /etc/pacman.d/mirrorlist
 ```
 ```bash
+# Tip/Fun Fact: You can update your system by just writing 'yay'. Try it
+#
 yay
 ```
 
-### 4.3 32-bit runtime
+### 4.2.5 Steam
 ```bash
-yay -S --needed --noconfirm lib32-nvidia-utils lib32-pipewire
+# DL Steam
+yay -S --needed --noconfirm steam
+
+# Run Steam in terminal to install it:
+steam
+```
+
+### 4.3 Ensure you have the 32-bit runtimes
+```bash
+# Some extra lib32 stuff for other games
+yay -S --needed --noconfirm \
+  lib32-sdl2-compat \
+  lib32-sdl2_mixer lib32-sdl2_ttf
 ```
 
 ---
@@ -735,7 +749,7 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ## 7 · Reboot
 ```bash
-# Reboot into new system
+# Reboot again into new system and you can finally sit back, relax, and tell your friends that you use arch btw
 reboot
 ```
 
