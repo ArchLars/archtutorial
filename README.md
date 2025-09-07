@@ -239,7 +239,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils terminus-font pkgstats \
-  pacman-contrib git wget \
+  pacman-contrib git wget plymouth \
   base-devel
   
 ```
@@ -251,6 +251,7 @@ nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 # Remove 'kms' from HOOKS=()
 # Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
+# Add 'plymouth' at the end of HOOKS=()
 (!IMPORTANT! - Otherwise your system won't boot!)
 
 # Regenerate initramfs
@@ -289,7 +290,7 @@ title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw rootflags=noatime zswap.max_pool_percent=25
+options rw rootflags=noatime zswap.max_pool_percent=25 plymouth.enable=0 disablehooks=plymouth
 EOF
 
 # Update boot entries
