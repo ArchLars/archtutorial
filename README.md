@@ -781,7 +781,7 @@ DEV=/dev/nvme1nX    # <-- set this to your new disk that you have identified, en
 # 1) Create a GPT partition and give it a PARTLABEL
 #    WARNING: the zap step is destructive. Save any data on it you might need beforehand.
 sudo sgdisk --zap-all "$DEV"  # <-- PROTIP: "$DEV" functions as an alias for your drive name temporarily.
-sudo sgdisk -n1:0:0 -t1:8300 -c1:"PARTLABEL" "$DEV"   # eg. PARTLABEL will be used during mounting, ensure you change it.
+sudo sgdisk -n1:0:0 -t1:8300 -c1:"PARTLABEL" "$DEV"   # eg. "PARTLABEL" is a placeholder, change to your name
 
 # 2) Make a filesystem (example: ext4)
 sudo mkfs.ext4 -L PARTLABEL "${DEV}p1"
