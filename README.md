@@ -272,6 +272,10 @@ I install konsole as well for backup, but it's mostly not necessary because kitt
 If you had an opinion of using another terminal then you probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
 else, which causes decision anxiety. Tell them to eat chow, y'know, just in general. kitty is a great, stable and good choice for a terminal.
 
+## plymouth
+plymouth adds a loading screen to your arch box with a spinner. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it.
+
+**NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
 
 ## wireless-regdb
 If you use wireless then an essential package is also `wireless-regdb`. This is often forgotten in many tutorials for some reason, but it's super vital to any wireless users. That's all you need to know...
