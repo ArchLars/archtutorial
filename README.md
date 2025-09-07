@@ -515,6 +515,57 @@ yay --version  # quick test
 yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms- 
 fastfetch # then run fastfetch          # -the endless questions if you want to install something or not.
 ```
+
+### 2.5 Shell and terminal bliss
+```bash
+yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
+```
+
+### Copy and configure .zshrc
+
+```bash
+# Let's set up zshrc with autosuggestions and syntax highlighting
+
+# This allows you to press right arrow key to auto complete a command youve done before.
+
+# It also allows you to press the up arrow key to remember previous commands-
+# -that started in a similar manner, so if you used sudo and then something-
+# -in the past, you can write 'sudo' and then press up and it will auto-
+# -fill the rest of the command, useful when you are installing much like you-
+# -are going to in this tutorial. Everytime you write "yay" you can simply press
+# -the up arrow key to auto fill the flags and then replace the package with something-
+# -else.
+
+# syntax highlighting makes it easier to know what commands will work or not
+
+# Copy default template config:
+cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
+```
+
+```bash
+# Tip: You can press F12 to insert the letter ~ into the terminal
+# This avoids having to spider-man hand ALT + whatever to write it
+#
+nano ~/.zshrc
+
+# Add this to () in plugins:
+#
+(git zsh-syntax-highlighting zsh-autosuggestions)
+
+# You are also going to want to set your name in PROMPT, otherwise it will just be `~`
+# The "PROMPT" below will look like this: [ArchLars], with Arch in Arch blue and Lars in white, same with brackets.
+# The ~ will be in cyan, which is your working directory. This is a fine early profile name. You can make it nicer later.
+#
+# Replace "Lars" with your own name and add this to the very bottom of ~/.zshrc:
+#
+PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
+```
+
+### Reload
+```bash
+# Then reload zshrc like so:
+source ~/.zshrc
+```
 Basic packages:
 ```bash
 # mainly good stuff to have.
@@ -535,11 +586,6 @@ Edit `/etc/pacman.conf`:
 # Color adds color (duh), ILoveCandy is a fun optional easter egg type setting that adds animations to when you update pacman. No spoilers.
 Color                      # uncomment
 ILoveCandy                 # add under Color
-```
-
-### 3.2 Shell and terminal bliss
-```bash
-yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 ```
 
 ### Enable syntax highlighting in nano
@@ -596,41 +642,6 @@ Section "InputClass"
     Option "XkbModel" "pc105"
 EndSection
 EOF
-```
-
-### Copy and configure .zshrc
-
-```bash
-# Let's set up zsrch with autosuggestions and syntax highlighting
-# This allows you to press right to auto finish a command youve done before
-# syntax highlighting makes it easier to know what commands will work or not
-#
-cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
-```
-
-```bash
-# Tip: You can press F12 to insert the letter ~ into the terminal
-# This avoids having to spider-man hand ALT + whatever to write it
-#
-nano ~/.zshrc
-
-# Add this to () in plugins:
-#
-(git zsh-syntax-highlighting zsh-autosuggestions)
-
-# You are also going to want to set your name in PROMPT, otherwise it will just be `~`
-# The "PROMPT" below will look like this: [ArchLars], with Arch in Arch blue and Lars in white, same with brackets.
-# The ~ will be in cyan, which is your working directory. This is a fine early profile name. You can make it nicer later.
-#
-# Replace "Lars" with your own name and add this to the very bottom of ~/.zshrc:
-#
-PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
-```
-
-### Reload
-```bash
-# Then reload zshrc like so:
-source ~/.zshrc
 ```
 
 ### 3.4 Raise vm.max_map_count (gaming)
