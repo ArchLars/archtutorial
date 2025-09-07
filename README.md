@@ -8,7 +8,7 @@ some caveat, KDE Plasma does not. That is why I use it.
 
 ---
 
-##**NOTE (ACTUALLY READ THIS PLS): THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
+## NOTE (ACTUALLY READ THIS PLS): THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!
 I like to use `systemd-gpt-auto-generator`. This is an opinionated decision on my part, and I debated wheter or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
 It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. Windows for example also identifies volumes by stable GUIDs (Volume{GUID} paths).
 
