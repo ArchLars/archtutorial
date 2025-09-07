@@ -240,13 +240,13 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## 4.5.5 Info & Rest of System Install
+## 4.5.5 Package Choice
 
 ### Info:
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
 all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty, plymouth and pkgstats. 
 
-Here's why I included them:
+Here's why I included those:
 
 
 ### pkgstats 
@@ -257,20 +257,20 @@ prioritize and other things.
 ### kitty 
 kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
 It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
-I install konsole as well for backup. 
+konsole is included as a backup.
 
 ### plymouth & plymouth-kcm
-plymouth adds a loading screen to your arch box with a spinner. you can customize it too. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it. plymouth-kcm just adds functionality for KDE Plasma settings to change the loading.
+plymouth adds a loading screen to your arch box with a spinner. you can customize it too. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it. plymouth-kcm adds functionality for KDE Plasma settings to be able to change the themes of your loading.
 
 ---
 
 ## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
 
 ### wireless-regdb
-If you use wireless then an essential package is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
+If you use wireless then an **essential package** is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
 
 ### audiocd-kio
-This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. I don't ever plan on using that on my desktop tower but otherwise I would consider this essential. If you are on a laptop with a CD player then you are going to want this.
+This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. If you are on a laptop with a CD player then you are going to want this.
 
 ### libdvdread, libdvdnav, and libdvdcss
 This is the same as above but for DVD playback. This is needed on any DE.
@@ -306,12 +306,13 @@ pacman -S --needed \
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
-# MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
-# Remove 'kms' from HOOKS=()
-# Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# Add 'plymouth' at the end of HOOKS=() if you want plymouth.
-(!IMPORTANT! - Otherwise your system won't boot!)
+# MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
+# Remove 'kms' from HOOKS=() also if you use nvidia
 
+# IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
+# If you do not remove udev and add systemd your system will not boot.
+
+# Add 'plymouth' at the end of HOOKS=() if you want plymouth.
 # Regenerate initramfs
 mkinitcpio -P
 ```
@@ -333,25 +334,24 @@ EOF
 # Confirm boot entries
 bootctl list
 
-# Create boot entry for main kernel. noatime is a harmless optimization for filesystems
-# zswap pool percentage optimizes zswap.
+# Create boot entry for main kernel. noatime is a standard optimization for EXT4 partitions.
 # quiet and splash makes plymouth work, remove both if you don't need it.
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw quiet splash rootflags=noatime zswap.max_pool_percent=25
+options rw quiet splash rootflags=noatime
 EOF
 
 # Create boot entry for LTS kernel backup
-# I will disable plymouth for this kernel, other options are the same
+# I will disable plymouth for this kernel, other options remain the same
 cat << EOF > /boot/loader/entries/arch-lts.conf
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw rootflags=noatime zswap.max_pool_percent=25 plymouth.enable=0 disablehooks=plymouth
+options rw rootflags=noatime plymouth.enable=0 disablehooks=plymouth
 EOF
 
 # Update boot entries
@@ -485,7 +485,7 @@ fastfetch # then run fastfetch
 Basic packages:
 ```bash
 # mainly desktop apps and codecs, stuff good to have. dont install cuda if you dont have NVIDIA obviously.
-yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
+yay -S --needed --noconfirm firefox thunderbird-esr-bin informant nohang-git \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra ttf-dejavu cuda systemd-timer-notify \
 python-pip kdeconnect journalctl-desktop-notification
@@ -538,7 +538,7 @@ bell_on_tab none
 # reload the config
 CTRL + SHIFT + F5
 
-# Test that the Geneva violation is gone. Printing '\a' sends the BEL character.
+# Test that the violation of the Geneva Convention is gone. Printing '\a' should send the BEL character which triggers it if not.
 printf '%b' '\a'
 ```
 
@@ -571,19 +571,30 @@ EOF
 ## Copy and configure .zshrc
 
 ```bash
+# Let's set up zsrch with autosuggestions and syntax highlighting
+# This allows you to press right to auto finish a command youve done before
+# syntax highlighting makes it easier to know what commands will work or not
+#
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
 ```bash
+# Tip: You can press F12 to insert the letter ~ into the terminal
+# This avoids having to spider-man hand ALT + whatever to write it
+#
 nano ~/.zshrc
-# Add to plugins
+
+# Add this to () in plugins:
 (git zsh-syntax-highlighting zsh-autosuggestions)
-# Add to end of file
+
+# You are also going to want to set your name in PROMPT, otherwise it will just be `~`
+# Replace "Lars" with your own name here and add this to the very bottom of ~/.zshrc:
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
 # Reload
 ```bash
+# Then reload zshrc like so:
 source ~/.zshrc
 ```
 
@@ -596,7 +607,7 @@ vm.max_map_count = 2147483642
 
 ### 3.6 Install and configure cpupower
 ```bash
-# Package install
+# cpupower sets cpu scheduler and is configurable
 yay -S --noconfirm --needed cpupower 
 ```
 
@@ -651,6 +662,13 @@ yay -S --needed --noconfirm lib32-nvidia-utils lib32-pipewire
 
 ## 5 · Maintenance hooks (fire and forget)
 ```bash
+# these hooks are great for system maintenance
+#
+# pacdiff shows you if any .pacnew is on your system needed to merge
+# reflector will run reflector any time mirrorlist updates
+# paccache-hook is the GOAT. it cleans your cache after using pacman.
+# systemd-boot-pacman-hook good for security, not strictly needed since we got the timer, but doesn't hurt.
+#
 yay -S --needed --noconfirm \
   pacdiff-pacman-hook-git \
   reflector-pacman-hook-git \
@@ -658,24 +676,17 @@ yay -S --needed --noconfirm \
   systemd-boot-pacman-hook
 ```
 
----
-
-## 6 · Daily driver apps
-
-- **Text Editor**: `yay -S --needed --noconfirm kate`  
-- **Graphics and Media**: `yay -S --needed --noconfirm gimp mpv audacity reaper gwenview spotify`  
-- **Gaming Stack**: `yay -S --needed --noconfirm steam dxvk-bin lutris protonup-qt-bin`  
-- **System Tools**: `yay -S --needed --noconfirm partitionmanager ksystemlog systemdgenie nohang-git mkinitcpio-firmware ark`
-
 ## Enable Nohang:
 ```bash
-# This is an OOM killer. If your system fills up it's swap and RAM this will work to terminate processes doing so before your system freeze up.
+# This is an OOM killer. It's VITAL.
+# If your system fills up it's swap and RAM then this will terminate offending processes before your system freeze up.
 sudo systemctl enable --now nohang-desktop.service
 ```
 
 ## Set Journalctl limit:
 ```bash
-# SUPER important, journal on desktop use fills up very quickly which takes space and can slow down boot times after a while.
+# SUPER important, journal on desktop use fills up very quickly which takes space
+# a large one can slow down boot times after a while.
 /etc/systemd/journald.conf.d/00-journal-size.conf
 ```
 ```ini
@@ -685,7 +696,7 @@ SystemMaxUse=50M
 
 ## MPV hardware acceleration:
 ```bash
-# You have to do this if you want GPU acceleration.
+# You have to do this if you want GPU acceleration for your wholesome entertainment
 mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 ```
