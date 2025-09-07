@@ -52,20 +52,22 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
 - NVME SSD
+- `linux-zen` default kernel which is a kernel optimized for desktop use, `linux-lts` for a fallback and debug kernel
 - zsh default shell
 - systemd-boot
 - zswap
 - EXT4 for `/` and `/home`
-- AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
+- AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open-dkms`)
 - Plymouth which is for loading screen, it's optional but I prefer it personally.
 
-modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS WIP, FOLLOW BY OWN VOLITION.
+modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS SUPER OPINIONATED, FOLLOW BY OWN VOLITION.
 
-*Protip:* This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).  
+*Protip:* This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).
+If you use an English lang keyboard you can ignore all of it, but it's worth knowing if you are new and use a different keyboard like say `de-latin1` for German keyboards.
 
 **NOTE:** **This tutorial assumes you have a NVME SSD,** which are named `/dev/nvme0n1`. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all instances of `nvme0n1` and remove the `p` from  `${d}p1` in the formatting.
 
-*Sidenote:* Unless you like the name, replace my hostname (basically the name of your rig) of `bigboy` with yours, same as my user name `lars` if your name ain't Lars. Though if it is, cool. Hi!
+*Sidenote:* Unless you like the name, replace my hostname (basically the name of your rig) of `BigBlue` with yours, same as my user name `lars` if your name ain't Lars. Though if it is, cool. Hi! I thought about doing placeholders but I feel those are more distracting usually, I prefer to see how something would actually work in a guide, maybe you do as well?
 
 
 ## Prerequisites
@@ -83,6 +85,7 @@ modeset is set by default, and according to the wiki setting fbdev manually is n
 **GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
 
 > **Prerequisites:** This guide assumes you have an AMD processor with NVIDIA graphics. For Intel CPUs, replace `amd-ucode` with `intel-ucode` throughout the installation.
+For AMDGPU or Intel GPU you should look either up at the Arch Wiki and replace the corresponding packages with those. I'd rather not clutter up the guide with a bunch of different setups, especially if I've never used those. It just confuses new users, like placeholders.
 
 
 
@@ -117,6 +120,7 @@ sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
 * `/dev/nvme0n1p1` — 1GB EFI System Partition
 * `/dev/nvme0n1p2` — Root partition
 
+I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop because Arch is a complete distribution of Linux, and I don't do any encryption because the one time I did I ended up being locked out of my computer because of stupidity. If you need encryption for security sensitive systems then look elsewhere.
 
 ## Step 2: Format and Mount Partitions
 
@@ -234,8 +238,25 @@ EDITOR=nano visudo
 ```bash
 # Update package database
 pacman -Syu
+```
 
-# Install essential packages
+## Install packages. All are essential to the well function of a KDE Plasma desktop except for kitty and pkgstats.
+
+## pkgstats 
+pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
+It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
+prioritize and other things. Most people reveal more about their system voluntarily in ways that help nobody so this is not a problem.
+If you are very paranoid you can leave this one out and not enable the timer of it at the end. I included it however because
+I use it and I also try to help out wherever I can personally. I send most information to KDE in crash reports as well. I would like to
+promote such an attitude to anyone else in FOSS which has become more & more ungrateful and entitled over the years.
+
+## kitty 
+kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, fast enough and hassle free.
+It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and -
+I install konsole as well for backup, but it's mostly not necessary because kitty is very good. 
+
+## Install
+```bash
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
@@ -254,7 +275,7 @@ nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 # Remove 'kms' from HOOKS=()
 # Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# Add 'plymouth' at the end of HOOKS=()
+# Add 'plymouth' at the end of HOOKS=() if you want plymouth. If not don't add it and remove quiet splash from zen kernel options.
 (!IMPORTANT! - Otherwise your system won't boot!)
 
 # Regenerate initramfs
@@ -278,7 +299,7 @@ EOF
 # Confirm boot entries
 bootctl list
 
-# Create boot entry for main kernel
+# Create boot entry for main kernel. noatime is a harmless optimization for filesystems, zswap pool percentage optimizes zswap.
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
@@ -287,7 +308,7 @@ initrd  /initramfs-linux-zen.img
 options rw quiet splash rootflags=noatime zswap.max_pool_percent=25
 EOF
 
-# Create boot entry for LTS kernel backup
+# Create boot entry for LTS kernel backup / I will disable plymouth for this kernel to use for troubleshooting booting.
 cat << EOF > /boot/loader/entries/arch-lts.conf
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
@@ -408,7 +429,7 @@ sudo pacman -Syu
 
 ### 2.1 Prerequisites
 ```bash
-# Essential build tools
+# Essential build tools, you already installed these during install but just to be sure
 sudo pacman -S --needed base-devel git
 ```
 
@@ -426,6 +447,7 @@ fastfetch # then run fastfetch
 ```
 Basic packages:
 ```bash
+# mainly desktop apps and codecs, stuff good to have. dont install cuda if you dont have NVIDIA obviously.
 yay -S --needed --noconfirm firefox thunderbird-esr-bin informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra ttf-dejavu cuda systemd-timer-notify \
@@ -437,9 +459,10 @@ python-pip kdeconnect journalctl-desktop-notification
 
 ## 3 · System Optimisation
 
-### 3.1 Pacman speed and candy
+### 3.1 Pacman candy
 Edit `/etc/pacman.conf`:
 ```ini
+# Color adds color (duh), ILoveCandy is a fun optional easter egg type setting that adds animations to when you update pacman. No spoilers.
 Color                      # uncomment
 ILoveCandy                 # add under Color
 ```
@@ -463,6 +486,23 @@ yay -S --needed --noconfirm nano-syntax-highlighting
 # enable all bundled syntaxes
 printf 'include "/usr/share/nano/*.nanorc"\ninclude "/usr/share/nano/extra/*.nanorc"\n' >> ~/.config/nano/nanorc
 echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/nanorc
+```
+## Turn off that incessant beeping in kitty without doing it system wide.
+```bash
+# You can turn this off system wide in KDE settings, but that is a bit overkill.
+sudo nano ~/.config/kitty/kitty.conf
+
+# Add these lines:
+enable_audio_bell no
+visual_bell_duration 0
+window_alert_on_bell no
+bell_on_tab none
+
+# reload the config
+CTRL + SHIFT + F5
+
+# Test that the Geneva violation is gone. Printing '\a' sends the BEL character.
+printf '%b' '\a'
 ```
 
 ## Show asterisks when typing your sudo password
@@ -512,6 +552,7 @@ source ~/.zshrc
 
 ### 3.4 Raise vm.max_map_count (gaming)
 ```bash
+# This is what Valve uses for the SteamDeck.
 sudo nano /etc/sysctl.d/80-gaming.conf
 vm.max_map_count = 2147483642
 ```
@@ -591,11 +632,13 @@ yay -S --needed --noconfirm \
 
 ## Enable Nohang:
 ```bash
+# This is an OOM killer. If your system fills up it's swap and RAM this will work to terminate processes doing so before your system freeze up.
 sudo systemctl enable --now nohang-desktop.service
 ```
 
 ## Set Journalctl limit:
 ```bash
+# SUPER important, journal on desktop use fills up very quickly which takes space and can slow down boot times after a while.
 /etc/systemd/journald.conf.d/00-journal-size.conf
 ```
 ```ini
@@ -605,16 +648,21 @@ SystemMaxUse=50M
 
 ## MPV hardware acceleration:
 ```bash
+# You have to do this if you want GPU acceleration.
 mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 ```
 
 Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
 
+0. Open up ProtonUp-Qt and install the latest version of Proton GE
 1. Launch Steam and open **Settings → Steam Play**.  
 2. Tick both **Enable Steam Play** boxes.  
 3. In the dropdown, choose **Proton GE**.  
 4. Click OK and restart Steam.
+
+ProtonGE is a good default for a lot of games, works just as well as regular Proton for most games and for other games include 
+propietary codecs and such that Valve cannot package themselves, this helps with video files and music with odd formats.
 
 ---
 
