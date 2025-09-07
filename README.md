@@ -779,7 +779,7 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ---
 
-### Adding a new Drive/SSD to GPT-Auto Setups
+## Adding a new Drive/SSD to GPT-Auto Setups
 
 
 Name of drive will be `data`, replace all instances of that in this guide if you don't want that.
