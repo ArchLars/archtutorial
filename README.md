@@ -349,13 +349,13 @@ EOF
 bootctl list
 
 # Create boot entry for main kernel. noatime is a standard optimization for EXT4 partitions.
-# quiet and splash makes plymouth work, remove both if you don't need it.
+# quiet, splash and plymouth.use-simpledrm makes plymouth work, remove if you don't need it.
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw quiet splash rootflags=noatime
+options rw quiet splash rootflags=noatime plymouth.use-simpledrm
 EOF
 
 # Create boot entry for LTS kernel backup
