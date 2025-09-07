@@ -21,9 +21,9 @@ But for now EXT4 serves me and will probably serve your purposes well enough. Mu
 
 ---
 
-### INTRODUCTION - How GPT Auto-Mounting Works
+## INTRODUCTION - How GPT Auto-Mounting Works
 
-Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type GUIDs, eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary.
+Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type **GUIDs,** eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary.
 
 ### The GUIDs
 
@@ -108,7 +108,7 @@ For AMDGPU or Intel GPU you should look either up at the Arch Wiki and replace t
 Set up Norwegian keyboard layout and verify UEFI boot:
 
 ```bash
-# Set Norwegian keyboard layout
+# Set Norwegian keyboard layout, each line in these code blocks is a separate line in the terminal FYI
 loadkeys no-latin1
 
 # Verify UEFI firmware
