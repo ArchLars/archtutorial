@@ -8,11 +8,12 @@ some caveat, KDE Plasma does not. That is why I use it.
 
 ---
 
-## NOTE (ACTUALLY READ THIS PLS): THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!
-I like to use `systemd-gpt-auto-generator`. This is an opinionated decision on my part, and I debated wheter or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
+## NOTE (ACTUALLY READ THIS PLS): 
+
+THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!! - So, I like to use something called `systemd-gpt-auto-generator`. I acknowledge that this is a super opinionated decision for a noob tutorial, and I debated whether or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
 It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. Windows for example also identifies volumes by stable GUIDs (Volume{GUID} paths).
 
-Your drive partitions like `boot` and `root` will also automount entirely by using GUIDs with this by using `systemd-gpt-auto-generator` which I prefer to having basically what amounts to a text file standing between you and your system mounting correctly. 
+Your drive partitions like `boot` and `root` will not be mounted by `fstab`, instead they will automount entirely by using GUIDs by using `systemd-gpt-auto-generator` which I prefer to having basically what amounts to a text file standing between you and your system mounting correctly. This is anecdotal, but I have heard of what happens when some package or update randomly decides to destroy your `fstab` and it is **NOT** fun to troubleshoot if it happens.
 
 It's worth familiarizing yourself with how this works before following my guide. I will add a small tutorial on how you would go about adding a new SSD later on with this, it's a tiny bit different but still very easy to do. **NOTE:** that there are extra steps to subvolumes if you choose to use this with **BTRFS,** since subvolumes like snapshots usually require `fstab`. I might write a small tutorial on what you need to do with BTRFS for this type of system if I ever decide to use that filesystem, but essentially instead of `fstab` you just use systemd service for each instead which is also what you will do for new drives. 
 
@@ -272,7 +273,7 @@ It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + S
 I install konsole as well for backup, but it's mostly not necessary because kitty is very good. If you had an opinion of using another terminal then you 
 probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people
 like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
-else, which causes decision anxiety. Tell them to eat chow, just in general. kitty is a stable and good choice for a terminal.
+else, which causes decision anxiety. Tell them to eat chow, y'know, just in general. kitty is a great, stable and good choice for a terminal.
 
 ## Install
 ```bash
@@ -281,11 +282,34 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils terminus-font pkgstats \
+  nvidia-open-dkms nvidia-utils terminus-font pkgstats hunspell hunspell-en_us  \
   pacman-contrib git wget plymouth plymouth-kcm \
   base-devel
   
 ```
+
+## For other setups that use wireless or DVD/CD players.
+
+**wireless-regdb**
+
+If you use wireless then an essential package is also `wireless-regdb`. This is often forgotten in many tutorials for some reason, but it's super vital to any wireless users. That's all you need to know...
+
+But if you want the full nerd explanation:
+
+It installs regulatory.db, a machine-readable table of Wi-Fi rules per country (ISO-3166 code) that allows you to connect properly. Since Linux 4.15 the kernel’s wireless stack reads this file like firmware and uses it to enforce allowed channels, max EIRP, DFS, and indoor-only flags. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
+
+So yeah, it is kinda nuts that a lot of people miss that package in their tutorials. I don't use it because ethernet, but if you do use wireless then install the package and leave it be. ONLY if you know what you are doing should you mess around with it, but be aware that this could be illegal in some places in the world. I am not a lawyer so I cannot tell you for sure, so my only advice here is to leave it alone and to talk to a lawyer if you are unsure about what rules may apply in your country.
+
+**audiocd-kio**
+This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. I don't ever plan on using that on my desktop tower but otherwise I would consider this essential. If you are on a laptop with a CD player then you are going to want this.
+
+**libdvdread, libdvdnav, and libdvdcss**
+This is the same as above but for DVD playback. This is needed on any DE.
+
+**libbluray, libaacs**
+Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is outlined in the (ArchWiki article)[https://wiki.archlinux.org/title/Blu-ray#Playback] on this. It says in the article that in most countries this is legal, but again I do not condone any illegal activity and I suggest you always speak with a lawyer in your country/state if unsure.
+
+
 ### 4.7 Configure NVIDIA in Initramfs
 
 ```bash
