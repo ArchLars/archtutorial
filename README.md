@@ -753,104 +753,91 @@ SystemMaxUse=50M
 
 ### MPV hardware acceleration:
 ```bash
+# install mpv (audio / video)
+yay -S --needed --noconfirm mpv
+
 # You have to do this if you want GPU acceleration for your wholesome entertainment
 mkdir -p ~/.config/mpv
 echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 ```
 
+### ProtonUp-Qt:
+```bash
+# install protonup qt (ProtonGE)
+yay -S --needed --noconfirm protonup-qt
+```
+
 Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
 
 0. Open up ProtonUp-Qt and install the latest version of Proton GE
-1. Launch Steam and open **Settings → Steam Play**.  
-2. Tick both **Enable Steam Play** boxes.  
-3. In the dropdown, choose **Proton GE**.  
-4. Click OK and restart Steam.
+1. Launch Steam and open **Settings → Compatibility**.  
+2. In the dropdown, choose **Proton GE**.  
+3. Click OK and restart Steam.
 
 ProtonGE is a good default for a lot of games, works just as well as regular Proton for most games and for other games include 
 propietary codecs and such that Valve cannot package themselves, this helps with video files and music with odd formats.
 
 ---
 
-### If you ever need to add another drive, you can edit DEV and LABEL in step 0 and then just copy line for line:
+### Adding a new Drive/SSD to GPT-Auto Setups
 
-#### 0) pick your device and label (edit these two only)
 ```bash
-# Identify the new disk (double check before you write to it)
+# 0) Identify the new disk (double check before you write to it)
 lsblk -e7 -o NAME,SIZE,TYPE,MOUNTPOINT,MODEL,SERIAL
-```
+DEV=/dev/nvme1n1    # <-- set this to your new disk
 
-```bash
-DEV=/dev/nvme1n1
-LABEL=mydata
-```
-
-#### 1) create a GPT partition named with your PARTLABEL
-```bash
+# 1) Create a GPT partition and give it a PARTLABEL
+#    WARNING: the zap step is destructive. Skip it if you need data.
 sudo sgdisk --zap-all "$DEV"
-sudo sgdisk -n1:0:0 -t1:8300 -c1:"$LABEL" "$DEV"
-sudo partprobe "$DEV"
+sudo sgdisk -n1:0:0 -t1:8300 -c1:"data" "$DEV"   # one Linux partition named "data"
+# Alternative using parted:
+# sudo parted -s "$DEV" mklabel gpt mkpart data ext4 0% 100% name 1 data
+
+# 2) Make a filesystem (example: ext4)
+sudo mkfs.ext4 -L data "${DEV}p1"
+
+# 3) Verify the persistent symlink created by udev, then wait if needed
+ls -l /dev/disk/by-partlabel/ | grep ' data$' || true
 sudo udevadm settle
-```
 
-#### 2) make the filesystem directly on the PARTLABEL symlink
-```bash
-sudo mkfs.ext4 -L "$LABEL" "/dev/disk/by-partlabel/$LABEL"
-```
+# 4) Create the mount point (must be a real directory, not a symlink)
+sudo mkdir -p /mnt/data
 
-#### 3) create the mount point
-```bash
-sudo install -d -m 755 "/mnt/$LABEL"
-```
-
-#### 4) compute correct unit names from the mount point, then write units with no placeholders
-```bash
-AUTOUNIT="$(systemd-escape -p --suffix=automount "/mnt/$LABEL")"   # e.g. mnt-mydata.automount
-MOUNTUNIT="$(systemd-escape -p --suffix=mount "/mnt/$LABEL")"       # e.g. mnt-mydata.mount
-```
-```bash
-# Copy and paste and press enter  into terminal for both tee commands to auto-create mount files
-
-sudo tee "/etc/systemd/system/$MOUNTUNIT" >/dev/null <<EOF
+# 5) Create a native systemd mount unit (keeps fstab empty)
+sudo tee /etc/systemd/system/mnt-data.mount >/dev/null <<'EOF'
 [Unit]
-Description=Mount $LABEL via PARTLABEL
+Description=Data SSD via PARTLABEL
 
 [Mount]
-What=/dev/disk/by-partlabel/$LABEL
-Where=/mnt/$LABEL
+What=/dev/disk/by-partlabel/data
+Where=/mnt/data
 Type=ext4
-Options=defaults,noatime
+Options=noatime
 
 [Install]
 WantedBy=multi-user.target
 EOF
-```
 
-```bash
-
-sudo tee "/etc/systemd/system/$AUTOUNIT" >/dev/null <<EOF
+# Optional: create an automount for on-demand mounting
+sudo tee /etc/systemd/system/mnt-data.automount >/dev/null <<'EOF'
 [Unit]
-Description=Automount $LABEL at /mnt/$LABEL
+Description=Auto-mount /mnt/data
 
 [Automount]
-Where=/mnt/$LABEL
+Where=/mnt/data
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-```
-
-#### 5) enable and start
-```bash
+# 6) Enable it (use the .automount, or the .mount if you prefer always-on)
 sudo systemctl daemon-reload
-sudo systemctl enable --now "$AUTOUNIT"
-```
+sudo systemctl enable --now mnt-data.automount
 
-#### 6) test
-```bash
-systemctl status "$AUTOUNIT" --no-pager
-df -h "/mnt/$LABEL" || :   # will trigger automount
-touch "/mnt/$LABEL/it-works"
+# 7) Test
+systemctl status mnt-data.automount
+df -h /mnt/data
+touch /mnt/data/it-works
 ```
 
 
