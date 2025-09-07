@@ -513,10 +513,10 @@ fastfetch # then run fastfetch
 ```
 Basic packages:
 ```bash
-# mainly desktop apps and codecs, stuff good to have. dont install cuda if you dont have NVIDIA obviously.
-yay -S --needed --noconfirm firefox thunderbird-esr-bin informant nohang-git \
+# mainly desktop apps and codecs, stuff good to have.
+yay -S --needed --noconfirm firefox informant nohang-git \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
-noto-fonts-cjk noto-fonts-extra ttf-dejavu cuda systemd-timer-notify \
+noto-fonts-cjk noto-fonts-extra ttf-dejavu systemd-timer-notify \
 python-pip kdeconnect journalctl-desktop-notification
 
 ```
@@ -536,12 +536,14 @@ ILoveCandy                 # add under Color
 ### 3.2 Shell and terminal bliss
 ```bash
 yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
+```
 
-#  set Kitty as default terminal in KDE:
+###  set Kitty as default terminal in KDE:
+```ini
 # Settings → Default Applications → Terminal Emulator → kitty
 ```
 
-## Enable syntax highlighting in nano
+### Enable syntax highlighting in nano
 ```bash
 # create your nano config if it does not exist
 mkdir -p ~/.config/nano
@@ -553,7 +555,7 @@ yay -S --needed --noconfirm nano-syntax-highlighting
 printf 'include "/usr/share/nano/*.nanorc"\ninclude "/usr/share/nano/extra/*.nanorc"\n' >> ~/.config/nano/nanorc
 echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/nanorc
 ```
-## Turn off that incessant beeping in kitty without doing it system wide.
+### Turn off that incessant beeping in kitty without doing it system wide.
 ```bash
 # You can turn this off system wide in KDE settings, but that is a bit overkill.
 sudo nano ~/.config/kitty/kitty.conf
@@ -571,7 +573,7 @@ CTRL + SHIFT + F5
 printf '%b' '\a'
 ```
 
-## Show asterisks when typing your sudo password
+### Show asterisks when typing your sudo password
 Use `visudo` and add the `pwfeedback` default. This is the safe way to edit sudoers.
 ```bash
 # open a drop-in with visudo
@@ -584,7 +586,7 @@ Defaults pwfeedback
 sudo -k
 sudo true
 ```
-## Persist configure X11 keymap for non U.S keyboards
+### Persist configure X11 keymap for non U.S keyboards
 
 ```bash
 cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
@@ -597,7 +599,7 @@ EndSection
 EOF
 ```
 
-## Copy and configure .zshrc
+### Copy and configure .zshrc
 
 ```bash
 # Let's set up zsrch with autosuggestions and syntax highlighting
@@ -626,7 +628,7 @@ nano ~/.zshrc
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
-# Reload
+### Reload
 ```bash
 # Then reload zshrc like so:
 source ~/.zshrc
@@ -724,14 +726,14 @@ yay -S --needed --noconfirm \
   systemd-boot-pacman-hook
 ```
 
-## Enable Nohang:
+### Enable Nohang:
 ```bash
 # This is an OOM killer. It's VITAL.
 # If your system fills up it's swap and RAM then this will terminate offending processes before your system freeze up.
 sudo systemctl enable --now nohang-desktop.service
 ```
 
-## Set Journalctl limit:
+### Set Journalctl limit:
 ```bash
 # SUPER important, journal on desktop use fills up very quickly which takes space
 # a large one can slow down boot times after a while.
@@ -742,7 +744,7 @@ sudo systemctl enable --now nohang-desktop.service
 SystemMaxUse=50M
 ```
 
-## MPV hardware acceleration:
+### MPV hardware acceleration:
 ```bash
 # You have to do this if you want GPU acceleration for your wholesome entertainment
 mkdir -p ~/.config/mpv
