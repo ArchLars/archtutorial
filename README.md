@@ -599,10 +599,15 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 nano ~/.zshrc
 
 # Add this to () in plugins:
+#
 (git zsh-syntax-highlighting zsh-autosuggestions)
 
 # You are also going to want to set your name in PROMPT, otherwise it will just be `~`
-# Replace "Lars" with your own name here and add this to the very bottom of ~/.zshrc:
+# The "PROMPT" below will look like this: [ArchLars], with Arch in Arch blue and Lars in white, same with brackets.
+# The ~ will be in cyan, which is your working directory. This is a fine early profile name. You can make it nicer later.
+#
+# Replace "Lars" with your own name and add this to the very bottom of ~/.zshrc:
+#
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 ```
 
