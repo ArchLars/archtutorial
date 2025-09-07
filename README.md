@@ -1,5 +1,4 @@
 # Quick Arch Linux Tutorial (KDE Plasma + NVIDIA + Wayland w/ Automounting)
----
 
 This is a quick Arch installation guide for noobs that just want a working system to game on that's straight forward with a DE that is most like Windows
 and usually the one most people want to use because of that, at least for their first DE. I've used every DE and WM that is both trendy and some obscure,
@@ -7,7 +6,7 @@ I started with KDE Plasma and Arch Linux. I always come back to both eventually.
 this. It's fully featured, they finally have a good process in eliminating bugs which plagued the DE before, and it's very easy to customize. Most DEs and WMs have
 some caveat, KDE Plasma does not. That is why I use it.
 
---
+---
 
 ##**NOTE (ACTUALLY READ THIS PLS): THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
 I like to use `systemd-gpt-auto-generator`. This is an opinionated decision on my part, and I debated wheter or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
