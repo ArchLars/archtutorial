@@ -188,7 +188,7 @@ LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific 
 EOF
 
 # Set console keymap. This even U.S keyboards has to set!
-sudo tee /etc/vconsole.conf >/dev/null <<'EOF'
+cat > /etc/vconsole.conf <<'EOF'
 KEYMAP=no-latin1
 FONT=ter-118n
 EOF
