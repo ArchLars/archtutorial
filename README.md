@@ -546,7 +546,7 @@ ILoveCandy                 # add under Color
 
 ### 3.2 Shell and terminal bliss
 ```bash
-yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
+yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 ```
 
 ### Enable syntax highlighting in nano
