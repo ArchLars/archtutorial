@@ -636,7 +636,7 @@ Basic packages:
 # mainly good stuff to have.
 yay -S --needed --noconfirm firefox informant nohang-git \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
-noto-fonts-cjk noto-fonts-extra systemd-timer-notify \
+noto-fonts-cjk noto-fonts-extra systemd-timer-notify rebuild-detector \
 python-pip kdeconnect journalctl-desktop-notification
 
 ```
