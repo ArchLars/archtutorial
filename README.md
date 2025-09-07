@@ -781,24 +781,27 @@ DEV=/dev/nvme1nX    # <-- set this to your new disk that you have identified, en
 # 1) Create a GPT partition and give it a PARTLABEL
 #    WARNING: the zap step is destructive. Save any data on it you might need beforehand.
 sudo sgdisk --zap-all "$DEV"  # <-- PROTIP: "$DEV" functions as an alias for your drive name temporarily.
-sudo sgdisk -n1:0:0 -t1:8300 -c1:"data" "$DEV"   # named "data", but u can name it w/e u want
+sudo sgdisk -n1:0:0 -t1:8300 -c1:"PARTLABEL" "$DEV"   # eg. PARTLABEL will be used during mounting, ensure you change it.
 
 # 2) Make a filesystem (example: ext4)
-sudo mkfs.ext4 -L data "${DEV}p1"
+sudo mkfs.ext4 -L PARTLABEL "${DEV}p1"
 
 # 3) Create the mount point (must be a real directory, not a symlink)
-sudo mkdir -p /mnt/data
+sudo mkdir -p /mnt/PARTLABEL
 
-# 4) Then create a native systemd mount unit
+# 4) Create a native systemd mount unit
 
-sudo nano /etc/systemd/system/mnt-data.mount
+# IMPORTANT
+# CHANGE "PARTLABEL" to the name you gave in Step 1 during partitioning.
+
+sudo nano /etc/systemd/system/mnt-PARTLABEL.mount
 
 [Unit]
-Description=Data SSD via PARTLABEL
+Description=Add a description of your new drive.
 
 [Mount]
-What=/dev/disk/by-partlabel/data
-Where=/mnt/data
+What=/dev/disk/by-partlabel/PARTLABEL
+Where=/mnt/PARTLABEL
 Type=ext4
 Options=noatime
 
@@ -806,30 +809,32 @@ Options=noatime
 WantedBy=multi-user.target
 
 # If you want it to automount create an .automount as well
+# IMPORTANT:
+# CHANGE "PARTLABEL" to the name you gave in Step 1 during partitioning.
 
-sudo nano /etc/systemd/system/mnt-data.automount
+sudo nano /etc/systemd/system/mnt-PARTLABEL.automount
 
 [Unit]
-Description=Auto-mount /mnt/data
+Description=Add a description of your new auto-mounting drive.
 
 [Automount]
-Where=/mnt/data
+Where=/mnt/PARTLABEL
 
 [Install]
 WantedBy=multi-user.target
 
 # 6) Enable it (use the .automount if you prefer always-on)
 sudo systemctl daemon-reload
-sudo systemctl enable --now mnt-data.automount
+sudo systemctl enable --now mnt-PARTLABEL.automount
 
 # 7) Test
-systemctl status mnt-data.automount
-df -h /mnt/data
-touch /mnt/data/it-works
+systemctl status mnt-PARTLABEL.automount
+df -h /mnt/PARTLABEL
+touch /mnt/PARTLABEL/it-works
 
 # Notes
-# - Unit file name must match the mount point (mnt-data.mount controls /mnt/data).
-#   If unsure, run: systemd-escape -p --suffix=mount "/mnt/data"
+# - Unit file name must match the mount point (mnt-PARTLABEL.mount controls /mnt/PARTLABEL).
+#   If unsure, run: systemd-escape -p --suffix=mount "/mnt/PARTLABEL"
 # - If you ever rename the partition, update What=/dev/disk/by-partlabel/<NEWNAME>.
 ```
 
