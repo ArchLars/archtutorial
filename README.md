@@ -798,7 +798,7 @@ sudo install -d -m 755 "/mnt/$LABEL"
 AUTOUNIT="$(systemd-escape -p --suffix=automount "/mnt/$LABEL")"   # e.g. mnt-mydata.automount
 MOUNTUNIT="$(systemd-escape -p --suffix=mount "/mnt/$LABEL")"       # e.g. mnt-mydata.mount
 
-# Copy and paste all of this in terminal from first EOF to last then press enter.
+# Copy and paste and press enter  into terminal for both tee commands to auto-create mount files
 
 sudo tee "/etc/systemd/system/$MOUNTUNIT" >/dev/null <<EOF
 [Unit]
@@ -813,6 +813,9 @@ Options=defaults,noatime
 [Install]
 WantedBy=multi-user.target
 EOF
+```
+
+```bash
 
 sudo tee "/etc/systemd/system/$AUTOUNIT" >/dev/null <<EOF
 [Unit]
@@ -826,6 +829,7 @@ Where=/mnt/$LABEL
 [Install]
 WantedBy=multi-user.target
 EOF
+
 ```
 
 #### 5) enable and start
