@@ -764,61 +764,79 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ## If you ever need to add another drive:
 
+# 0) pick your device and label (edit these two only)
 ```bash
-# Add a new disk using GPT PARTLABEL (no UUIDs, no fstab)
-
-# Why this method
-# - Uses /dev/disk/by-partlabel/<NAME> which is stable and human-readable.
-# - Works on any disk, not only the root disk that gpt-auto scans.
-# - systemd mount units keep everything out of /etc/fstab.
-
-# 0) Identify the new disk (double check before you write to it)
+# Identify the new disk (double check before you write to it)
 lsblk -e7 -o NAME,SIZE,TYPE,MOUNTPOINT,MODEL,SERIAL
+```
 
-# Then write the name of it like so similar to how we partitioned before
-DEV=/dev/nvme1nX    # <-- set this to your new disk that you have identified, ensure it's correct one
+```bash
+DEV=/dev/the_disk_from_lsblk
+LABEL=the_name_ur_using_for_ur_drive
+```
 
-# 1) Create a GPT partition and give it a PARTLABEL
-#    WARNING: the zap step is destructive. Save any data on it you might need beforehand.
-sudo sgdisk --zap-all "$DEV"  # <-- PROTIP: "$DEV" functions as an alias for your drive name temporarily.
-sudo sgdisk -n1:0:0 -t1:8300 -c1:"PARTLABEL" "$DEV"   # eg. "PARTLABEL" is a placeholder, change to your name
+# 1) create a GPT partition named with your PARTLABEL
+```bash
+sudo sgdisk --zap-all "$DEV"
+sudo sgdisk -n1:0:0 -t1:8300 -c1:"$LABEL" "$DEV"
+sudo partprobe "$DEV"
+sudo udevadm settle
+```
 
-# 2) Make a filesystem (example: ext4)
-sudo mkfs.ext4 -L PARTLABEL "${DEV}p1"
+# 2) make the filesystem directly on the PARTLABEL symlink (avoids guessing p1 vs 1)
+```bash
+sudo mkfs.ext4 -L "$LABEL" "/dev/disk/by-partlabel/$LABEL"
+```
 
-# 3) Create the mount point (must be a real directory, not a symlink)
-sudo mkdir -p /mnt/PARTLABEL
+# 3) create the mount point
+```bash
+sudo install -d -m 755 "/mnt/$LABEL"
+```
 
-# 4) Create a native systemd mount unit
+# 4) compute correct unit names from the mount point, then write units with no placeholders
+```bash
+AUTOUNIT="$(systemd-escape -p --suffix=automount "/mnt/$LABEL")"   # e.g. mnt-mydata.automount
+MOUNTUNIT="$(systemd-escape -p --suffix=mount "/mnt/$LABEL")"       # e.g. mnt-mydata.mount
 
-# If you want automounting use .automount, if you don't use .mount
-# IMPORTANT:
-# CHANGE EVERY INSTANCE OF "PARTLABEL" to the name you gave in Step 1 during partitioning.
-
-sudo nano /etc/systemd/system/mnt-PARTLABEL.automount
-
+sudo tee "/etc/systemd/system/$MOUNTUNIT" >/dev/null <<EOF
 [Unit]
-Description=Add a description of your new auto-mounting drive.
+Description=Mount $LABEL via PARTLABEL
 
-[Automount]
-Where=/mnt/PARTLABEL
+[Mount]
+What=/dev/disk/by-partlabel/$LABEL
+Where=/mnt/$LABEL
+Type=ext4
+Options=defaults,noatime
 
 [Install]
 WantedBy=multi-user.target
+EOF
 
-# 6) Enable it (use the .automount if you prefer always-on)
+sudo tee "/etc/systemd/system/$AUTOUNIT" >/dev/null <<EOF
+[Unit]
+Description=Automount $LABEL at /mnt/$LABEL
+
+[Automount]
+Where=/mnt/$LABEL
+# Optional idle unmount, comment out if you want it always on
+# TimeoutIdleSec=600
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+# 5) enable and start
+```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now mnt-PARTLABEL.automount
+sudo systemctl enable --now "$AUTOUNIT"
+```
 
-# 7) Test
-systemctl status mnt-PARTLABEL.automount
-df -h /mnt/PARTLABEL
-touch /mnt/PARTLABEL/it-works
-
-# Notes
-# - Unit file name must match the mount point (mnt-PARTLABEL.mount controls /mnt/PARTLABEL).
-#   If unsure, run: systemd-escape -p --suffix=mount "/mnt/PARTLABEL"
-# - If you ever rename the partition, update What=/dev/disk/by-partlabel/<NEWNAME>.
+# 6) test
+```bash
+systemctl status "$AUTOUNIT" --no-pager
+df -h "/mnt/$LABEL" || :   # will trigger automount
+touch "/mnt/$LABEL/it-works"
 ```
 
 
