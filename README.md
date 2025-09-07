@@ -322,6 +322,7 @@ nano /etc/mkinitcpio.conf
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
 # Add microcode to HOOKS=()
+# Replace keymap and consolefont with sd-vconsole in HOOKS=()
 # If you do not remove udev and add systemd your system will not boot.
 # Regenerate initramfs
 mkinitcpio -P
@@ -590,7 +591,7 @@ echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/
 ### Turn off that incessant beeping in kitty without doing it system wide.
 ```bash
 # You can turn this off system wide in KDE settings, but that is a bit overkill.
-sudo nano ~/.config/kitty/kitty.conf
+nano ~/.config/kitty/kitty.conf
 
 # Add these lines:
 enable_audio_bell no
