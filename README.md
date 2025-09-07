@@ -523,7 +523,19 @@ yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlig
 
 ### Copy and configure .zshrc
 
-Let's set up .zshrc with autosuggestions and syntax highlighting. This lets you press the right arrow key to autocomplete a command you've run before. It also lets you press the up arrow key to recall previous commands that start the same way. For example, if you used 'sudo …' in the past, you can type 'sudo', then press up, and it will fill in the rest. This is useful when you are installing packages, just like you are going to in this tutorial. Every time you type 'yay' you can press the up arrow to autofill your usual flags, then replace the package name with something else. Syntax highlighting makes commands easier to read and helps you spot obvious mistakes.
+Let's set up .zshrc with autosuggestions and syntax highlighting.
+
+Right arrow: accept a suggestion to autocomplete a command you've run before.
+
+Up arrow: recall a previous command that starts the same way.
+For example, type 'sudo', then press Up, and it fills in the rest.
+This is useful when installing packages, like you will in this tutorial.
+
+Every time you type 'yay', you can press Up to autofill your usual flags,
+then replace the package name with something else.
+
+Syntax highlighting makes commands easier to read, and helps you spot obvious mistakes.
+
 
 #### Copy default template config:
 ```bash
