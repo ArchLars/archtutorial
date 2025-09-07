@@ -249,9 +249,9 @@ EDITOR=nano visudo
 
 ## 4.6 Install Desktop Environment and Drivers
 
-### About the packages (Skip if you don't care):
-I have taken the liberty to make some decisions for the packages you will install, some of them are technically "optional" but
-all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats.
+### RE:"WHY DID YOU INCLUDE X":
+I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
+all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. Here's why I included both of them:
 
 
 ### pkgstats 
