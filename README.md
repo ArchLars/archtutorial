@@ -163,7 +163,10 @@ reflector \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist
 ```
-INSTALL ARCH LINUX
+### Install Linux! 
+
+Here we go:
+
 ```bash
 #
 # IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
@@ -178,14 +181,8 @@ pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 
 ### 4.1 Enter the New System
 
-You have now successfully installed Arch Linux.
-
-Congratulations.
-Now go annoy your friends about it.
-
-But if you wanted something more, keep going:
-
 ```bash
+# Before you can say you've installed arch you need to configure something
 arch-chroot /mnt
 ```
 
