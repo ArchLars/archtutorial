@@ -791,26 +791,9 @@ sudo mkdir -p /mnt/PARTLABEL
 
 # 4) Create a native systemd mount unit
 
-# IMPORTANT
-# CHANGE "PARTLABEL" to the name you gave in Step 1 during partitioning.
-
-sudo nano /etc/systemd/system/mnt-PARTLABEL.mount
-
-[Unit]
-Description=Add a description of your new drive.
-
-[Mount]
-What=/dev/disk/by-partlabel/PARTLABEL
-Where=/mnt/PARTLABEL
-Type=ext4
-Options=noatime
-
-[Install]
-WantedBy=multi-user.target
-
-# If you want it to automount create an .automount as well
+# If you want automounting use .automount, if you don't use .mount
 # IMPORTANT:
-# CHANGE "PARTLABEL" to the name you gave in Step 1 during partitioning.
+# CHANGE EVERY INSTANCE OF "PARTLABEL" to the name you gave in Step 1 during partitioning.
 
 sudo nano /etc/systemd/system/mnt-PARTLABEL.automount
 
