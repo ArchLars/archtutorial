@@ -491,11 +491,20 @@ sudo pacman -Syu
 
 ### 2.1 Prerequisites
 
-#### Launch Kitty
-Open the application launcher located on the bottom left of the panel
-Navigate to the "System" submenu, then locate & launch the program entitled: `kitty`
+### Launch Kitty
 
-# Essential build tools, you already installed these during install but just to be sure
+* Open the application launcher located on the bottom left of the panel.
+* Navigate to the "System" submenu, then locate & launch the program entitled: `kitty`
+
+### Set Kitty as default terminal in KDE:
+
+* Go to System Settings
+* Then to Default Applications
+* locate "Terminal Emulator"
+* Set it to `kitty`
+
+
+### Essential build tools, you already installed these during install but just to be sure
 ```bash
 sudo pacman -S --needed base-devel git  # when you run pacman -S with the --needed flag it will skip
                                         # installing any package that is already on the system.
@@ -538,11 +547,6 @@ ILoveCandy                 # add under Color
 ### 3.2 Shell and terminal bliss
 ```bash
 yay -S --needed --noconfirm zsh oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
-```
-
-###  set Kitty as default terminal in KDE:
-```ini
-# Settings → Default Applications → Terminal Emulator → kitty
 ```
 
 ### Enable syntax highlighting in nano
