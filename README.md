@@ -149,9 +149,9 @@ mkdir -p /mnt/boot
 mount /dev/disk/by-label/EFI /mnt/boot
 ```
 
-## Step 3: Install Base System
+## Step 3: Base System Install
 
-Update mirrorlist for optimal download speeds, obv replace Norway and Germany:
+First update mirrorlist for optimal download speeds, obv replace Norway and Germany:
 
 ```bash
 # Update mirrorlist before install so you install with fastest mirrors
@@ -163,9 +163,9 @@ reflector \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist
 ```
-### Install Linux! 
+### then Install Linux! 
 
-Here we go:
+This is where the fun begins:
 
 ```bash
 #
