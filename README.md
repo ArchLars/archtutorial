@@ -57,6 +57,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - zswap
 - EXT4 for `/` and `/home`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open`)
+- Plymouth which is for loading screen, it's optional but I prefer it personally.
 
 modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS WIP, FOLLOW BY OWN VOLITION.
 
@@ -283,7 +284,7 @@ title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw rootflags=noatime zswap.max_pool_percent=25
+options rw quiet splash rootflags=noatime zswap.max_pool_percent=25
 EOF
 
 # Create boot entry for LTS kernel backup
