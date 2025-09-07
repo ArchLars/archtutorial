@@ -823,8 +823,10 @@ touch /mnt/PARTLABEL/it-works
 
 
 ## Final Reboot
-```bash
+
 # Reboot again into new system and you can finally sit back, relax, and tell your friends that you use arch btw
+
+```bash
 reboot
 ```
 
