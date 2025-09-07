@@ -7,7 +7,7 @@ this. It's fully featured, they finally have a good process in eliminating bugs 
 some caveat, KDE Plasma does not. That is why I use it.
 
 
-## NOTE (ACTUALLY READ THIS PLS): 
+## NOTE (ACTUALLY READ THIS): 
 
 So, I like to use something called `systemd-gpt-auto-generator`. I acknowledge that this is a super opinionated decision for a noob tutorial, and I debated whether or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
 It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. Windows for example also identifies volumes by stable GUIDs (Volume{GUID} paths).
@@ -15,8 +15,6 @@ It is not usually done on Linux and it is kind of new(?), at least relative to `
 Your drive partitions like `boot` and `root` will not be mounted by `fstab`, instead they will automount entirely by using GUIDs by using `systemd-gpt-auto-generator` which I prefer to having basically what amounts to a text file standing between you and your system mounting correctly. This is anecdotal, but I have heard of what happens when some package or update randomly decides to destroy your `fstab` and it is **NOT** fun to troubleshoot if it happens.
 
 It's worth familiarizing yourself with how this works before following my guide. I will add a small tutorial on how you would go about adding a new SSD later on with this, it's a tiny bit different but still very easy to do. **NOTE:** that there are extra steps to subvolumes if you choose to use this with **BTRFS,** since subvolumes like snapshots usually require `fstab`. I might write a small tutorial on what you need to do with BTRFS for this type of system if I ever decide to use that filesystem, but essentially instead of `fstab` you just use systemd service for each instead which is also what you will do for new drives. 
-
-But for now EXT4 serves me and will probably serve your purposes well enough. Much like other things I will talk about later, some nerds love to really spread FOMO about filesystems on Linux. They are mostly just vibing, as long as you choose anything in Desktop Linux that is used by a lot of people like EXT4 you will be fine. Avoid experimental stuff when it comes to anything in Linux, which BTRFS isn't anymore but stuff like BcacheFS for example very much still is.
 
 ## INTRODUCTION - How GPT Auto-Mounting Works
 
@@ -242,7 +240,7 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## 4.6 Info & Rest of System Install
+## 4.5.5 Info & Rest of System Install
 
 ### Info:
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
@@ -256,18 +254,10 @@ pkstats is a super harmless way to help out the Arch developers that work hard a
 It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
 prioritize and other things. 
 
-Most people reveal more about their system voluntarily in ways that help nobody so this is not a problem.
-If you are very paranoid you can leave this one out and not enable the timer of it at the end. I included it however because
-I use it and I also try to help out wherever I can personally. I send most information to KDE in crash reports as well. I would like to
-promote such an attitude to anyone else in FOSS which has become more & more ungrateful and entitled over the years.
-
 ### kitty 
 kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
-It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and - ' it doesn't look terrible like some terminals do.
-I install konsole as well for backup, but it's mostly not necessary because kitty is very good. 
-
-If you had an opinion of using another terminal then you probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
-else, which causes decision anxiety. Tell them to eat chow, y'know, just in general. kitty is a great, stable and good choice for a terminal.
+It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
+I install konsole as well for backup. 
 
 ### plymouth & plymouth-kcm
 plymouth adds a loading screen to your arch box with a spinner. you can customize it too. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it. plymouth-kcm just adds functionality for KDE Plasma settings to change the loading.
@@ -277,11 +267,7 @@ plymouth adds a loading screen to your arch box with a spinner. you can customiz
 ## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
 
 ### wireless-regdb
-If you use wireless then an essential package is also `wireless-regdb`. This is often forgotten in many tutorials for some reason, but it's super vital to any wireless users. That's all you need to know...
-
-But if you want the full nerd explanation:
-
-It installs regulatory.db, a machine-readable table of Wi-Fi rules per country (ISO-3166 code) that allows you to connect properly. Since Linux 4.15 the kernel’s wireless stack reads this file like firmware and uses it to enforce allowed channels, max EIRP, DFS, and indoor-only flags. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
+If you use wireless then an essential package is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
 
 ### audiocd-kio
 This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. I don't ever plan on using that on my desktop tower but otherwise I would consider this essential. If you are on a laptop with a CD player then you are going to want this.
@@ -294,7 +280,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 
 ---
 
-# SYSTEM INSTALLATION
+# 4.6 Install the System
 
 ```bash
 # Update package database
@@ -323,7 +309,7 @@ nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 # Remove 'kms' from HOOKS=()
 # Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# Add 'plymouth' at the end of HOOKS=() if you want plymouth. If not don't add it and remove quiet splash from zen kernel options.
+# Add 'plymouth' at the end of HOOKS=() if you want plymouth.
 (!IMPORTANT! - Otherwise your system won't boot!)
 
 # Regenerate initramfs
@@ -347,7 +333,9 @@ EOF
 # Confirm boot entries
 bootctl list
 
-# Create boot entry for main kernel. noatime is a harmless optimization for filesystems, zswap pool percentage optimizes zswap.
+# Create boot entry for main kernel. noatime is a harmless optimization for filesystems
+# zswap pool percentage optimizes zswap.
+# quiet and splash makes plymouth work, remove both if you don't need it.
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
@@ -356,7 +344,8 @@ initrd  /initramfs-linux-zen.img
 options rw quiet splash rootflags=noatime zswap.max_pool_percent=25
 EOF
 
-# Create boot entry for LTS kernel backup / I will disable plymouth for this kernel to use for troubleshooting booting.
+# Create boot entry for LTS kernel backup
+# I will disable plymouth for this kernel, other options are the same
 cat << EOF > /boot/loader/entries/arch-lts.conf
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
@@ -400,7 +389,7 @@ sudo systemctl enable --now swapfile.swap
 sudo swapon --show
 ```
 
-Optimizations for desktop use:
+Optimizations for swap use:
 
 ```bash
 sudo tee /etc/sysctl.d/99-zswap.conf >/dev/null << 'EOF'
