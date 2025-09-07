@@ -12,15 +12,17 @@ some caveat, KDE Plasma does not. That is why I use it.
 So, I like to use something called `systemd-gpt-auto-generator`. I acknowledge that this is a super opinionated decision for a noob tutorial, and I debated whether or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
 It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. Windows for example also identifies volumes by stable GUIDs (Volume{GUID} paths).
 
+---
+
+# INTRODUCTION - How GPT Auto-Mounting Works
+
+Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type **GUIDs,** eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary.
+
 Your drive partitions like `boot` and `root` will not be mounted by `fstab`, instead they will automount entirely by using GUIDs by using `systemd-gpt-auto-generator` which I prefer to having basically what amounts to a text file standing between you and your system mounting correctly. This is anecdotal, but I have heard of what happens when some package or update randomly decides to destroy your `fstab` and it is **NOT** fun to troubleshoot if it happens.
 
 It's worth familiarizing yourself with how this works before following my guide. I will add a small tutorial on how you would go about adding a new SSD later on with this, it's a tiny bit different but still very easy to do. **NOTE:** that there are extra steps to subvolumes if you choose to use this with **BTRFS,** since subvolumes like snapshots usually require `fstab`. I might write a small tutorial on what you need to do with BTRFS for this type of system if I ever decide to use that filesystem, but essentially instead of `fstab` you just use systemd service for each instead which is also what you will do for new drives. 
 
-## INTRODUCTION - How GPT Auto-Mounting Works
-
-Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on their GPT partition type **GUIDs,** eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary.
-
-### The GUIDs
+## The GUIDs
 
 When you use the partition type codes in this guide:
 - `EF00` (EFI System Partition)
