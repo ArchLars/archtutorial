@@ -519,7 +519,7 @@ makepkg -si
 cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test
-yay -S --needed --noconfirm fastfetch
+yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it so it automatically says yes to install etc
 fastfetch # then run fastfetch
 ```
 Basic packages:
