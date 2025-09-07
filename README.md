@@ -762,20 +762,20 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ---
 
-## If you ever need to add another drive:
+### If you ever need to add another drive, you can edit DEV and LABEL in step 0 and then just copy line for line:
 
-# 0) pick your device and label (edit these two only)
+#### 0) pick your device and label (edit these two only)
 ```bash
 # Identify the new disk (double check before you write to it)
 lsblk -e7 -o NAME,SIZE,TYPE,MOUNTPOINT,MODEL,SERIAL
 ```
 
 ```bash
-DEV=/dev/the_disk_from_lsblk
-LABEL=the_name_ur_using_for_ur_drive
+DEV=/dev/nvme1n1
+LABEL=mydata
 ```
 
-# 1) create a GPT partition named with your PARTLABEL
+#### 1) create a GPT partition named with your PARTLABEL
 ```bash
 sudo sgdisk --zap-all "$DEV"
 sudo sgdisk -n1:0:0 -t1:8300 -c1:"$LABEL" "$DEV"
@@ -783,20 +783,22 @@ sudo partprobe "$DEV"
 sudo udevadm settle
 ```
 
-# 2) make the filesystem directly on the PARTLABEL symlink (avoids guessing p1 vs 1)
+#### 2) make the filesystem directly on the PARTLABEL symlink
 ```bash
 sudo mkfs.ext4 -L "$LABEL" "/dev/disk/by-partlabel/$LABEL"
 ```
 
-# 3) create the mount point
+#### 3) create the mount point
 ```bash
 sudo install -d -m 755 "/mnt/$LABEL"
 ```
 
-# 4) compute correct unit names from the mount point, then write units with no placeholders
+#### 4) compute correct unit names from the mount point, then write units with no placeholders
 ```bash
 AUTOUNIT="$(systemd-escape -p --suffix=automount "/mnt/$LABEL")"   # e.g. mnt-mydata.automount
 MOUNTUNIT="$(systemd-escape -p --suffix=mount "/mnt/$LABEL")"       # e.g. mnt-mydata.mount
+
+# Copy and paste all of this in terminal from first EOF to last then press enter.
 
 sudo tee "/etc/systemd/system/$MOUNTUNIT" >/dev/null <<EOF
 [Unit]
@@ -826,13 +828,13 @@ WantedBy=multi-user.target
 EOF
 ```
 
-# 5) enable and start
+#### 5) enable and start
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now "$AUTOUNIT"
 ```
 
-# 6) test
+#### 6) test
 ```bash
 systemctl status "$AUTOUNIT" --no-pager
 df -h "/mnt/$LABEL" || :   # will trigger automount
