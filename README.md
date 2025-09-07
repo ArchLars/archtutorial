@@ -264,7 +264,7 @@ If you are very paranoid you can leave this one out and not enable the timer of 
 I use it and I also try to help out wherever I can personally. I send most information to KDE in crash reports as well. I would like to
 promote such an attitude to anyone else in FOSS which has become more & more ungrateful and entitled over the years.
 
-## kitty 
+### kitty 
 kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
 It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and - ' it doesn't look terrible like some terminals do.
 I install konsole as well for backup, but it's mostly not necessary because kitty is very good. 
@@ -272,25 +272,27 @@ I install konsole as well for backup, but it's mostly not necessary because kitt
 If you had an opinion of using another terminal then you probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
 else, which causes decision anxiety. Tell them to eat chow, y'know, just in general. kitty is a great, stable and good choice for a terminal.
 
-## plymouth
-plymouth adds a loading screen to your arch box with a spinner. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it.
+### plymouth & plymouth-kcm
+plymouth adds a loading screen to your arch box with a spinner. you can customize it too. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it. plymouth-kcm just adds functionality for KDE Plasma settings to change the loading.
 
-**NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
+---
 
-## wireless-regdb
+## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
+
+### wireless-regdb
 If you use wireless then an essential package is also `wireless-regdb`. This is often forgotten in many tutorials for some reason, but it's super vital to any wireless users. That's all you need to know...
 
 But if you want the full nerd explanation:
 
 It installs regulatory.db, a machine-readable table of Wi-Fi rules per country (ISO-3166 code) that allows you to connect properly. Since Linux 4.15 the kernel’s wireless stack reads this file like firmware and uses it to enforce allowed channels, max EIRP, DFS, and indoor-only flags. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
 
-## audiocd-kio
+### audiocd-kio
 This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. I don't ever plan on using that on my desktop tower but otherwise I would consider this essential. If you are on a laptop with a CD player then you are going to want this.
 
-## libdvdread, libdvdnav, and libdvdcss
+### libdvdread, libdvdnav, and libdvdcss
 This is the same as above but for DVD playback. This is needed on any DE.
 
-## libbluray, libaacs
+### libbluray, libaacs
 Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
 
 ---
