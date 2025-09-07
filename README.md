@@ -6,7 +6,6 @@ I started with KDE Plasma and Arch Linux. I always come back to both eventually.
 this. It's fully featured, they finally have a good process in eliminating bugs which plagued the DE before, and it's very easy to customize. Most DEs and WMs have
 some caveat, KDE Plasma does not. That is why I use it.
 
----
 
 ## NOTE (ACTUALLY READ THIS PLS): 
 
@@ -18,8 +17,6 @@ Your drive partitions like `boot` and `root` will not be mounted by `fstab`, ins
 It's worth familiarizing yourself with how this works before following my guide. I will add a small tutorial on how you would go about adding a new SSD later on with this, it's a tiny bit different but still very easy to do. **NOTE:** that there are extra steps to subvolumes if you choose to use this with **BTRFS,** since subvolumes like snapshots usually require `fstab`. I might write a small tutorial on what you need to do with BTRFS for this type of system if I ever decide to use that filesystem, but essentially instead of `fstab` you just use systemd service for each instead which is also what you will do for new drives. 
 
 But for now EXT4 serves me and will probably serve your purposes well enough. Much like other things I will talk about later, some nerds love to really spread FOMO about filesystems on Linux. They are mostly just vibing, as long as you choose anything in Desktop Linux that is used by a lot of people like EXT4 you will be fine. Avoid experimental stuff when it comes to anything in Linux, which BTRFS isn't anymore but stuff like BcacheFS for example very much still is.
-
----
 
 ## INTRODUCTION - How GPT Auto-Mounting Works
 
@@ -58,8 +55,6 @@ Self-Describing: The partition table contains all mounting information
 Container-Friendly: Tools like systemd-nspawn can automatically set up filesystems from GPT images
 
 Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
-
----
 
 ## What we will be using/setting:
 
@@ -247,11 +242,13 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## 4.6 Install Desktop Environment and Drivers
+## 4.6 A break before we continue, you are doing well btw
 
 ### RE:"WHY DID YOU INCLUDE X":
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
-all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. Here's why I included both of them:
+all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty, plymouth and pkgstats. 
+
+Here's why I included them:
 
 
 ### pkgstats 
@@ -297,7 +294,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 
 ---
 
-# Install the packages
+# TIME TO INSTALL THE PACKAGES
 
 ```bash
 # Update package database
