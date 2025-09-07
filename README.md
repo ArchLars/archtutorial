@@ -433,6 +433,17 @@ umount -R /mnt
 
 # Reboot into new system
 reboot
+
+# If you see a very generic type of screen, dont worry. That happens to me on every install.
+#
+# To fix, log in to the system and launch "System Settings" from the Start Menu (Application launcher)
+# 
+# Navigate to Colors & Themes -> Login Screen (SDDM) -> then select "Breeze" and hit Apply
+# It will then have applied it and on next reboot and others after it will persist
+# 
+# This is also the way to fix if Breeze panel appears on the wrong monitor, simply go to Global Theme
+# Press Breeze or Breeze-Dark, select BOTH checkboxes and hit apply. Wait and then it will correctly apply
+# This will then persist on reboots as well
 ```
 
 ## Post-Installation Verification
@@ -480,6 +491,10 @@ sudo pacman -Syu
 
 ### 2.1 Prerequisites
 ```bash
+# Launch Kitty
+Click the application launcher on bottom left of the panel, and launch the program
+titled: "kitty"
+
 # Essential build tools, you already installed these during install but just to be sure
 sudo pacman -S --needed base-devel git
 ```
