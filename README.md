@@ -1,9 +1,23 @@
-# Quick Arch Linux Tutorial (KDE + NVIDIA + Wayland w/ Automounting)
+# Quick Arch Linux Tutorial (KDE Plasma + NVIDIA + Wayland w/ Automounting)
+---
 
-##**NOTE: THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
+This is a quick Arch installation guide for noobs that just want a working system to game on that's straight forward with a DE that is most like Windows
+and usually the one most people want to use because of that, at least for their first DE. I've used every DE and WM that is both trendy and some obscure,
+I started with KDE Plasma and Arch Linux. I always come back to both eventually. It's fun to try out new things, but KDE Plasma is OP at the moment I am writing 
+this. It's fully featured, they finally have a good process in eliminating bugs which plagued the DE before, and it's very easy to customize. Most DEs and WMs have
+some caveat, KDE Plasma does not. That is why I use it.
 
+--
 
-Your drives will automount entirely by using GUIDs and `systemd-gpt-auto-generator` which I find much more convenient, stable and secure. - It's worth familiarizing yourself with how this works before following my guide.
+##**NOTE (ACTUALLY READ THIS PLS): THERE ARE NO `fstab` edits! A populated `fstab` will break this guide!!!** 
+I like to use `systemd-gpt-auto-generator`. This is an opinionated decision on my part, and I debated wheter or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
+It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. Windows for example also identifies volumes by stable GUIDs (Volume{GUID} paths).
+
+Your drive partitions like `boot` and `root` will also automount entirely by using GUIDs with this by using `systemd-gpt-auto-generator` which I prefer to having basically what amounts to a text file standing between you and your system mounting correctly. 
+
+It's worth familiarizing yourself with how this works before following my guide. I will add a small tutorial on how you would go about adding a new SSD later on with this, it's a tiny bit different but still very easy to do. **NOTE:** that there are extra steps to subvolumes if you choose to use this with **BTRFS,** since subvolumes like snapshots usually require `fstab`. I might write a small tutorial on what you need to do with BTRFS for this type of system if I ever decide to use that filesystem, but essentially instead of `fstab` you just use systemd service for each instead which is also what you will do for new drives. 
+
+But for now EXT4 serves me and will probably serve your purposes well enough. Much like other things I will talk about later, some nerds love to really spread FOMO about filesystems on Linux. They are mostly just vibing, as long as you choose anything in Desktop Linux that is used by a lot of people like EXT4 you will be fine. Avoid experimental stuff when it comes to anything in Linux, which BTRFS isn't anymore but stuff like BcacheFS for example very much still is.
 
 ---
 
@@ -233,14 +247,17 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-### 4.6 Install Desktop Environment and Drivers
+## 4.6 Install Desktop Environment and Drivers
 
 ```bash
 # Update package database
 pacman -Syu
 ```
 
-## Install packages. All are essential to the well function of a KDE Plasma desktop except for kitty and pkgstats.
+### About the packages.
+I have taken the liberty to make some decisions for the packages you will install, some of them are technically "optional" but
+all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats.
+
 
 ## pkgstats 
 pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
@@ -251,9 +268,12 @@ I use it and I also try to help out wherever I can personally. I send most infor
 promote such an attitude to anyone else in FOSS which has become more & more ungrateful and entitled over the years.
 
 ## kitty 
-kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, fast enough and hassle free.
-It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and -
-I install konsole as well for backup, but it's mostly not necessary because kitty is very good. 
+kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
+It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and - ' it doesn't look terrible like some terminals do.
+I install konsole as well for backup, but it's mostly not necessary because kitty is very good. If you had an opinion of using another terminal then you 
+probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people
+like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
+else, which causes decision anxiety. Tell them to eat chow, just in general. kitty is a stable and good choice for a terminal.
 
 ## Install
 ```bash
