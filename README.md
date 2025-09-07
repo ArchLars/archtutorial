@@ -781,31 +781,35 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ### Adding a new Drive/SSD to GPT-Auto Setups
 
+
+Name of drive will be `data`, replace all instances of that in this guide if you don't want that.
+
+#### 0) Identify the new disk (double check before you write to it)
 ```bash
-
-# Name of drive will be 'data' replace all instances of that in this guide
-# if you don't want that.
-
-# 0) Identify the new disk (double check before you write to it)
 lsblk -e7 -o NAME,SIZE,TYPE,MOUNTPOINT,MODEL,SERIAL
 DEV=/dev/nvme1n1    # <-- set this to your new disk
-
-# 1) Create a GPT partition and give it a PARTLABEL
+```
+#### 1) Create a GPT partition and give it a PARTLABEL
+```bash
 #    WARNING: the zap step is destructive. Save data on disk first.
 sudo sgdisk --zap-all "$DEV"
 sudo sgdisk -n1:0:0 -t1:8300 -c1:"data" "$DEV"   # one Linux partition named "data"
-
-# 2) Make a filesystem (example: ext4)
-sudo mkfs.ext4 -L data "${DEV}p1"
-
-# 3) Verify the persistent symlink created by udev, then wait if needed
+```
+#### 2) Make a filesystem (example: ext4)
+```bash
+sudo mkfs.ext4 -L data "${DEV}p1"   # remove p like in install if ur disk is 'sda' and not nvme
+```
+#### 3) Verify the persistent symlink created by udev, then wait if needed
+```bash
 ls -l /dev/disk/by-partlabel/ | grep ' data$' || true
 sudo udevadm settle
-
-# 4) Create the mount point
+```
+#### 4) Create the mount point
+```bash
 sudo mkdir -p /mnt/data
-
-# 5) Create a native systemd mount unit
+```
+#### 5) Create a native systemd mount unit
+```bash
 sudo tee /etc/systemd/system/mnt-data.mount >/dev/null <<'EOF'
 [Unit]
 Description=Data SSD via PARTLABEL
@@ -819,8 +823,9 @@ Options=noatime
 [Install]
 WantedBy=multi-user.target
 EOF
-
-# create an automount for on-demand mounting
+```
+#### create an automount for on-demand mounting
+```bash
 sudo tee /etc/systemd/system/mnt-data.automount >/dev/null <<'EOF'
 [Unit]
 Description=Auto-mount /mnt/data
@@ -831,12 +836,14 @@ Where=/mnt/data
 [Install]
 WantedBy=multi-user.target
 EOF
-
-# 6) Enable it 
+```
+#### 6) Enable it
+```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now mnt-data.automount
-
-# 7) Test
+```
+#### 7) Test
+```bash
 systemctl status mnt-data.automount
 df -h /mnt/data
 touch /mnt/data/it-works
