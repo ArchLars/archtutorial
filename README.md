@@ -94,7 +94,7 @@ If you use an English lang keyboard you can ignore all of it, but it's worth kno
 ---
 
 
-### TUTORIAL PROPER - Non-HTML Version
+### TUTORIAL PROPER
 
 **GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
 
@@ -249,20 +249,19 @@ EDITOR=nano visudo
 
 ## 4.6 Install Desktop Environment and Drivers
 
-```bash
-# Update package database
-pacman -Syu
-```
+---
 
-### About the packages.
+## About the packages (Skip down if you don't care):
 I have taken the liberty to make some decisions for the packages you will install, some of them are technically "optional" but
 all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats.
 
 
-## pkgstats 
+### pkgstats 
 pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
 It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
-prioritize and other things. Most people reveal more about their system voluntarily in ways that help nobody so this is not a problem.
+prioritize and other things. 
+
+Most people reveal more about their system voluntarily in ways that help nobody so this is not a problem.
 If you are very paranoid you can leave this one out and not enable the timer of it at the end. I included it however because
 I use it and I also try to help out wherever I can personally. I send most information to KDE in crash reports as well. I would like to
 promote such an attitude to anyone else in FOSS which has become more & more ungrateful and entitled over the years.
@@ -270,12 +269,20 @@ promote such an attitude to anyone else in FOSS which has become more & more ung
 ## kitty 
 kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
 It allows you to zoom in by pressing CTRL + SHIFT and + and zoom out by CTRL + SHIFT and - ' it doesn't look terrible like some terminals do.
-I install konsole as well for backup, but it's mostly not necessary because kitty is very good. If you had an opinion of using another terminal then you 
-probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people
-like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
+I install konsole as well for backup, but it's mostly not necessary because kitty is very good. 
+
+If you had an opinion of using another terminal then you probably don't need this tutorial in the first place, but if you are new and you just don't care, then I get you. I don't either, and for people like us kitty is the best option. A lot of nerds like to debate for hours over this crap and they will try to FOMO you into using something 
 else, which causes decision anxiety. Tell them to eat chow, y'know, just in general. kitty is a great, stable and good choice for a terminal.
 
-## Install
+---
+
+# Install the packages
+
+```bash
+# Update package database
+pacman -Syu
+```
+
 ```bash
 pacman -S --needed \
   networkmanager reflector \
