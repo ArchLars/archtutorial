@@ -441,9 +441,9 @@ reboot
 # Navigate to Colors & Themes -> Login Screen (SDDM) -> then select "Breeze" and hit Apply
 # It will then have applied it and on next reboot and others after it will persist
 # 
-# This is also the way to fix if Breeze panel appears on the wrong monitor, simply go to Global Theme
+# This is also the way to fix if the taskbar (panel) appears on the wrong monitor, simply go to Global Theme
 # Press Breeze or Breeze-Dark, select BOTH checkboxes and hit apply. Wait and then it will correctly apply
-# This will then persist on reboots as well
+# This will also persist on reboots as well. Two odd bugs I've ran into but not something that persists afterwards.
 ```
 
 ## Post-Installation Verification
