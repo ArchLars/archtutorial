@@ -163,9 +163,8 @@ reflector \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist
 ```
-### then Install Linux! 
 
-This is where the fun begins:
+and then install the base of Arch Linux! :
 
 ```bash
 #
@@ -182,7 +181,9 @@ pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 ### 4.1 Enter the New System
 
 ```bash
-# Before you can say you've installed arch you need to configure something
+# Howeever before you can say you've installed arch you need to configure the system
+# This is how you chroot into your newly installed system:
+#
 arch-chroot /mnt
 ```
 
