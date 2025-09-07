@@ -305,7 +305,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils terminus-font pkgstats hunspell hunspell-en_us  \
-  pacman-contrib git wget \
+  pacman-contrib git wget ttf-dejavu \
   base-devel
   
 ```
@@ -469,7 +469,7 @@ swapon --show
 
 ---
 
-# Post-Install Tutorial
+# OPTIONAL: Post-Install Tutorial
 
 ## 1 · Update Base System
 
@@ -520,7 +520,7 @@ Basic packages:
 # mainly good stuff to have.
 yay -S --needed --noconfirm firefox informant nohang-git \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
-noto-fonts-cjk noto-fonts-extra ttf-dejavu systemd-timer-notify \
+noto-fonts-cjk noto-fonts-extra systemd-timer-notify \
 python-pip kdeconnect journalctl-desktop-notification
 
 ```
