@@ -490,13 +490,15 @@ sudo pacman -Syu
 ## 2 · Install AUR Helper (yay)
 
 ### 2.1 Prerequisites
-```bash
-# Launch Kitty
-Click the application launcher on bottom left of the panel, and launch the program
-titled: "kitty"
+
+#### Launch Kitty
+Open the application launcher located on the bottom left of the panel
+Navigate to the "System" submenu, then locate & launch the program entitled: `kitty`
 
 # Essential build tools, you already installed these during install but just to be sure
-sudo pacman -S --needed base-devel git
+```bash
+sudo pacman -S --needed base-devel git  # when you run pacman -S with the --needed flag it will skip
+                                        # installing any package that is already on the system.
 ```
 
 ### 2.2 Build and install yay
