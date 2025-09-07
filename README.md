@@ -67,7 +67,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - zswap
 - EXT4 for `/` and `/home`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open-dkms`)
-- Plymouth which is for loading screen, it's optional but I prefer it personally.
+
 
 modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS SUPER OPINIONATED, FOLLOW BY OWN VOLITION.
 
@@ -273,9 +273,6 @@ kitty is a terminal that I think is the best sort of default terminal on Linux. 
 It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
 konsole is included as a backup.
 
-### plymouth & plymouth-kcm
-plymouth adds a loading screen to your arch box with a spinner. you can customize it too. for most systems this is the default and preferable for users which is why I am including it. We will be making the LTS kernel not have it enabled if we need to troubleshoot booting. However this one is optional, you don't really need it. plymouth-kcm adds functionality for KDE Plasma settings to be able to change the themes of your loading.
-
 ---
 
 ## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
@@ -308,7 +305,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils terminus-font pkgstats hunspell hunspell-en_us  \
-  pacman-contrib git wget plymouth plymouth-kcm \
+  pacman-contrib git wget \
   base-devel
   
 ```
@@ -325,8 +322,6 @@ nano /etc/mkinitcpio.conf
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
 # If you do not remove udev and add systemd your system will not boot.
-
-# Add 'plymouth' at the end of HOOKS=() if you want plymouth.
 # Regenerate initramfs
 mkinitcpio -P
 ```
@@ -349,13 +344,12 @@ EOF
 bootctl list
 
 # Create boot entry for main kernel. noatime is a standard optimization for EXT4 partitions.
-# quiet, splash and plymouth.use-simpledrm makes plymouth work, remove if you don't need it.
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
-options rw quiet splash rootflags=noatime plymouth.use-simpledrm
+options rw rootflags=noatime
 EOF
 
 # Create boot entry for LTS kernel backup
@@ -365,7 +359,7 @@ title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
-options rw rootflags=noatime plymouth.enable=0 disablehooks=plymouth
+options rw rootflags=noatime
 EOF
 
 # Update boot entries
@@ -524,7 +518,7 @@ fastfetch # then run fastfetch          # -the endless questions if you want to 
 ```
 Basic packages:
 ```bash
-# mainly desktop apps and codecs, stuff good to have.
+# mainly good stuff to have.
 yay -S --needed --noconfirm firefox informant nohang-git \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra ttf-dejavu systemd-timer-notify \
