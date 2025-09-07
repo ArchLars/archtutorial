@@ -321,6 +321,7 @@ nano /etc/mkinitcpio.conf
 # Remove 'kms' from HOOKS=() also if you use nvidia
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
+# Add microcode to HOOKS=()
 # If you do not remove udev and add systemd your system will not boot.
 # Regenerate initramfs
 mkinitcpio -P
@@ -347,7 +348,6 @@ bootctl list
 cat << EOF > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-zen
-initrd  /amd-ucode.img
 initrd  /initramfs-linux-zen.img
 options rw rootflags=noatime
 EOF
@@ -356,7 +356,6 @@ EOF
 cat << EOF > /boot/loader/entries/arch-lts.conf
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
-initrd  /amd-ucode.img
 initrd  /initramfs-linux-lts.img
 options rw rootflags=noatime
 EOF
