@@ -782,16 +782,18 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 ### Adding a new Drive/SSD to GPT-Auto Setups
 
 ```bash
+
+# Name of drive will be 'data' replace all instances of that in this guide
+# if you don't want that.
+
 # 0) Identify the new disk (double check before you write to it)
 lsblk -e7 -o NAME,SIZE,TYPE,MOUNTPOINT,MODEL,SERIAL
 DEV=/dev/nvme1n1    # <-- set this to your new disk
 
 # 1) Create a GPT partition and give it a PARTLABEL
-#    WARNING: the zap step is destructive. Skip it if you need data.
+#    WARNING: the zap step is destructive. Save data on disk first.
 sudo sgdisk --zap-all "$DEV"
 sudo sgdisk -n1:0:0 -t1:8300 -c1:"data" "$DEV"   # one Linux partition named "data"
-# Alternative using parted:
-# sudo parted -s "$DEV" mklabel gpt mkpart data ext4 0% 100% name 1 data
 
 # 2) Make a filesystem (example: ext4)
 sudo mkfs.ext4 -L data "${DEV}p1"
@@ -800,10 +802,10 @@ sudo mkfs.ext4 -L data "${DEV}p1"
 ls -l /dev/disk/by-partlabel/ | grep ' data$' || true
 sudo udevadm settle
 
-# 4) Create the mount point (must be a real directory, not a symlink)
+# 4) Create the mount point
 sudo mkdir -p /mnt/data
 
-# 5) Create a native systemd mount unit (keeps fstab empty)
+# 5) Create a native systemd mount unit
 sudo tee /etc/systemd/system/mnt-data.mount >/dev/null <<'EOF'
 [Unit]
 Description=Data SSD via PARTLABEL
@@ -818,7 +820,7 @@ Options=noatime
 WantedBy=multi-user.target
 EOF
 
-# Optional: create an automount for on-demand mounting
+# create an automount for on-demand mounting
 sudo tee /etc/systemd/system/mnt-data.automount >/dev/null <<'EOF'
 [Unit]
 Description=Auto-mount /mnt/data
@@ -830,7 +832,7 @@ Where=/mnt/data
 WantedBy=multi-user.target
 EOF
 
-# 6) Enable it (use the .automount, or the .mount if you prefer always-on)
+# 6) Enable it 
 sudo systemctl daemon-reload
 sudo systemctl enable --now mnt-data.automount
 
