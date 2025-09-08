@@ -711,14 +711,6 @@ yay -S --needed --noconfirm steam
 steam
 ```
 
-### 4.3 Ensure you have the 32-bit runtimes
-```bash
-# Some extra lib32 stuff for other games
-yay -S --needed --noconfirm \
-  lib32-sdl2-compat \
-  lib32-sdl2_mixer lib32-sdl2_ttf
-```
-
 ---
 
 ## 5 · Maintenance hooks
