@@ -118,6 +118,8 @@ timedatectl set-ntp true
 Create a GPT partition table with three partitions AFTER checking your drive name with `lsblk -l` :
 
 ```bash
+lsblk -l  # To confirm, replace if it says anything else
+
 sgdisk --zap-all /dev/nvme0n1
 
 sgdisk -n1:0:+1G -t1:EF00 -c1:"EFI system" /dev/nvme0n1
@@ -136,7 +138,7 @@ I won't do a swap partition, don't need hibernation personally. If you do you wi
 Create filesystems and mount them in the correct order:
 
 ```bash
-# Format partitions
+# Format partitions, if you are not using nvme, you remove the 'p' from formatting
 d=/dev/nvme0n1
 mkfs.fat -F32 -n EFI ${d}p1
 mkfs.ext4 -L root ${d}p2
