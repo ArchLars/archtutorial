@@ -563,9 +563,9 @@ source ~/.zshrc
 #
 ```
 
-### Fix those annoying 'missing firmware' warnings in mkinitcpio
+### How to fix those annoying 'missing firmware' warnings in mkinitcpio
 
-## 1) Find the module names that warn (no pipes)
+#### 0) Find the module names that warn
 
 ```bash
 # Everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
@@ -577,15 +577,12 @@ source ~/.zshrc
 sudo mkinitcpio -P
 ```
 
-```bash
-## 1) Create a tiny helper that makes clearly labeled dummy firmware files
-sudo nano /usr/local/sbin/mkinitcpio-make-dummy-fw
-```
-
+#### 1) Copy my script, which is a tiny helper that identifies the firmware
 ```bash
 sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
 ```
 
+#### 1.5) The script
 ```bash
 # ----- /usr/local/sbin/mkinitcpio-silence-missing-fw -----
 #!/usr/bin/env bash
@@ -602,7 +599,6 @@ Usage:
   mkinitcpio-silence-missing-fw         Run mkinitcpio, detect modules that warn, create dummy firmware only for those modules not in use.
   mkinitcpio-silence-missing-fw --undo  Remove only the dummy firmware files previously created by this tool.
 Notes:
-  - No AUR packages. Future new warnings are unaffected.
   - A module that is currently loaded is skipped.
   - Undo is safe, it only deletes files containing the marker string.
 USAGE
@@ -715,39 +711,37 @@ case "${1:-}" in
   *) create_from_warnings ;;
 esac
 ```
-
+#### 2) Make it executable
 ```bash
-## 2) Make it executable
 sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
 ```
-
+#### 3) Run it to silence only the modules that warned on your machine
 ```bash
-## 3) Run it to silence only the modules that warned on your machine
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
 sudo mkinitcpio -P
 ```
 
+#### 4) If you ever add hardware that needs real firmware (undo)
 ```bash
-## 4) If you ever add hardware that needs real firmware (undo)
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
 sudo mkinitcpio -P
 ```
 
+#### 5) Generate the dummies for only the modules you listed, then rebuild initramfs
 ```bash
-## 5) Generate the dummies for only the modules you listed, then rebuild initramfs
 sudo /usr/local/sbin/mkinitcpio-make-dummy-fw
 sudo mkinitcpio -P
 ```
 
+#### 6) Undo later if you add hardware that needs the real firmware
 ```bash
-## 6) Undo later if you add hardware that needs the real firmware
 # This removes only files created by the tool, then rebuilds.
 sudo /usr/local/sbin/mkinitcpio-make-dummy-fw --undo
 sudo mkinitcpio -P
 ```
 
+#### Tips
 ```bash
-## Tips
 # - To see what firmware names a module expects before adding it to the list:
 #     modinfo -F firmware <module>
 # - If a warning only appears while building the fallback image and you do not use that hardware,
