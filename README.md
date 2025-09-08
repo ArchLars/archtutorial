@@ -332,11 +332,11 @@ mkinitcpio -P
 
 ```bash
 # Install systemd-boot
-bootctl install
+bootctl install --variables=yes
 
 # Configure bootloader
 cat << EOF > /boot/loader/loader.conf
-default arch
+default arch.conf
 timeout 10
 console-mode auto
 editor no
@@ -388,9 +388,7 @@ WantedBy=swap.target
 ```
 then:
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now swapfile.swap
-sudo swapon --show
+sudo systemctl enable swapfile.swap
 ```
 
 Optimizations for swap use:
