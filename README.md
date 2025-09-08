@@ -512,8 +512,8 @@ makepkg -si
 cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test | NOTE: Whenever you run any 'yay' command, do not use 'sudo' before it. it will warn you but FYI.
-yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms- 
-fastfetch # then run fastfetch          # -the endless questions if you want to install something or not.
+yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms the endless questions
+                                          if you want to install something or not.
 ```
 
 ### 2.5 Shell and terminal bliss
@@ -783,9 +783,26 @@ yay -S --needed --noconfirm protonup-qt
 ProtonGE is a good default for a lot of games, works just as well as regular Proton for most games and for other games include 
 propietary codecs and such that Valve cannot package themselves, this helps with video files and music with odd formats.
 
+
+## Final Reboot
+
+#### Reboot again into new system and you can finally sit back, relax, and use arch btw
+
+```bash
+# reboot
+reboot
+
+# after reboot open kitty (CTRL + ALT + T)
+fastfetch
+
+# press prt scr to take a desktop photo
+# save it
+```
+
+
 ---
 
-## Mini-Tutorial on How to a new Drive/SSD to GPT-Auto Setups:
+# TUTORIAL: How to a new Drive/SSD to GPT-Auto Setups
 
 
 - Name of drive will be `data`, 
@@ -854,15 +871,6 @@ sudo systemctl enable --now mnt-data.automount
 systemctl status mnt-data.automount
 df -h /mnt/data
 touch /mnt/data/it-works
-```
-
-
-## Final Reboot
-
-#### Reboot again into new system and you can finally sit back, relax, and use arch btw
-
-```bash
-reboot
 ```
 
 ---
