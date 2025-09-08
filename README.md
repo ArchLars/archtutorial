@@ -870,11 +870,13 @@ reboot
 
 ```bash
 # Everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
-# but none of these are important, they are ancient. You PROBABLY won't need them.
+# but none of these are important, they are ancient. You probably won't need them.
 #
 # To see them, run this, and you'll see multiple lines ala:
 # "Possibly missing firmware for module: qla2xxx"
-# IF you are unsure that you might need them you can find a list of them here :
+# IF you are unsure that you might need them or if the ones you are seeing are the ones
+# I am talking about or actual problems, then you can find a list of them here :
+#
 # https://wiki.archlinux.org/title/Mkinitcpio#Possibly_missing_firmware_for_module_XXXX
 #
 sudo mkinitcpio -P
