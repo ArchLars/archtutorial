@@ -1040,12 +1040,14 @@ sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
 #### 3) Run & Undo
 
 ```bash
-## 1) FIRST run this to capture the ancient modules warned on your machine
+## 1) FIRST run this to write the dummies for the ancient modules warned on your machine
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
 
 ## 2) THEN run this to confirm, and you are done
 sudo mkinitcpio -P
 
+# Disclaimer: there is no guarantee that what its writing a dummy for is one of these ancient modules
+# You should confirm with the wiki first before running this script.
 ---
 
 ## 1) If you ever want to undo
