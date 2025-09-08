@@ -575,6 +575,7 @@ source ~/.zshrc
 #
 # To see them, run this, and you'll see multiple lines ala:
 # "Possibly missing firmware for module: qla2xxx"
+# You can find a list of them here : https://wiki.archlinux.org/title/Mkinitcpio#Possibly_missing_firmware_for_module_XXXX
 #
 sudo mkinitcpio -P
 ```
@@ -586,10 +587,12 @@ yay -S --needed --noconfirm mkinitcpio-firmware
 
 #### OPTION B) Copy a script that silences them by making dummy firmware
 ```bash
-# The Arch Wiki recommends writing dummy files manually for them
+# The Arch Wiki recommends instead writing dummy files manually for them
 #
 # I wrote a script that creates harmless dummy firmware files to shut it up
-# It automatically silences the ones on a run with this script enabled
+# It automatically captures the ones on a run with this script
+# then you run mkinitcpio so the images are actually rebuilt
+#
 # First open nano like so, which will create a new file:
 #
 sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
@@ -731,12 +734,16 @@ sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
 #### 3) Run & Undo
 
 ```bash
-## silence only the modules that warned on your machine
+## capture the ancient modules warned on your machine
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
+
+## Run to confirm, and you are done
 sudo mkinitcpio -P
 
 ## If you ever want to undo
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
+
+## And if so, run to confirm.
 sudo mkinitcpio -P
 ```
 
