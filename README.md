@@ -579,8 +579,15 @@ source ~/.zshrc
 sudo mkinitcpio -P
 ```
 
-#### 1) Copy a script that silences them by making dummy firmware
+#### OPTION A) Install all the firmware from the AUR (which will take up space)
 ```bash
+yay -S --needed --noconfirm mkinitcpio-firmware
+```
+
+#### OPTION B) Copy a script that silences them by making dummy firmware
+```bash
+# The Arch Wiki recommends writing dummy files manually for them
+#
 # I wrote a script that creates harmless dummy firmware files to shut it up
 # It automatically silences the ones on a run with this script enabled
 # First open nano like so, which will create a new file:
