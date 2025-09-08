@@ -765,7 +765,7 @@ echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 yay -S --needed --noconfirm protonup-qt
 ```
 
-## Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
+### Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
 
 0. Open up ProtonUp-Qt and install the latest version of Proton GE
 1. Launch Steam and open **Settings → Compatibility**.  
@@ -794,11 +794,12 @@ fastfetch
 
 ---
 
-# TUTORIAL: How to a new Drive/SSD to GPT-Auto Setups
+# TUTORIAL: How to add a new Drive/SSD to GPT-Auto Setups
 
 
 - Name of drive will be `data`, 
-- Replace ALL instances of `data` in this guide if you don't want that.
+- Replace ALL instances of `data` in this guide if you don't want that name for your drive.
+- And by all I mean ALL instances, even in the .mount & .automount files
 
 #### 0) Identify the new disk (double check before you write to it)
 ```bash
@@ -826,7 +827,9 @@ sudo mkdir -p /mnt/data
 ```
 #### 5) Create a native systemd mount unit
 ```bash
-sudo tee /etc/systemd/system/mnt-data.mount >/dev/null <<'EOF'
+sudo nano /etc/systemd/system/mnt-data.mount
+
+# add
 [Unit]
 Description=Data SSD via PARTLABEL
 
@@ -838,11 +841,12 @@ Options=noatime
 
 [Install]
 WantedBy=multi-user.target
-EOF
 ```
-#### create an automount for on-demand mounting
+#### Create an automount for on-demand mounting
 ```bash
-sudo tee /etc/systemd/system/mnt-data.automount >/dev/null <<'EOF'
+sudo nano /etc/systemd/system/mnt-data.automount
+
+# add
 [Unit]
 Description=Auto-mount /mnt/data
 
@@ -851,7 +855,6 @@ Where=/mnt/data
 
 [Install]
 WantedBy=multi-user.target
-EOF
 ```
 #### 6) Enable it
 ```bash
@@ -873,7 +876,7 @@ touch /mnt/data/it-works
 #### 0) Find the module names that warn
 
 ```bash
-# Everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
+# So everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
 # but none of these are important, they are ancient. You probably won't need them.
 #
 # IF you are unsure that you might need them or if the ones you are seeing are the ones
