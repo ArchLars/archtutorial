@@ -511,7 +511,7 @@ cd yay
 makepkg -si
 cd ~ && rm -rf /tmp/yay
 
-yay --version  # quick test
+yay --version  # quick test | NOTE: Whenever you run any 'yay' command, do not use 'sudo' before it. it will warn you but FYI.
 yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms- 
 fastfetch # then run fastfetch          # -the endless questions if you want to install something or not.
 ```
