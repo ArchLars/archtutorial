@@ -563,193 +563,6 @@ source ~/.zshrc
 #
 ```
 
----
-
-# How to fix those annoying 'missing firmware' warnings in mkinitcpio
-
-#### 0) Find the module names that warn
-
-```bash
-# Everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
-# but none of these are important, they are ancient. You won't need them.
-#
-# To see them, run this, and you'll see multiple lines ala:
-# "Possibly missing firmware for module: qla2xxx"
-# You can find a list of them here : https://wiki.archlinux.org/title/Mkinitcpio#Possibly_missing_firmware_for_module_XXXX
-#
-sudo mkinitcpio -P
-```
-
-#### OPTION A) Install all the firmware from the AUR (which will take up space)
-```bash
-yay -S --needed --noconfirm mkinitcpio-firmware
-```
-
-#### OPTION B) Copy a script that silences them by making dummy firmware
-```bash
-# The Arch Wiki recommends instead writing dummy files manually for them
-#
-# I wrote a script that creates harmless dummy firmware files to shut it up
-# It automatically captures the ones on a run with this script
-# then you run mkinitcpio so the images are actually rebuilt
-#
-# First open nano like so, which will create a new file:
-#
-sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
-```
-
-#### 1.5) Then paste the script with CTRL + SHIFT + V
-```bash
-# ----- /usr/local/sbin/mkinitcpio-silence-missing-fw -----
-#!/usr/bin/env bash
-set -euo pipefail
-
-FWROOT="/usr/lib/firmware"
-LIST="/etc/mkinitcpio.local-firmware-ignore"
-MARKER="### mkinitcpio-dummy-fw created, remove if you add matching hardware ###"
-LOG="/var/tmp/mkinitcpio-warnings.$$.log"
-
-usage() {
-  cat <<'USAGE'
-Usage:
-  mkinitcpio-silence-missing-fw         Run mkinitcpio, detect modules that warn, create dummy firmware only for those modules not in use.
-  mkinitcpio-silence-missing-fw --undo  Remove only the dummy firmware files previously created by this tool.
-Notes:
-  - A module that is currently loaded is skipped.
-  - Undo is safe, it only deletes files containing the marker string.
-USAGE
-}
-
-undo() {
-  if [[ ! -f "$LIST" ]]; then
-    echo "Nothing to undo, $LIST not found."
-    exit 0
-  fi
-  while IFS= read -r f; do
-    [[ -z "$f" || ! -e "$f" ]] && continue
-    if grep -q "$MARKER" "$f" 2>/dev/null; then
-      rm -v -- "$f"
-    else
-      echo "Skip non-dummy file: $f"
-    fi
-  done < "$LIST"
-  : > "$LIST"
-  echo "Removed recorded dummy firmware files."
-}
-
-create_from_warnings() {
-  echo "Running mkinitcpio -P to collect warnings..."
-  # Capture both stdout and stderr, do not hard-fail if mkinitcpio returns non-zero
-  if ! mkinitcpio -P >"$LOG" 2>&1; then
-    echo "mkinitcpio exited non-zero. Continuing, warnings were still captured."
-  fi
-
-  # Extract the module names from lines like:
-  # '==> WARNING: Possibly missing firmware for module: 'module_name''
-  declare -A seen=()
-  modules=()
-  while IFS= read -r line; do
-    case "$line" in
-      *"Possibly missing firmware for module"*)
-        m="${line##*: }"                         # keep text after last colon+space
-        # trim leading and trailing whitespace
-        m="${m#"${m%%[![:space:]]*}"}"
-        m="${m%"${m##*[![:space:]]}"}"
-        # strip single or double quotes if present
-        if [[ "$m" == \"*\" && "$m" == *\" ]]; then
-          m="${m:1:${#m}-2}"
-        elif [[ "$m" == \'*\' && "$m" == *\' ]]; then
-          m="${m:1:${#m}-2}"
-        fi
-        if [[ -n "$m" && -z "${seen[$m]+x}" ]]; then
-          seen[$m]=1
-          modules+=("$m")
-        fi
-      ;;
-    esac
-  done < "$LOG"
-
-  if [[ ${#modules[@]} -eq 0 ]]; then
-    echo "No 'Possibly missing firmware' warnings found in this run."
-    echo "Log: $LOG"
-    return 0
-  fi
-
-  echo "Modules with warnings: ${modules[*]}"
-  touch "$LIST"
-
-  make_dummies_for_module() {
-    local module="$1"
-    # Skip if module is actually loaded
-    if lsmod | grep -qw "$module"; then
-      echo "SKIP $module (module is loaded, not creating dummies for hardware in use)"
-      return 0
-    fi
-
-    # Ask the module which firmware names it declares
-    # (modinfo -F firmware prints one filename per line)
-    mapfile -t fws < <(modinfo -F firmware "$module" 2>/dev/null | grep -v '^$' | sort -u)
-    if [[ ${#fws[@]} -eq 0 ]]; then
-      echo "No firmware filenames reported by $module, nothing to create."
-      return 0
-    fi
-
-    for fw in "${fws[@]}"; do
-      target="$FWROOT/$fw"
-      mkdir -p "$(dirname "$target")"
-      if [[ -e "$target" ]]; then
-        echo "Exists: $target, leaving as is."
-        continue
-      fi
-      {
-        echo "$MARKER"
-        echo "Dummy firmware for module $module on $(hostname)."
-        echo "If you later add matching hardware, delete this file and install the proper firmware package."
-      } > "$target"
-      chmod 0644 "$target"
-      echo "$target" >> "$LIST"
-      echo "Created dummy: $target"
-    done
-  }
-
-  for m in "${modules[@]}"; do
-    make_dummies_for_module "$m"
-  done
-
-  echo "Recorded created files in $LIST"
-  echo "Done. You can now rebuild: sudo mkinitcpio -P"
-  echo "Log of the run is at $LOG"
-}
-
-case "${1:-}" in
-  --undo) undo ;;
-  -h|--help) usage ;;
-  *) create_from_warnings ;;
-esac
-```
-#### 2) Make it executable
-```bash
-sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
-```
-#### 3) Run & Undo
-
-```bash
-## 1) capture the ancient modules warned on your machine
-sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
-
-## 2) Run to confirm, and you are done
-sudo mkinitcpio -P
-
----
-
-## 1) If you ever want to undo
-sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
-
-## 2) And if so, run to confirm.
-sudo mkinitcpio -P
-```
----
-
 ## 3 · System Optimisation
 
 ### 3.1 Pacman candy
@@ -1048,5 +861,191 @@ touch /mnt/data/it-works
 reboot
 ```
 
+---
+
+
+# OPTIONAL: How to fix those annoying 'missing firmware' warnings in mkinitcpio
+
+#### 0) Find the module names that warn
+
+```bash
+# Everytime you run mkinicpio -P it warns you about a bunch of "missing firmware" 
+# but none of these are important, they are ancient. You won't need them.
+#
+# To see them, run this, and you'll see multiple lines ala:
+# "Possibly missing firmware for module: qla2xxx"
+# You can find a list of them here : https://wiki.archlinux.org/title/Mkinitcpio#Possibly_missing_firmware_for_module_XXXX
+#
+sudo mkinitcpio -P
+```
+
+#### OPTION A) Install all the firmware from the AUR (which will take up space)
+```bash
+yay -S --needed --noconfirm mkinitcpio-firmware
+```
+
+#### OPTION B) Copy a script that silences them by making dummy firmware
+```bash
+# The Arch Wiki recommends instead writing dummy files manually for them
+#
+# I wrote a script that creates harmless dummy firmware files to shut it up
+# It automatically captures the ones on a run with this script
+# then you run mkinitcpio so the images are actually rebuilt
+#
+# First open nano like so, which will create a new file:
+#
+sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
+```
+
+#### 1.5) Then paste the script with CTRL + SHIFT + V
+```bash
+# ----- /usr/local/sbin/mkinitcpio-silence-missing-fw -----
+#!/usr/bin/env bash
+set -euo pipefail
+
+FWROOT="/usr/lib/firmware"
+LIST="/etc/mkinitcpio.local-firmware-ignore"
+MARKER="### mkinitcpio-dummy-fw created, remove if you add matching hardware ###"
+LOG="/var/tmp/mkinitcpio-warnings.$$.log"
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  mkinitcpio-silence-missing-fw         Run mkinitcpio, detect modules that warn, create dummy firmware only for those modules not in use.
+  mkinitcpio-silence-missing-fw --undo  Remove only the dummy firmware files previously created by this tool.
+Notes:
+  - A module that is currently loaded is skipped.
+  - Undo is safe, it only deletes files containing the marker string.
+USAGE
+}
+
+undo() {
+  if [[ ! -f "$LIST" ]]; then
+    echo "Nothing to undo, $LIST not found."
+    exit 0
+  fi
+  while IFS= read -r f; do
+    [[ -z "$f" || ! -e "$f" ]] && continue
+    if grep -q "$MARKER" "$f" 2>/dev/null; then
+      rm -v -- "$f"
+    else
+      echo "Skip non-dummy file: $f"
+    fi
+  done < "$LIST"
+  : > "$LIST"
+  echo "Removed recorded dummy firmware files."
+}
+
+create_from_warnings() {
+  echo "Running mkinitcpio -P to collect warnings..."
+  # Capture both stdout and stderr, do not hard-fail if mkinitcpio returns non-zero
+  if ! mkinitcpio -P >"$LOG" 2>&1; then
+    echo "mkinitcpio exited non-zero. Continuing, warnings were still captured."
+  fi
+
+  # Extract the module names from lines like:
+  # '==> WARNING: Possibly missing firmware for module: 'module_name''
+  declare -A seen=()
+  modules=()
+  while IFS= read -r line; do
+    case "$line" in
+      *"Possibly missing firmware for module"*)
+        m="${line##*: }"                         # keep text after last colon+space
+        # trim leading and trailing whitespace
+        m="${m#"${m%%[![:space:]]*}"}"
+        m="${m%"${m##*[![:space:]]}"}"
+        # strip single or double quotes if present
+        if [[ "$m" == \"*\" && "$m" == *\" ]]; then
+          m="${m:1:${#m}-2}"
+        elif [[ "$m" == \'*\' && "$m" == *\' ]]; then
+          m="${m:1:${#m}-2}"
+        fi
+        if [[ -n "$m" && -z "${seen[$m]+x}" ]]; then
+          seen[$m]=1
+          modules+=("$m")
+        fi
+      ;;
+    esac
+  done < "$LOG"
+
+  if [[ ${#modules[@]} -eq 0 ]]; then
+    echo "No 'Possibly missing firmware' warnings found in this run."
+    echo "Log: $LOG"
+    return 0
+  fi
+
+  echo "Modules with warnings: ${modules[*]}"
+  touch "$LIST"
+
+  make_dummies_for_module() {
+    local module="$1"
+    # Skip if module is actually loaded
+    if lsmod | grep -qw "$module"; then
+      echo "SKIP $module (module is loaded, not creating dummies for hardware in use)"
+      return 0
+    fi
+
+    # Ask the module which firmware names it declares
+    # (modinfo -F firmware prints one filename per line)
+    mapfile -t fws < <(modinfo -F firmware "$module" 2>/dev/null | grep -v '^$' | sort -u)
+    if [[ ${#fws[@]} -eq 0 ]]; then
+      echo "No firmware filenames reported by $module, nothing to create."
+      return 0
+    fi
+
+    for fw in "${fws[@]}"; do
+      target="$FWROOT/$fw"
+      mkdir -p "$(dirname "$target")"
+      if [[ -e "$target" ]]; then
+        echo "Exists: $target, leaving as is."
+        continue
+      fi
+      {
+        echo "$MARKER"
+        echo "Dummy firmware for module $module on $(hostname)."
+        echo "If you later add matching hardware, delete this file and install the proper firmware package."
+      } > "$target"
+      chmod 0644 "$target"
+      echo "$target" >> "$LIST"
+      echo "Created dummy: $target"
+    done
+  }
+
+  for m in "${modules[@]}"; do
+    make_dummies_for_module "$m"
+  done
+
+  echo "Recorded created files in $LIST"
+  echo "Done. You can now rebuild: sudo mkinitcpio -P"
+  echo "Log of the run is at $LOG"
+}
+
+case "${1:-}" in
+  --undo) undo ;;
+  -h|--help) usage ;;
+  *) create_from_warnings ;;
+esac
+```
+#### 2) Make it executable
+```bash
+sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
+```
+#### 3) Run & Undo
+
+```bash
+## 1) capture the ancient modules warned on your machine
+sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
+
+## 2) Run to confirm, and you are done
+sudo mkinitcpio -P
+
+---
+
+## 1) If you ever want to undo
+sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
+
+## 2) And if so, run to confirm.
+sudo mkinitcpio -P
+```
 ---
 
