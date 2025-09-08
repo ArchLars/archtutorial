@@ -321,9 +321,11 @@ nano /etc/mkinitcpio.conf
 # Remove 'kms' from HOOKS=() also if you use nvidia
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# Add microcode to HOOKS=()
-# Replace keymap and consolefont with sd-vconsole in HOOKS=()
 # If you do not remove udev and add systemd your system will not boot.
+
+# Ensure microcode is in HOOKS=()
+# Replace keymap and consolefont with sd-vconsole in HOOKS=()
+
 # Regenerate initramfs
 mkinitcpio -P
 ```
