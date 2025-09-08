@@ -360,9 +360,6 @@ linux   /vmlinuz-linux-lts
 initrd  /initramfs-linux-lts.img
 options rw rootflags=noatime
 EOF
-
-# Update boot entries
-bootctl update
 ```
 
 ### 4.9 Configure Zswap
