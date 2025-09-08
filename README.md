@@ -565,7 +565,7 @@ source ~/.zshrc
 
 ---
 
-## How to fix those annoying 'missing firmware' warnings in mkinitcpio
+# How to fix those annoying 'missing firmware' warnings in mkinitcpio
 
 #### 0) Find the module names that warn
 
@@ -734,18 +734,21 @@ sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
 #### 3) Run & Undo
 
 ```bash
-## capture the ancient modules warned on your machine
+## 1) capture the ancient modules warned on your machine
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
 
-## Run to confirm, and you are done
+## 2) Run to confirm, and you are done
 sudo mkinitcpio -P
 
-## If you ever want to undo
+---
+
+## 1) If you ever want to undo
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
 
-## And if so, run to confirm.
+## 2) And if so, run to confirm.
 sudo mkinitcpio -P
 ```
+---
 
 ## 3 · System Optimisation
 
