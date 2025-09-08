@@ -407,7 +407,8 @@ sysctl --system
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer pkgstats.timer
+# Include systemd-boot-update.service if you aren't using the hook
+systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer
 ```
 
 ## Step 5: Complete Installation
@@ -536,7 +537,8 @@ nano ~/.zshrc
 
 # You are also going to want to set your name in PROMPT, otherwise it will just be `~`
 # The "PROMPT" below will look like this: [ArchLars], with Arch in Arch blue and Lars in white, same with brackets.
-# The ~ will be in cyan, which is your working directory. This is a fine early profile name. You can make it nicer later.
+# The ~ will be in cyan, which is your working directory.
+# This is a fine early profile name, you can make it nicer later.
 #
 # Replace "Lars" with your own name and add this to the very bottom of ~/.zshrc:
 #
@@ -629,7 +631,7 @@ EOF
 Basic packages:
 ```bash
 # mainly good stuff to have.
-yay -S --needed --noconfirm firefox informant nohang-git \
+yay -S --needed --noconfirm firefox informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra systemd-timer-notify rebuild-detector \
 python-pip kdeconnect journalctl-desktop-notification
@@ -728,9 +730,11 @@ yay -S --needed --noconfirm \
   systemd-boot-pacman-hook
 ```
 
-### Enable Nohang:
+### Install & Enable Nohang:
 ```bash
 # This is an OOM killer. It's VITAL.
+yay -S --needed --noconfirm nohang-git 
+
 # If your system fills up it's swap and RAM then this will terminate offending processes before your system freeze up.
 sudo systemctl enable --now nohang-desktop.service
 ```
@@ -762,7 +766,7 @@ echo "hwdec=auto" > ~/.config/mpv/mpv.conf
 yay -S --needed --noconfirm protonup-qt
 ```
 
-Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
+## Configure Proton GE as the default in Steam after installing Proton GE from ProtonUp-Qt:
 
 0. Open up ProtonUp-Qt and install the latest version of Proton GE
 1. Launch Steam and open **Settings → Compatibility**.  
@@ -774,10 +778,11 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 
 ---
 
-## Adding a new Drive/SSD to GPT-Auto Setups
+## Mini-Tutorial on How to a new Drive/SSD to GPT-Auto Setups:
 
 
-Name of drive will be `data`, replace all instances of that in this guide if you don't want that.
+- Name of drive will be `data`, 
+- Replace ALL instances of `data` in this guide if you don't want that.
 
 #### 0) Identify the new disk (double check before you write to it)
 ```bash
