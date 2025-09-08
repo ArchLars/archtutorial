@@ -372,7 +372,7 @@ mkswap /swapfile
 ```
 edit:
 ```bash
-sudo nano /etc/systemd/system/swapfile.swap
+nano /etc/systemd/system/swapfile.swap
 ```
 and add:
 ```ini
@@ -388,19 +388,19 @@ WantedBy=swap.target
 ```
 then:
 ```bash
-sudo systemctl enable swapfile.swap
+systemctl enable swapfile.swap
 ```
 
 Optimizations for swap use:
 
 ```bash
-sudo tee /etc/sysctl.d/99-zswap.conf >/dev/null << 'EOF'
+tee /etc/sysctl.d/99-zswap.conf >/dev/null << 'EOF'
 vm.swappiness = 100
 vm.page-cluster = 0
 vm.watermark_boost_factor = 0
 vm.watermark_scale_factor = 125
 EOF
-sudo sysctl --system
+sysctl --system
 ```
 
 ### 4.10 Enable Essential Services
