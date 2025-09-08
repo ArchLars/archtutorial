@@ -900,22 +900,23 @@ sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
 #### 1.5) Then paste the script with CTRL + SHIFT + V
 ```bash
 # ----- /usr/local/sbin/mkinitcpio-silence-missing-fw -----
-#!/usr/bin/env bash
+##!/usr/bin/env bash
 set -euo pipefail
 
 FWROOT="/usr/lib/firmware"
 LIST="/etc/mkinitcpio.local-firmware-ignore"
 MARKER="### mkinitcpio-dummy-fw created, remove if you add matching hardware ###"
 LOG="/var/tmp/mkinitcpio-warnings.$$.log"
+HOST="$(uname -n 2>/dev/null || echo unknown-host)"
 
 usage() {
   cat <<'USAGE'
 Usage:
-  mkinitcpio-silence-missing-fw         Run mkinitcpio, detect modules that warn, create dummy firmware only for those modules not in use.
+  mkinitcpio-silence-missing-fw         Run mkinitcpio, show output live, detect modules that warn, create dummy firmware only for those modules not in use.
   mkinitcpio-silence-missing-fw --undo  Remove only the dummy firmware files previously created by this tool.
 Notes:
-  - A module that is currently loaded is skipped.
-  - Undo is safe, it only deletes files containing the marker string.
+  - Future new warnings remain visible, this only touches modules found in this run.
+  - Modules currently loaded are skipped.
 USAGE
 }
 
@@ -936,30 +937,39 @@ undo() {
   echo "Removed recorded dummy firmware files."
 }
 
+# Try modinfo with common dash/underscore variants
+get_fw_list() {
+  local m="$1"
+  # print unique non-empty firmware paths to stdout
+  for name in "$m" "${m//-/_}" "${m//_/-}"; do
+    if mapfile -t _x < <(modinfo -F firmware "$name" 2>/dev/null); then
+      printf '%s\n' "${_x[@]}" | sed '/^$/d' | sort -u
+      return 0
+    fi
+  done
+  return 1
+}
+
 create_from_warnings() {
-  echo "Running mkinitcpio -P to collect warnings..."
-  # Capture both stdout and stderr, do not hard-fail if mkinitcpio returns non-zero
-  if ! mkinitcpio -P >"$LOG" 2>&1; then
-    echo "mkinitcpio exited non-zero. Continuing, warnings were still captured."
+  echo "Running mkinitcpio -P (output will be shown and logged to $LOG)..."
+  set +e
+  mkinitcpio -P 2>&1 | tee "$LOG"
+  status=${PIPESTATUS[0]}
+  set -e
+  if [[ $status -ne 0 ]]; then
+    echo "mkinitcpio exited with status $status, continuing (warnings were captured)."
   fi
 
-  # Extract the module names from lines like:
-  # '==> WARNING: Possibly missing firmware for module: 'module_name''
+  # Extract module names from warning lines
   declare -A seen=()
   modules=()
   while IFS= read -r line; do
     case "$line" in
       *"Possibly missing firmware for module"*)
-        m="${line##*: }"                         # keep text after last colon+space
-        # trim leading and trailing whitespace
-        m="${m#"${m%%[![:space:]]*}"}"
-        m="${m%"${m##*[![:space:]]}"}"
-        # strip single or double quotes if present
-        if [[ "$m" == \"*\" && "$m" == *\" ]]; then
-          m="${m:1:${#m}-2}"
-        elif [[ "$m" == \'*\' && "$m" == *\' ]]; then
-          m="${m:1:${#m}-2}"
-        fi
+        m="${line##*: }"
+        m="${m#"${m%%[![:space:]]*}"}"; m="${m%"${m##*[![:space:]]}"}"
+        [[ "$m" == \"*\" && "$m" == *\" ]] && m="${m:1:${#m}-2}"
+        [[ "$m" == \'*\' && "$m" == *\' ]] && m="${m:1:${#m}-2}"
         if [[ -n "$m" && -z "${seen[$m]+x}" ]]; then
           seen[$m]=1
           modules+=("$m")
@@ -977,20 +987,17 @@ create_from_warnings() {
   echo "Modules with warnings: ${modules[*]}"
   touch "$LIST"
 
-  make_dummies_for_module() {
-    local module="$1"
-    # Skip if module is actually loaded
+  for module in "${modules[@]}"; do
+    # Skip if the module is actually in use
     if lsmod | grep -qw "$module"; then
-      echo "SKIP $module (module is loaded, not creating dummies for hardware in use)"
-      return 0
+      echo "SKIP $module (module is loaded, will not create dummies for hardware in use)"
+      continue
     fi
 
-    # Ask the module which firmware names it declares
-    # (modinfo -F firmware prints one filename per line)
-    mapfile -t fws < <(modinfo -F firmware "$module" 2>/dev/null | grep -v '^$' | sort -u)
+    mapfile -t fws < <(get_fw_list "$module" || true)
     if [[ ${#fws[@]} -eq 0 ]]; then
       echo "No firmware filenames reported by $module, nothing to create."
-      return 0
+      continue
     fi
 
     for fw in "${fws[@]}"; do
@@ -1002,22 +1009,18 @@ create_from_warnings() {
       fi
       {
         echo "$MARKER"
-        echo "Dummy firmware for module $module on $(hostname)."
+        echo "Dummy firmware for module $module on $HOST."
         echo "If you later add matching hardware, delete this file and install the proper firmware package."
       } > "$target"
       chmod 0644 "$target"
       echo "$target" >> "$LIST"
       echo "Created dummy: $target"
     done
-  }
-
-  for m in "${modules[@]}"; do
-    make_dummies_for_module "$m"
   done
 
   echo "Recorded created files in $LIST"
   echo "Done. You can now rebuild: sudo mkinitcpio -P"
-  echo "Log of the run is at $LOG"
+  echo "Full mkinitcpio output is in: $LOG"
 }
 
 case "${1:-}" in
