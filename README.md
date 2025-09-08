@@ -892,8 +892,8 @@ yay -S --needed --noconfirm mkinitcpio-firmware
 ```bash
 # The Arch Wiki recommends instead writing dummy files manually for them
 #
-# I wrote a script that creates harmless dummy firmware files to shut it up
-# It automatically captures the ones on a run with this script
+# I wrote a script that creates harmless dummy firmware files for you
+# It automatically captures the ones on a single run and then writes dummies for all of them
 # then you run mkinitcpio again to build with the dummies to never see them ever again
 #
 # First open nano like so, which will create a new file:
