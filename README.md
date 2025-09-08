@@ -563,7 +563,9 @@ source ~/.zshrc
 #
 ```
 
-### How to fix those annoying 'missing firmware' warnings in mkinitcpio
+---
+
+## How to fix those annoying 'missing firmware' warnings in mkinitcpio
 
 #### 0) Find the module names that warn
 
@@ -577,12 +579,16 @@ source ~/.zshrc
 sudo mkinitcpio -P
 ```
 
-#### 1) Copy my script, which is a tiny helper that identifies the firmware
+#### 1) Copy a script that silences them by making dummy firmware
 ```bash
+# I wrote a script that creates harmless dummy firmware files to shut it up
+# It automatically silences the ones on a run with this script enabled
+# First open nano like so, which will create a new file:
+#
 sudo nano /usr/local/sbin/mkinitcpio-silence-missing-fw
 ```
 
-#### 1.5) The script
+#### 1.5) Then paste the script with CTRL + SHIFT + V
 ```bash
 # ----- /usr/local/sbin/mkinitcpio-silence-missing-fw -----
 #!/usr/bin/env bash
