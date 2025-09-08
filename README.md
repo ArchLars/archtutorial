@@ -512,8 +512,8 @@ makepkg -si
 cd ~ && rm -rf /tmp/yay
 
 yay --version  # quick test | NOTE: Whenever you run any 'yay' command, do not use 'sudo' before it.
-yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms the endless questions
-                                        # if you want to install something or not.
+yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms the endless
+                                        # questions if you want to install something or not.
 ```
 
 ### 2.5 Shell and terminal bliss
@@ -698,20 +698,27 @@ Include = /etc/pacman.d/mirrorlist
 ```
 Update your system to include multilib:
 ```bash
+#
 # Tip/Fun Fact: You can update your system by just writing 'yay'.
 # This is actually ideal, as pacman -Syu does not update your AUR packages.
 # Try it:
+#
+
 yay
 
-# This is a good time to teach you the habit of running `checkrebuild` after updates.
-# You got this function after installing `rebuild-detector` during a previous step
 #
+# This is a good time to teach you the habit of running `checkrebuild` after updates.
 # 'checkrebuild' checks if you need to rebuild any packages towards new dependencies.
+#
 # If you don't do that when needed, it can lead to instability.
+#
+
 checkrebuild
 
+#
 # usually it doesn't list anything, that means you're good, but if it does you need to run
 # yay  -S <pkg> --rebuild
+#
 ```
 
 ### 4.2.5 Steam
