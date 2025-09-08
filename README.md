@@ -690,24 +690,33 @@ sudo firewall-cmd --permanent --zone=public --add-service=kdeconnect
 sudo firewall-cmd --reload
 ```
 
-### 4.2 Enable multilib
-Uncomment in `/etc/pacman.conf`, then refresh:
+### 4.2 Enable multilib for 32-bit support (pre-Steam)
+Uncomment in `/etc/pacman.conf`:
 ```ini
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 ```
+Update your system to include multilib:
 ```bash
-# Now update your system to include multilib
 # Tip/Fun Fact: You can update your system by just writing 'yay'.
 # This is actually ideal, as pacman -Syu does not update your AUR packages.
 # Try it:
-#
 yay
+
+# This is a good time to teach you the habit of running `checkrebuild` after updates.
+# You got this function after installing `rebuild-detector` during a previous step
+#
+# 'checkrebuild' checks if you need to rebuild any packages towards new dependencies.
+# If you don't do that when needed, it can lead to instability.
+checkrebuild
+
+# usually it doesn't list anything, that means you're good, but if it does you need to run
+# yay  -S <pkg> --rebuild
 ```
 
 ### 4.2.5 Steam
 ```bash
-# DL Steam
+# then after enabling multilib DL Steam
 yay -S --needed --noconfirm steam
 
 # Run Steam in terminal to install it:
