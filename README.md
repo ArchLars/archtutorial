@@ -890,7 +890,7 @@ yay -S --needed --noconfirm mkinitcpio-firmware
 #
 # I wrote a script that creates harmless dummy firmware files to shut it up
 # It automatically captures the ones on a run with this script
-# then you run mkinitcpio so the images are actually rebuilt
+# then you run mkinitcpio again to build with the dummies to never see them ever again
 #
 # First open nano like so, which will create a new file:
 #
