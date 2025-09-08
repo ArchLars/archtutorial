@@ -697,7 +697,10 @@ Uncomment in `/etc/pacman.conf`, then refresh:
 Include = /etc/pacman.d/mirrorlist
 ```
 ```bash
-# Tip/Fun Fact: You can update your system by just writing 'yay'. Try it
+# Now update your system to include multilib
+# Tip/Fun Fact: You can update your system by just writing 'yay'.
+# This is actually ideal, as pacman -Syu does not update your AUR packages.
+# Try it:
 #
 yay
 ```
