@@ -715,37 +715,16 @@ esac
 ```bash
 sudo chmod +x /usr/local/sbin/mkinitcpio-silence-missing-fw
 ```
-#### 3) Run it to silence only the modules that warned on your machine
+#### 3) Run & Undo
+
 ```bash
+## silence only the modules that warned on your machine
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw
 sudo mkinitcpio -P
-```
 
-#### 4) If you ever add hardware that needs real firmware (undo)
-```bash
+## If you ever want to undo
 sudo /usr/local/sbin/mkinitcpio-silence-missing-fw --undo
 sudo mkinitcpio -P
-```
-
-#### 5) Generate the dummies for only the modules you listed, then rebuild initramfs
-```bash
-sudo /usr/local/sbin/mkinitcpio-make-dummy-fw
-sudo mkinitcpio -P
-```
-
-#### 6) Undo later if you add hardware that needs the real firmware
-```bash
-# This removes only files created by the tool, then rebuilds.
-sudo /usr/local/sbin/mkinitcpio-make-dummy-fw --undo
-sudo mkinitcpio -P
-```
-
-#### Tips
-```bash
-# - To see what firmware names a module expects before adding it to the list:
-#     modinfo -F firmware <module>
-# - If a warning only appears while building the fallback image and you do not use that hardware,
-#   ignoring it is acceptable. This tool only silences the exact modules you choose.
 ```
 
 ## 3 · System Optimisation
