@@ -879,6 +879,7 @@ reboot
 #
 # To see them, run this, and you'll see multiple lines ala:
 # "Possibly missing firmware for module: qla2xxx"
+# Write down all you see and confirm that you won't need them.
 #
 sudo mkinitcpio -P
 ```
