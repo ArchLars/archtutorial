@@ -165,10 +165,10 @@ First update mirrorlist for optimal download speeds, obv replace Norway and Germ
 # a "\" and it will run it all as one command, this is good for keeping
 # large commands digestible
 #
-reflector \                                      
-      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # this is a line, press enter
-      --age 12 \   # and it goes to the 2nd line, but with a ">", type out this and press enter with "\"
-      --protocol https \ # same here etc under
+reflector \ # this is a line, press enter                                      
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # and it goes to the 2nd line, do same as first
+      --age 12 \ # same here & etc under  
+      --protocol https \ 
       --sort rate \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist  # then when pressing enter here w/o "\" it will run all the lines
