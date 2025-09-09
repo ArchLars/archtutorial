@@ -493,12 +493,12 @@ sudo pacman -Syu
 
 ### Clear Konsole Global Shortcut and set it to Kitty instead
 
+* System Settings → Shortcuts → Global Shortcuts → search for `konsole`
 * Unbind Konsole from Ctrl+Alt+T
-* System Settings → Shortcuts → Global Shortcuts → search for `konsole` 
-* Clear its shortcut, then hit Apply. 
+* After you clear its shortcut, hit Apply. 
 
 ### Bind Kitty to Ctrl+Alt+T
-* Still in Global Shortcuts, click “Add Application,” pick `kitty`, set the shortcut to `Ctrl+Alt+T`, then Apply.
+* While still in Global Shortcuts, click “Add Application,” pick `kitty`, set the shortcut to `Ctrl+Alt+T`, then Apply.
 * If a conflict dialog appears, choose to reassign.
 * Test it by pressing the shortcut. `kitty` should now launch with it instead of `konsole`
 
