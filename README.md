@@ -565,6 +565,7 @@ PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$)
 # Then reload zshrc like so:
 source ~/.zshrc
 
+#   GUIDE:
 # 
 # - Right arrow: accept a suggestion to autocomplete a command you've run before. 
 #
