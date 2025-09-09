@@ -166,12 +166,12 @@ First update mirrorlist for optimal download speeds, obv replace Norway and Germ
 # large commands digestible
 #
 reflector \                                      
-      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # this is a line
-      --age 12 \   # 2nd line, etc under
-      --protocol https \
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # this is a line, press enter
+      --age 12 \   # and it goes to the 2nd line, but with a ">", type out this and press enter with "\"
+      --protocol https \ # same here etc under
       --sort rate \
       --latest 10 \
-      --save /etc/pacman.d/mirrorlist  # when pressing enter it will run all the lines
+      --save /etc/pacman.d/mirrorlist  # then when pressing enter here w/o "\" it will run all the lines
 ```
 
 and then install the base of Arch Linux! :
@@ -319,7 +319,8 @@ pacman -Syu
 ```
 
 ```bash
-# pipe commands, like before each pipe line until base-devel, press enter and it installs it all
+# pipe commands, like before type out each pipe line, press enter on each until base-devel
+# then when u press enter it installs it all
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
