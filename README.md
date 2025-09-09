@@ -496,6 +496,15 @@ sudo pacman -Syu
 * locate "Terminal Emulator"
 * Set it to `kitty`
 
+### Clear Konsole Global Shortcut and set it to Kitty instead
+
+* Unbind Konsole from Ctrl+Alt+T
+* System Settings → Shortcuts → Global Shortcuts → search for “Konsole” 
+* Clear its shortcut, then Apply. 
+
+* Bind Kitty to Ctrl+Alt+T
+* Still in Global Shortcuts, click “Add Application,” pick “kitty,” set the shortcut to Ctrl+Alt+T, then Apply.
+* If a conflict dialog appears, choose to reassign. KDE’s docs confirm global shortcuts are edited here. 
 
 ### Essential build tools, you already installed these during install but just to be sure
 ```bash
