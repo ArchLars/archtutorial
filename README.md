@@ -484,11 +484,6 @@ sudo pacman -Syu
 
 ### 2.1 Prerequisites
 
-### Launch Kitty
-
-* Open the application launcher located on the bottom left of the panel.
-* Navigate to the "System" submenu, then locate & launch the program entitled: `kitty`
-
 ### Set Kitty as default terminal in KDE:
 
 * Go to System Settings
@@ -506,6 +501,11 @@ sudo pacman -Syu
 * Still in Global Shortcuts, click “Add Application,” pick `kitty`, set the shortcut to `Ctrl+Alt+T`, then Apply.
 * If a conflict dialog appears, choose to reassign.
 * Test it by pressing the shortcut. `kitty` should now launch with it instead of `konsole`
+
+### Launch Kitty
+
+* Either open it with your shortcut, or click the application launcher located on the bottom left of the panel.
+* Navigate to the "System" submenu, then locate & launch the program entitled: `kitty`
 
 ### Essential build tools, you already installed these during install but just to be sure
 ```bash
