@@ -171,6 +171,7 @@ and then install the base of Arch Linux! :
 ```bash
 #
 # IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
+#
 # The reason why is that it provides free, open-source font files that are metrically compatible with
 # proprietary Microsoft fonts. This ensures that documents will render with consistent layout and
 # text appearance across different systems and applications.
@@ -183,7 +184,7 @@ pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 ### 4.1 Enter the New System
 
 ```bash
-# Howeever before you can say you've installed arch you need to configure the system
+# However before you can say you've installed arch you need to configure the system
 # This is how you chroot into your newly installed system:
 #
 arch-chroot /mnt
