@@ -103,10 +103,12 @@ For AMDGPU or Intel GPU you should look either up at the Arch Wiki and replace t
 Set up Norwegian keyboard layout and verify UEFI boot:
 
 ```bash
-# Set Norwegian keyboard layout, each line in these code blocks is a separate line in the terminal FYI
+# Set your keyboard layout, you can skip this is u use a normal keyboard (US)
+# each line in these code blocks is a separate line in the terminal FYI
 loadkeys no-latin1
 
-# Verify UEFI firmware
+# Verify UEFI firmware, write it out and if it says that at the end there
+# then ur good
 ls /sys/firmware/efi/efivars && echo "UEFI firmware detected"
 
 # Sync system clock
@@ -157,19 +159,24 @@ First update mirrorlist for optimal download speeds, obv replace Norway and Germ
 
 ```bash
 # Update mirrorlist before install so you install with fastest mirrors
+#
+# protip "\" is a pipe, it basically is a fancy way to add a space
+# to a bash command, so essentially just write each line until there isnt
+# a "\" and it will run it all as one command, this is good for keeping
+# large commands digestible
+#
 reflector \                                      
-      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \
-      --age 12 \
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # this is a line
+      --age 12 \   # 2nd line, etc under
       --protocol https \
       --sort rate \
       --latest 10 \
-      --save /etc/pacman.d/mirrorlist
+      --save /etc/pacman.d/mirrorlist  # when pressing enter it will run all the lines
 ```
 
 and then install the base of Arch Linux! :
 
 ```bash
-#
 # IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
 #
 # The reason why is that it provides free, open-source font files that are metrically compatible with
@@ -211,32 +218,38 @@ Uncomment: nb_NO.UTF-8 UTF-8 # Optional if you need second language
 locale-gen
 
 # Set system locale
-cat << EOF > /etc/locale.conf
+nano /etc/locale.conf
+
+# add
 LANG=en_US.UTF-8
 LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
-EOF
+
 
 # Set console keymap. This even U.S keyboards has to set!
-cat > /etc/vconsole.conf <<'EOF'
+nano /etc/vconsole.conf
+
+# add
 KEYMAP=no-latin1
 FONT=ter-118n
-EOF
 
 ```
 
 ### 4.4 Set Hostname and Hosts
 
 ```bash
-# Set hostname
+# Set hostname, echo lets you do it quickly w/o using nano
+# good for one line stuff
+#
 echo "BigBlue" > /etc/hostname
 
 # Configure hosts file
-cat << EOF > /etc/hosts
+nano /etc/hosts
+
+# add
 127.0.0.1   localhost
 ::1         localhost
 127.0.1.1   BigBlue.localdomain BigBlue
-EOF
-```
+
 
 ### 4.5 Create User Account
 
@@ -302,6 +315,7 @@ pacman -Syu
 ```
 
 ```bash
+# pipe commands, like before each pipe line until base-devel, press enter and it installs it all
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
@@ -351,20 +365,23 @@ EOF
 bootctl list
 
 # Create boot entry for main kernel. noatime is a standard optimization for EXT4 partitions.
-cat << EOF > /boot/loader/entries/arch.conf
+nano /boot/loader/entries/arch.conf
+
+# add
 title   Arch Linux
 linux   /vmlinuz-linux-zen
 initrd  /initramfs-linux-zen.img
 options rw rootflags=noatime
-EOF
+
 
 # Create boot entry for LTS kernel backup
-cat << EOF > /boot/loader/entries/arch-lts.conf
+nano /boot/loader/entries/arch-lts.conf
+
+# add
 title   Arch Linux (LTS)
 linux   /vmlinuz-linux-lts
 initrd  /initramfs-linux-lts.img
 options rw rootflags=noatime
-EOF
 ```
 
 ### 4.9 Configure Zswap
@@ -399,12 +416,15 @@ systemctl enable swapfile.swap
 Optimizations for swap use:
 
 ```bash
-tee /etc/sysctl.d/99-zswap.conf >/dev/null << 'EOF'
+nano /etc/sysctl.d/99-zswap.conf >/dev/null
+
+# add
 vm.swappiness = 100
 vm.page-cluster = 0
 vm.watermark_boost_factor = 0
 vm.watermark_scale_factor = 125
-EOF
+
+# update the sysctl
 sysctl --system
 ```
 
