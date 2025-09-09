@@ -200,8 +200,12 @@ arch-chroot /mnt
 ### 4.2 Set Timezone
 
 ```bash
-# Set timezone to Oslo (Norway)
-ln -sf /usr/share/zoneinfo/Europe/Oslo /etc/localtime
+# list all timezones
+timedatectl list-timezones
+
+# Set timezone to your own continent and city
+timedatectl set-timezone Europe/Oslo
+
 # Set hardware clock
 hwclock --systohc
 ```
@@ -354,12 +358,13 @@ mkinitcpio -P
 bootctl install --variables=yes
 
 # Configure bootloader
-cat << EOF > /boot/loader/loader.conf
+nano /boot/loader/loader.conf
+
+# add
 default arch.conf
 timeout 10
 console-mode auto
 editor no
-EOF
 
 # Confirm boot entries
 bootctl list
@@ -416,7 +421,7 @@ systemctl enable swapfile.swap
 Optimizations for swap use:
 
 ```bash
-nano /etc/sysctl.d/99-zswap.conf >/dev/null
+nano /etc/sysctl.d/99-zswap.conf
 
 # add
 vm.swappiness = 100
