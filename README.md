@@ -433,8 +433,9 @@ timeout 10
 console-mode auto
 editor no
 auto-entries off
-# optional after mkinitcpio builds your UKIs:
-# default arch-linux-zen.efi
+
+# set default entry
+bootctl set-default arch-zen.conf
 
 # Confirm boot entries
 bootctl list
