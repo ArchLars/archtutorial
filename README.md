@@ -349,7 +349,7 @@ nano /etc/mkinitcpio.conf
 # Replace keymap and consolefont with sd-vconsole in HOOKS=()
 ```
 
-#### 4.8 Install UKIs and Configure Bootloader
+### 4.8 Install UKIs and Configure Bootloader
 
 ```bash
 # Install systemd-boot
@@ -380,6 +380,7 @@ fallback_options="-S autodetect"
 ```
 
 #### Repeat for LTS:
+
 ```bash
 nano /etc/mkinitcpio.d/linux-lts.preset
 
@@ -396,12 +397,14 @@ fallback_options="-S autodetect"
 ```
 
 #### Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
+
 ```bash
 sudo mkdir -p esp/EFI/Linux
 sudo mkinitcpio -P
 ```
 
 #### Configure bootloader
+
 ```bash
 nano /boot/loader/loader.conf
 
