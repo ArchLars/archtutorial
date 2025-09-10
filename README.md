@@ -403,26 +403,6 @@ mkdir -p esp/EFI/Linux
 mkinitcpio -P
 ```
 
-#### Add names for LTS and Zen kernels
-
-```bash
-nano /boot/loader/entries/arch-zen.conf
-
-# arch-zen.conf
-title Arch Linux
-efi   /EFI/Linux/arch-linux-zen.efi
-sort-key arch
-```
-
-```bash
-nano /boot/loader/entries/arch-lts.conf
-
-# arch-lts.conf
-title Arch Linux (LTS)
-efi   /EFI/Linux/arch-linux-lts.efi
-sort-key arch
-```
-
 #### Configure bootloader
 
 ```bash
@@ -432,10 +412,6 @@ nano /boot/loader/loader.conf
 timeout 10
 console-mode auto
 editor no
-auto-entries off
-
-# set default entry
-bootctl set-default arch-zen.conf
 
 # Confirm boot entries
 bootctl list
