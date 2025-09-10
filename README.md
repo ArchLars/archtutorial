@@ -363,8 +363,10 @@ nano /etc/kernel/cmdline
 
 # minimal for gpt auto loader
 rw rootflags=noatime
+```
 
 #### Edit the mkinitcpio presets so they write UKIs to the ESP
+
 ```bash
 nano /etc/mkinitcpio.d/linux-zen.preset
 
