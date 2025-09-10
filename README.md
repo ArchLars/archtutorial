@@ -318,6 +318,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 pacman -Syu
 ```
 
+NVIDIA: 
 ```bash
 # pipe commands, like before type out each pipe line, press enter on each until base-devel
 # then when u press enter it installs it all
@@ -329,7 +330,22 @@ pacman -S --needed \
   nvidia-open-dkms nvidia-utils terminus-font pkgstats hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu \
   base-devel
-  
+```
+
+AMD:
+```bash
+sudo pacman -S --needed \
+  networkmanager reflector \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
+  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  amd-ucode linux-firmware \
+  mesa \
+  vulkan-icd-loader vulkan-radeon \
+  libva libvdpau \
+  terminus-font pkgstats hunspell hunspell-en_us \
+  pacman-contrib git wget ttf-dejavu \
+  base-devel
 ```
 
 
