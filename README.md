@@ -399,8 +399,28 @@ fallback_options="-S autodetect"
 #### Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
 
 ```bash
-sudo mkdir -p esp/EFI/Linux
-sudo mkinitcpio -P
+mkdir -p esp/EFI/Linux
+mkinitcpio -P
+```
+
+#### Add names for LTS and Zen kernels
+
+```bash
+nano /boot/loader/entries/arch-zen.conf
+
+# arch-zen.conf
+title Arch Linux
+efi   /EFI/Linux/arch-linux-zen.efi
+sort-key arch
+```
+
+```bash
+nano /boot/loader/entries/arch-lts.conf
+
+# arch-lts.conf
+title Arch Linux (LTS)
+efi   /EFI/Linux/arch-linux-lts.efi
+sort-key arch
 ```
 
 #### Configure bootloader
@@ -412,6 +432,7 @@ nano /boot/loader/loader.conf
 timeout 10
 console-mode auto
 editor no
+auto-entries off
 # optional after mkinitcpio builds your UKIs:
 # default arch-linux-zen.efi
 
