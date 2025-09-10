@@ -347,9 +347,6 @@ nano /etc/mkinitcpio.conf
 
 # Ensure microcode is in HOOKS=()
 # Replace keymap and consolefont with sd-vconsole in HOOKS=()
-
-# Regenerate initramfs
-mkinitcpio -P
 ```
 
 #### 4.8 Install UKIs and Configure Bootloader
