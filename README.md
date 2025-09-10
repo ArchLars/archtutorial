@@ -352,42 +352,62 @@ nano /etc/mkinitcpio.conf
 mkinitcpio -P
 ```
 
-### 4.8 Install and Configure Bootloader
+### 4.8 Install UKIs and Configure Bootloader
 
 ```bash
 # Install systemd-boot
 bootctl install --variables=yes
 
+# Minimal cmdline with kernel option(s)
+nano /etc/kernel/cmdline
+
+# minimal for gpt auto loader
+rw rootflags=noatime
+
+# Edit the mkinitcpio presets so they write UKIs to the ESP
+nano /etc/mkinitcpio.d/linux-zen.preset
+
+# add the mkinitcpio preset for linux-zen
+ALL_kver="/boot/vmlinuz-linux-zen"
+PRESETS=('default' 'fallback')
+
+#default_image="/boot/initramfs-linux-zen.img"
+default_uki="esp/EFI/Linux/arch-linux-zen.efi"
+
+#fallback_image="/boot/initramfs-linux-zen-fallback.img"
+fallback_uki="esp/EFI/Linux/arch-linux-zen-fallback.efi"
+fallback_options="-S autodetect"
+
+# Repeat for LTS:
+nano /etc/mkinitcpio.d/linux-lts.preset
+
+# mkinitcpio preset for linux-lts
+ALL_kver="/boot/vmlinuz-linux-lts"
+PRESETS=('default' 'fallback')
+
+#default_image="/boot/initramfs-linux-lts.img"
+default_uki="esp/EFI/Linux/arch-linux-lts.efi"
+
+#fallback_image="/boot/initramfs-linux-lts-fallback.img"
+fallback_uki="esp/EFI/Linux/arch-linux-lts-fallback.efi"
+fallback_options="-S autodetect"
+
+# Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
+sudo mkdir -p esp/EFI/Linux
+sudo mkinitcpio -P
+
 # Configure bootloader
 nano /boot/loader/loader.conf
 
 # add
-default arch.conf
 timeout 10
 console-mode auto
 editor no
+# optional after mkinitcpio builds your UKIs:
+# default arch-linux-zen.efi
 
 # Confirm boot entries
 bootctl list
-
-# Create boot entry for main kernel. noatime is a standard optimization for EXT4 partitions.
-nano /boot/loader/entries/arch.conf
-
-# add
-title   Arch Linux
-linux   /vmlinuz-linux-zen
-initrd  /initramfs-linux-zen.img
-options rw rootflags=noatime
-
-
-# Create boot entry for LTS kernel backup
-nano /boot/loader/entries/arch-lts.conf
-
-# add
-title   Arch Linux (LTS)
-linux   /vmlinuz-linux-lts
-initrd  /initramfs-linux-lts.img
-options rw rootflags=noatime
 ```
 
 ### 4.9 Configure Zswap
