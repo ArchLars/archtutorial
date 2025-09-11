@@ -269,10 +269,15 @@ echo "BigBlue" > /etc/hostname
 # Configure hosts file
 nano /etc/hosts
 
-# add
-127.0.0.1   localhost
-::1         localhost
-127.0.1.1   BigBlue.localdomain BigBlue
+## add to /etc/hosts:
+# Standard host addresses
+127.0.0.1 localhost
+::1 localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+# This host address
+127.0.1.1 BigBlue
 ```
 
 ### 4.5 Create User Account
