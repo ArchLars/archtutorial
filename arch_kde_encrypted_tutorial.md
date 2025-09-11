@@ -76,7 +76,7 @@ If you use an English lang keyboard you can ignore all of it, but it's worth kno
 
 **NOTE:** **This tutorial assumes you have a NVME SSD,** which are named `/dev/nvme0n1`. If you don't have that, it's something else. If you don't know, check with `lsblk -l` to see your scheme. It could be `sda` or something else. If it is something else replace all instances of `nvme0n1` and remove the `p` from  `${d}p1` in the formatting.
 
-*Sidenote:* Unless you like the name, replace my hostname (basically the name of your rig) of `BigBlue` with yours, same as my user name `lars` if your name ain't Lars. Though if it is, cool. Hi! I thought about doing placeholders but I feel those are more distracting usually, I prefer to see how something would actually work in a guide, maybe you do as well?
+*Sidenote:* Unless you like the name, replace my hostname (basically the name of your rig) of `BigBlue` with yours. Though note, its generally frowned upon to use "Arch" or "Linux" identifiers in the hostname, use something that doesn't advertise your computer and especially choice of distro for security reasons. That goes same for my user name `lars`, change it if your name ain't Lars. Though if it is, cool. Hi! I thought about doing placeholders but I feel those are more distracting usually, I prefer to see how something would actually work in a guide, maybe you do as well?
 
 
 ## Prerequisites
