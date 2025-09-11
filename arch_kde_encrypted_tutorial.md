@@ -431,7 +431,7 @@ rw rootflags=noatime
 # Signature enforcement is opt-in with module.sig_enforce=1
 # Lockdown can be added via lockdown=integrity if you want that policy as well.
 ## /etc/kernel/cmdline
-rw rootflags=noatime module.sig_enforce=1
+rw rootflags=noatime module.sig_enforce=1 lockdown=integrity
 ```
 
 #### Step 4.7.3 Make the ESP directory
