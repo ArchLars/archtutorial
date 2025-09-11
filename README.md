@@ -401,19 +401,27 @@ nano /etc/kernel/cmdline
 rw rootflags=noatime
 ```
 
+#### Make the ESP directory
+```bash
+# Make ESP directory
+mkdir -p esp/EFI/Linux
+```
+
 #### Edit the mkinitcpio presets so they write UKIs to the ESP
 
 ```bash
+# If you followed where I mounted boot, then this is correct
+# Where we mounted was: /boot/EFI/
+# But if not, modify to where you did
+
 nano /etc/mkinitcpio.d/linux-zen.preset
 
-# add the mkinitcpio preset for linux-zen
+# add the mkinitcpio preset for linux-zen to linux-zen.preset:
 ALL_kver="/boot/vmlinuz-linux-zen"
 PRESETS=('default' 'fallback')
 
-#default_image="/boot/initramfs-linux-zen.img"
 default_uki="esp/EFI/Linux/arch-linux-zen.efi"
 
-#fallback_image="/boot/initramfs-linux-zen-fallback.img"
 fallback_uki="esp/EFI/Linux/arch-linux-zen-fallback.efi"
 fallback_options="-S autodetect"
 ```
@@ -423,14 +431,12 @@ fallback_options="-S autodetect"
 ```bash
 nano /etc/mkinitcpio.d/linux-lts.preset
 
-# mkinitcpio preset for linux-lts
+# mkinitcpio preset for linux-lts to linux-lts.preset:
 ALL_kver="/boot/vmlinuz-linux-lts"
 PRESETS=('default' 'fallback')
 
-#default_image="/boot/initramfs-linux-lts.img"
 default_uki="esp/EFI/Linux/arch-linux-lts.efi"
 
-#fallback_image="/boot/initramfs-linux-lts-fallback.img"
 fallback_uki="esp/EFI/Linux/arch-linux-lts-fallback.efi"
 fallback_options="-S autodetect"
 ```
@@ -438,7 +444,6 @@ fallback_options="-S autodetect"
 #### Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
 
 ```bash
-mkdir -p esp/EFI/Linux
 mkinitcpio -P
 ```
 
