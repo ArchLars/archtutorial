@@ -860,14 +860,24 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 
 ---
 
-# OPTIONAL: Post-Install Tutorial
+# 1) OPTIONAL: Post-Install Tutorial
 Head to `arch_post_tutorial.md` to do the post-install tutorial.
 
 ---
 
-# OPTIONAL: How to fix those annoying 'missing firmware' warnings in mkinitcpio
+# 2) OPTIONAL: How to fix those annoying 'missing firmware' warnings in mkinitcpio
 
 * Whenever you write `mkinitcpio -P` you might notice it keeps warning you about firmware that you are supposedly missing.
 * If this bothers you, check out my tutorial, `mkinitcpio-fix.md` to fix this.
+
+---
+
+# 3) OPTIONAL: Add LXQt with Openbox + picom for a Lightweight backup X11 session
+
+Since X11 has been depreciated with Plasma (though you can still try to use it I wouldn't recc it) 
+I would instead choose to use something like LXQt (which works well with SDDM as well) for your backup
+session with X11.
+
+Head to `lxqt-post-install.md` for this tutorial.
 
 ---
