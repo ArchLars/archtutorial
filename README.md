@@ -381,7 +381,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils libva-nvidia-driver terminus-font pkgstats hunspell hunspell-en_us  \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font pkgstats hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu libva-utils \
   base-devel
 ```
