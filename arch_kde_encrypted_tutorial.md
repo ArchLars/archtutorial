@@ -573,38 +573,8 @@ sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 
 ## Step 7 Package Choice
 
-### Info:
-I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
-all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. 
-
-Here's why I included those:
-
-
-### pkgstats 
-pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
-It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
-prioritize and other things. 
-
-### kitty 
-kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
-It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
-konsole is included as a backup.
-
----
-
-## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
-
-### wireless-regdb
-If you use wireless then an **essential package** is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
-
-### audiocd-kio
-This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. If you are on a laptop with a CD player then you are going to want this.
-
-### libdvdread, libdvdnav, and libdvdcss
-This is the same as above but for DVD playback. This is needed on any DE.
-
-### libbluray, libaacs
-Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
+* I removed `pkgstats` from this install considering the nature of it.
+* Everything else is the same as in `arch_kde_tutorial.md`
 
 ---
 
@@ -635,7 +605,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font pkgstats hunspell hunspell-en_us  \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu libva-utils \
   base-devel
 ```
@@ -651,7 +621,7 @@ sudo pacman -S --needed \
   mesa \
   vulkan-icd-loader vulkan-radeon \
   libva libvdpau libva-utils \
-  terminus-font pkgstats hunspell hunspell-en_us \
+  terminus-font hunspell hunspell-en_us \
   pacman-contrib git wget ttf-dejavu \
   base-devel
 ```
@@ -667,7 +637,7 @@ sudo pacman -S --needed \
   mesa \
   vulkan-icd-loader vulkan-intel \
   libva libva-utils intel-media-driver libvdpau-va-gl \
-  terminus-font pkgstats hunspell hunspell-en_us \
+  terminus-font hunspell hunspell-en_us \
   pacman-contrib git wget ttf-dejavu \
   base-devel
 ```
@@ -804,7 +774,7 @@ GDK_DEBUG=portals
 ```bash
 # Enable network, display manager, and timesyncd
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer \
-reflector.timer pkgstats.timer systemd-boot-update.service
+reflector.timer systemd-boot-update.service
 ```
 
 ## Step 11: Complete Pre-SecureBoot Install
