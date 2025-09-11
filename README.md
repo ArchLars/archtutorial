@@ -56,7 +56,7 @@ Container-Friendly: Tools like systemd-nspawn can automatically set up filesyste
 
 Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
 
-## What we will mainly be using/setting:
+## What I will mainly be using/setting:
 
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
@@ -66,7 +66,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - systemd-boot
 - zswap
 - EXT4 for `/`
-- AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open-dkms`)
+- AMD CPU + NVIDIA GPU (This tutorial is not compatible with older drivers due to dkms. For Turing or later NVIDIA, follow guide by using: `nvidia-open-dkms`)
 
 I included some stuff for AMDGPUs too, but my system is NVIDIA so I may have missed some things.
 
@@ -198,7 +198,7 @@ and then **Install the base of Arch Linux!** :
 # For AMD CPUs:
 pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 
-For Intel CPUs:
+# For Intel CPUs:
 pacstrap /mnt base linux-zen linux-lts linux-firmware intel-ucode nano sudo zsh
 ```
 
