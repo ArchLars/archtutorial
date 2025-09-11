@@ -536,8 +536,11 @@ Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when
 # Enroll your keys, with Microsoft's keys, to the UEFI:
 sbctl enroll-keys -m
 
-# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
-# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
+# For some PCs, for example with a Framework laptop, it is recommended
+# to also include the OEM firmware's built-in certificates.
+#
+# If you want to retain the ability to upgrade the firmware and
+# run others boot applications provided by OEM. In this case run instead:
 sbctl enroll-keys -m -f
 ```
 
