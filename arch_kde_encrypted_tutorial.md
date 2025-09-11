@@ -675,6 +675,7 @@ sudo pacman -S --needed \
   pacman-contrib git wget ttf-dejavu \
   base-devel
 ```
+---
 
 ## Step 8.5, DKMS signing for NVIDIA (certs-local)
 when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
@@ -738,6 +739,7 @@ modinfo -F signer nvidia
 # you can also look for signature messages
 dmesg | grep -i 'module.*sign'
 ```
+---
 
 ### Step 9 Create swap file & Configure Zswap
 
