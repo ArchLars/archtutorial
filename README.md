@@ -356,7 +356,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 pacman -Syu
 ```
 
-***EITHER**
+**EITHER**
 
 NVIDIA: 
 ```bash
