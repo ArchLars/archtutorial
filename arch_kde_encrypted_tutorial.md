@@ -368,222 +368,6 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## Step 6 SecureBoot Install
-  
-```bash
-
-# Exit chroot environment
-exit
-
-# Unmount all partitions
-umount -R /mnt
-
-# Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
-systemctl reboot --firmware-setup
-```
-
-* Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.” Do not enable Secure Boot yet.
-* Boot back into the ArchISO USB.
-
-### Install sbctl and create signing keys
-
-sbctl creates Platform Key, KEK, and db for you. 
-
-```bash
-# chroot back in
-arch-chroot /mnt
-
-# Install sbctl
-pacman -S --needed sbctl
-
-# sanity
-sbctl status    # should say: secure boot disabled, setup mode, etc.
-
-# make a PK/KEK/db set
-sbctl create-keys
-```
-
-### Enroll keys including Microsoft’s
-
-Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
-```bash
-# Enroll your keys, with Microsoft's keys, to the UEFI:
-sbctl enroll-keys -m
-
-# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
-# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
-sbctl enroll-keys -m -f
-```
-
-### Sign the whole boot chain (systemd-boot and UKIs)
-
-Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
-
-1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service. 
-```bash
-# sign the bootloader in its source location
-sbctl sign -s \
-  -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
-  /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-
-# optional: also sign the fallback BOOTX64.EFI if present
-if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
-  sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
-fi
-```
-
-2. Sign the UKIs you generated with mkinitcpio:
-```bash
-# adjust names if you changed them in your presets
-sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
-sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
-```
-
-3. Quick sweep for anything else that needs signing:
-```bash
-# list anything unsigned that sbctl tracks, then sign it
-sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
-```
-
-### Enable Secure Boot and verify
-
-Reboot into firmware, enable Secure Boot
-
-```bash
-# Reboot into the firmware
-systemctl reboot --firmware-setup
-
-# Enable SecureBoot #
-```
-
-Then reboot back into Arch. Verify:
-
-```bash
-sbctl status   # should show: Secure Boot enabled, and files signed
-```
-
-### Enroll TPM2 for LUKS after Secure Boot is active
-* Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
-* The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
-* If SB is off during enrollment, the TPM policy will not match once SB is on.
-* The Arch Wiki explicitly says to enroll TPM after signing and enabling SB.
-* The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor.
-* With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
-
-```bash
-# optional but strongly recommended
-systemd-cryptenroll --recovery-key /dev/nvme0n1p2
-
-# verify a TPM is visible
-systemd-cryptenroll --tpm2-device=list
-
-# enroll TPM2 bound to PCR 7 (SB state). You can add +15 if you want firmware config sensitivity.
-systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
-# or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
-# systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
-```
-
-## 4.5.5 Package Choice
-
-### Info:
-I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
-all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. 
-
-Here's why I included those:
-
-
-### pkgstats 
-pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
-It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
-prioritize and other things. 
-
-### kitty 
-kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
-It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
-konsole is included as a backup.
-
----
-
-## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
-
-### wireless-regdb
-If you use wireless then an **essential package** is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
-
-### audiocd-kio
-This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. If you are on a laptop with a CD player then you are going to want this.
-
-### libdvdread, libdvdnav, and libdvdcss
-This is the same as above but for DVD playback. This is needed on any DE.
-
-### libbluray, libaacs
-Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
-
----
-
-# 4.6 Install the System
-
-```bash
-# Update package database
-pacman -Syu
-
-# Run Reflector again since we rebooted for SecureBoot
-reflector \ # this is a line, press enter                                      
-      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  
-      --age 12 \ 
-      --protocol https \ 
-      --sort rate \
-      --latest 10 \
-      --save /etc/pacman.d/mirrorlist
-```
-
-**EITHER:**
-
-- NVIDIA: 
-```bash
-# pipe commands, like before type out each pipe line, press enter on each until base-devel
-# then when u press enter it installs it all
-pacman -S --needed \
-  networkmanager reflector \
-  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
-  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font pkgstats hunspell hunspell-en_us  \
-  pacman-contrib git wget ttf-dejavu libva-utils \
-  base-devel
-```
-
-- or AMDGPU:
-```bash
-sudo pacman -S --needed \
-  networkmanager reflector \
-  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
-  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  amd-ucode linux-firmware \
-  mesa \
-  vulkan-icd-loader vulkan-radeon \
-  libva libvdpau libva-utils \
-  terminus-font pkgstats hunspell hunspell-en_us \
-  pacman-contrib git wget ttf-dejavu \
-  base-devel
-```
-
-- or Intel GPUs:
-```bash
-sudo pacman -S --needed \
-  networkmanager reflector \
-  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
-  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  linux-firmware \
-  mesa \
-  vulkan-icd-loader vulkan-intel \
-  libva libva-utils intel-media-driver libvdpau-va-gl \
-  terminus-font pkgstats hunspell hunspell-en_us \
-  pacman-contrib git wget ttf-dejavu \
-  base-devel
-```
-
 
 
 ### 4.7 Configure Initramfs
@@ -705,6 +489,184 @@ editor no
 bootctl --esp-path=/efi list
 ```
 
+## SecureBoot Install
+  
+```bash
+
+# Exit chroot environment
+exit
+
+# Unmount all partitions
+umount -R /mnt
+
+# Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
+systemctl reboot --firmware-setup
+```
+
+* Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.” Do not enable Secure Boot yet.
+* Boot back into the ArchISO USB.
+
+### Install sbctl and create signing keys
+
+sbctl creates Platform Key, KEK, and db for you. 
+
+```bash
+# chroot back in
+arch-chroot /mnt
+
+# Install sbctl
+pacman -S --needed sbctl
+
+# sanity
+sbctl status    # should say: secure boot disabled, setup mode, etc.
+
+# make a PK/KEK/db set
+sbctl create-keys
+```
+
+### Enroll keys including Microsoft’s
+
+Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
+```bash
+# Enroll your keys, with Microsoft's keys, to the UEFI:
+sbctl enroll-keys -m
+
+# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
+# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
+sbctl enroll-keys -m -f
+```
+
+### Sign the whole boot chain (systemd-boot and UKIs)
+
+Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
+
+1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service. 
+```bash
+# sign the bootloader in its source location
+sbctl sign -s \
+  -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
+  /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+
+# optional: also sign the fallback BOOTX64.EFI if present
+if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
+  sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
+fi
+```
+
+2. Sign the UKIs you generated with mkinitcpio:
+```bash
+# adjust names if you changed them in your presets
+sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
+sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
+```
+
+3. Quick sweep for anything else that needs signing:
+```bash
+# list anything unsigned that sbctl tracks, then sign it
+sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
+```
+
+## 4.5.5 Package Choice
+
+### Info:
+I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
+all of them are in my opinion essential to the well functioning of a KDE Plasma desktop except for kitty and pkgstats. 
+
+Here's why I included those:
+
+
+### pkgstats 
+pkstats is a super harmless way to help out the Arch developers that work hard and mostly for free to make our wonderful distro.
+It basically just advertises a list of your core and extra packages that you use to them  so they can know what packages to 
+prioritize and other things. 
+
+### kitty 
+kitty is a terminal that I think is the best sort of default terminal on Linux. It's easy to use, GPU accelerated, fast enough and hassle free.
+It allows you to zoom in by pressing `CTRL + SHIFT and +` and zoom out by `CTRL + SHIFT and -` It doesn't look terrible like some terminals do.
+konsole is included as a backup.
+
+---
+
+## **NOT INCLUDED IN THE STEP BUT YOU MAY WANT TO INCLUDE:**
+
+### wireless-regdb
+If you use wireless then an **essential package** is also `wireless-regdb`. It installs regulatory.db, a machine-readable table of Wi-Fi rules per country  that allows you to connect properly. If regulatory.db is missing or cannot be read, Linux falls back to the “world” regdomain 00. That profile is **intentionally conservative,** which means fewer channels and more restrictions. For example, world 00 marks many 5 GHz channels as passive-scan only and limits parts of 2.4 GHz (12–13 passive, 14 effectively off).
+
+### audiocd-kio
+This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and rip audio CDs. Not needed on non-KDE Plasma systems, but KDE has their own thing with this for some reason. If you are on a laptop with a CD player then you are going to want this.
+
+### libdvdread, libdvdnav, and libdvdcss
+This is the same as above but for DVD playback. This is needed on any DE.
+
+### libbluray, libaacs
+Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
+
+---
+
+# 4.6 Install the System
+
+```bash
+# Update package database
+pacman -Syu
+
+# Run Reflector again since we rebooted for SecureBoot
+reflector \ # this is a line, press enter                                      
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  
+      --age 12 \ 
+      --protocol https \ 
+      --sort rate \
+      --latest 10 \
+      --save /etc/pacman.d/mirrorlist
+```
+
+**EITHER:**
+
+- NVIDIA: 
+```bash
+# pipe commands, like before type out each pipe line, press enter on each until base-devel
+# then when u press enter it installs it all
+pacman -S --needed \
+  networkmanager reflector \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
+  plasma-meta dolphin konsole kitty kio-admin \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font pkgstats hunspell hunspell-en_us  \
+  pacman-contrib git wget ttf-dejavu libva-utils \
+  base-devel
+```
+
+- or AMDGPU:
+```bash
+sudo pacman -S --needed \
+  networkmanager reflector \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
+  plasma-meta dolphin konsole kitty kio-admin \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  amd-ucode linux-firmware \
+  mesa \
+  vulkan-icd-loader vulkan-radeon \
+  libva libvdpau libva-utils \
+  terminus-font pkgstats hunspell hunspell-en_us \
+  pacman-contrib git wget ttf-dejavu \
+  base-devel
+```
+
+- or Intel GPUs:
+```bash
+sudo pacman -S --needed \
+  networkmanager reflector \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
+  plasma-meta dolphin konsole kitty kio-admin \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  linux-firmware \
+  mesa \
+  vulkan-icd-loader vulkan-intel \
+  libva libva-utils intel-media-driver libvdpau-va-gl \
+  terminus-font pkgstats hunspell hunspell-en_us \
+  pacman-contrib git wget ttf-dejavu \
+  base-devel
+```
+
 
 ### 4.9 Create swap file & Configure Zswap
 
@@ -783,10 +745,46 @@ exit
 
 # Unmount all partitions
 umount -R /mnt
-
-# Reboot
-reboot
 ```
+
+### Enable Secure Boot and verify
+
+Reboot into firmware, enable Secure Boot
+
+```bash
+# Reboot into the firmware
+systemctl reboot --firmware-setup
+
+# Enable SecureBoot #
+```
+
+Then reboot back into Arch. Verify:
+
+```bash
+sbctl status   # should show: Secure Boot enabled, and files signed
+```
+
+### Enroll TPM2 for LUKS after Secure Boot is active
+* Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
+* The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
+* If SB is off during enrollment, the TPM policy will not match once SB is on.
+* The Arch Wiki explicitly says to enroll TPM after signing and enabling SB.
+* The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor.
+* With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
+
+```bash
+# optional but strongly recommended
+systemd-cryptenroll --recovery-key /dev/nvme0n1p2
+
+# verify a TPM is visible
+systemd-cryptenroll --tpm2-device=list
+
+# enroll TPM2 bound to PCR 7 (SB state). You can add +15 if you want firmware config sensitivity.
+systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
+# or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
+# systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
+```
+
 ---
 
 # OPTIONAL: Post-Install Tutorial
