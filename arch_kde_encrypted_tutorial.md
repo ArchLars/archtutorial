@@ -807,7 +807,8 @@ GDK_DEBUG=portals
 
 ```bash
 # Enable network, display manager, and timesyncd
-systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer systemd-boot-update.service
+systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer \
+reflector.timer pkgstats.timer systemd-boot-update.service
 ```
 
 ## Step 11: Complete Pre-SecureBoot Install
