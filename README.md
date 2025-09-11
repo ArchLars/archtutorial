@@ -379,10 +379,10 @@ NVIDIA:
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils terminus-font pkgstats hunspell hunspell-en_us  \
-  pacman-contrib git wget ttf-dejavu \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver terminus-font pkgstats hunspell hunspell-en_us  \
+  pacman-contrib git wget ttf-dejavu libva-utils \
   base-devel
 ```
 
@@ -391,12 +391,12 @@ or AMDGPU:
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode linux-firmware \
   mesa \
   vulkan-icd-loader vulkan-radeon \
-  libva libvdpau \
+  libva libvdpau libva-utils \
   terminus-font pkgstats hunspell hunspell-en_us \
   pacman-contrib git wget ttf-dejavu \
   base-devel
@@ -407,12 +407,12 @@ or Intel GPUs (I think):
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   linux-firmware \
   mesa \
   vulkan-icd-loader vulkan-intel \
-  libva intel-media-driver libvdpau-va-gl \
+  libva libva-utils intel-media-driver libvdpau-va-gl \
   terminus-font pkgstats hunspell hunspell-en_us \
   pacman-contrib git wget ttf-dejavu \
   base-devel
@@ -580,28 +580,16 @@ vm.watermark_scale_factor = 125
 sysctl --system
 ```
 
-#### Make KDE the first choice for portals, and GTK the fallback
-
-```bash
-# This should in theory push KDE file selectors first
-# But allow for GTK when the KDE portal doesn't work.
-# Emphasis on: In theory.
-#
-nano /etc/xdg-desktop-portal/kde-portals.conf
-
-# kde-portals.conf
-[preferred]
-default=kde;gtk;
-```
-
 #### Force GTK to use Portals
 ```bash
 # This is important for file pickers etc
-# Sometimes programs insist on using the wrong ones.
+# Sometimes programs insist on using the wrong one
+# instead of Dolphin (Your File Manager)
 #
 nano ~/.config/environment.d/gtk-portal.conf
 ```
 ```ini
+# gtk-portal.conf
 GTK_USE_PORTAL=1
 GDK_DEBUG=portals
 ```
@@ -853,7 +841,8 @@ Section "InputClass"
 EndSection
 EOF
 ```
-Basic packages:
+### Install Basic packages:
+
 ```bash
 # essential stuff to have.
 yay -S --needed --noconfirm informant \
@@ -866,7 +855,49 @@ yay -S --needed --noconfirm firefox
 
 # or anything else
 yay -S --needed --noconfirm chromium   # example of "anything else"
+```
 
+### Configuring Firefox:
+
+#### (Optional) - Force Firefox to use Dolphin
+```bash
+# Optional if needed. GDK_DEBUG=portals set earlier should have done it.
+# If not, force Firefox to do it, open about:config and set:
+widget.use-xdg-desktop-portal.file-picker → 1 (always)
+```
+
+#### (Optional) - Add all buttons to Firefox
+```bash
+# Sometimes Firefox does not have the minimize and maximize buttons
+# The only remedy is to install:
+yay -S --needed --noconfirm xdg-desktop-portal-gtk
+```
+
+#### Make Firefox follow your KDE default apps via mimeapps.list on Arch.
+```bash
+# create if not already created
+mkdir -p ~/.local/share/applications
+
+# backup if a real file already exists
+[ -f ~/.local/share/applications/mimeapps.list ] && \
+  mv ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps.list.bak
+
+# symlink
+ln -sf ~/.config/mimeapps.list ~/.local/share/applications/mimeapps.list
+```
+#### Add VA-API to Firefox (GPU accelerated video)
+```bash
+# Confirm VA-API support
+vainfo
+
+# Open up about:config and set:
+media.ffmpeg.vaapi.enabled to true
+```
+
+#### Ensure Firefox media keys dont conflict with Plasma
+```bash
+# open about:config and set
+media.hardwaremediakeys.enabled → false
 ```
 
 ### 3.4 Raise vm.max_map_count (gaming)
