@@ -983,7 +983,7 @@ cat > ~/.config/autostart/picom.desktop << 'EOF'
 Type=Application
 Name=picom
 Comment=X11 compositor
-Exec=picom --config ~/.config/picom/picom.conf --experimental-backends --vsync
+Exec=picom --config ~/.config/picom/picom.conf --vsync
 OnlyShowIn=LXQt;
 X-GNOME-Autostart-enabled=true
 EOF
