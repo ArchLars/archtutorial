@@ -176,24 +176,29 @@ When systemd-gpt-auto-generator detects a partition with type 8304 that contains
 ```bash
 # 1) Set up LUKS2 encryption on the root partition
 # You'll be prompted to enter YES (in capitals) and create a passphrase
-cryptsetup luksFormat --type luks2 /dev/nvme0n1p2
 
-# 1) OPTIONAL: Consider using these LUKS options during format for better SSD performance:
-cryptsetup luksFormat --type luks2 \
-  --cipher aes-xts-plain64 \
-  --key-size 512 \
-  --pbkdf argon2id \
-  --pbkdf-memory 4194304 \
-  --pbkdf-parallel 4 \
-  --use-random \
-  /dev/nvme0n1p2
+# 4K encryption sectors are set at format time and cannot be changed later.
+cryptsetup luksFormat --type luks2 --sector-size 4096 /dev/nvme0n1p2
+
+# Open it and persist the useful runtime flags in the LUKS2 header
+# (these will apply automatically at every boot, including gpt-auto unlock)
+# This creates /dev/mapper/root which we'll format in the next step
+cryptsetup open \
+  --allow-discards \
+  --perf-no_read_workqueue \
+  --perf-no_write_workqueue \
+  --perf-submit_from_crypt_cpus \
+  --persistent \
+  /dev/nvme0n1p2 root
 
 # 2) Verify the LUKS header was created successfully
 cryptsetup luksDump /dev/nvme0n1p2
 
-# 3) Open the encrypted container 
-# This creates /dev/mapper/root which we'll format in the next step
-cryptsetup open /dev/nvme0n1p2 root
+# Optional 'Flags' sanity check specifically
+cryptsetup luksDump /dev/nvme0n1p2 | grep -i '^Flags'
+
+# Show keys check
+dmsetup table /dev/mapper/root --showkeys
 ```
 
 ## Step 2: Format and Mount Partitions
@@ -201,10 +206,13 @@ cryptsetup open /dev/nvme0n1p2 root
 Create filesystems and mount them in the correct order.
 
 We will be mounting EFI at /efi instead of /boot so the kernel
-is also encrypted. In the original tutorial we mounted it 
-on /boot which is fine for a non-encrypted setup but for a
-LUKS setup it leaves the kernel vulnerable to be replaced by
-a malicious actor when outside encrypted space:
+can also be encrypted after we set up our UKIs with SecureBoot 
+and TPM2 is enabled.
+
+In the original tutorial we mounted it on /boot which is fine 
+for a non-encrypted setup but for a LUKS + SecureBoot setup it 
+leaves the kernel vulnerable to be replaced by a malicious actor 
+when outside encrypted space:
 
 ```bash
 # Format partitions
