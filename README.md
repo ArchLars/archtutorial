@@ -356,6 +356,8 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 pacman -Syu
 ```
 
+***EITHER**
+
 NVIDIA: 
 ```bash
 # pipe commands, like before type out each pipe line, press enter on each until base-devel
@@ -370,7 +372,7 @@ pacman -S --needed \
   base-devel
 ```
 
-or for AMDGPU:
+or AMDGPU:
 ```bash
 sudo pacman -S --needed \
   networkmanager reflector \
@@ -386,7 +388,7 @@ sudo pacman -S --needed \
   base-devel
 ```
 
-And finally for Intel GPUs (I think):
+or Intel GPUs (I think):
 ```bash
 sudo pacman -S --needed \
   networkmanager reflector \
