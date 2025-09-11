@@ -541,9 +541,7 @@ sbctl enroll-keys -m -f
 Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
 
 1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service.
-*  The reason why is if you use systemd-boot and systemd-boot-update.service, the boot loader is only updated after a reboot, and the sbctl pacman hook will therefore not sign the new file.
-*  So as a workaround, it can be useful to sign the boot loader directly in /usr/lib/.
-*  A bootctl install and update will automatically recognize and copy .efi.signed files to the ESP if present, instead of the normal .efi file.
+*  The reason why is if you use systemd-boot and systemd-boot-update.service, the boot loader is only updated after a reboot, and the sbctl pacman hook will therefore not sign the new file. So as a workaround, it can be useful to sign the boot loader directly in /usr/lib/. A bootctl install and update will automatically recognize and copy .efi.signed files to the ESP if present, instead of the normal .efi file.
 ```bash
 # sign the bootloader in its source location
 sbctl sign -s \
@@ -556,14 +554,14 @@ if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
 fi
 ```
 
-### Sign the UKIs you generated with mkinitcpio:
+2. Sign the UKIs you generated with mkinitcpio:
 ```bash
 # adjust names if you changed them in your presets
 sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
 sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
 ```
 
-### Quick sweep for anything else that needs signing:
+3.  Quick sweep for anything else that needs signing:
 ```bash
 # list anything unsigned that sbctl tracks, then sign it
 sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
