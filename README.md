@@ -181,10 +181,9 @@ First update mirrorlist for optimal download speeds, obv replace Norway and Germ
 ```bash
 # Update mirrorlist before install so you install with fastest mirrors
 #
-# protip "\" is a pipe, it basically is a fancy way to add a space
-# to a bash command, so essentially just write each line until there isnt
-# a "\" and it will run it all as one command, this is good for keeping
-# large commands digestible
+# PROTIP: "\" is a pipe, it basically is a fancy way to add a space to a bash command.
+# So essentially just write each line until there isnt a "\" and it will run it all as one command.
+# This is good for keeping large commands digestible during install.
 #
 reflector \ # this is a line, press enter                                      
       --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  # and it goes to the 2nd line, do same as first
