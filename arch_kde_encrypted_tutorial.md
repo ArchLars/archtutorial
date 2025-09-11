@@ -1,6 +1,6 @@
-# Complete Arch Linux Tutorial (KDE Plasma + Wayland w/ Automounting Partitions)
+# Complete Arch Linux Tutorial (KDE Plasma + Wayland + LUKS + SecureBoot + TPM2 w/ Automounting Partitions)
 
-This is a Arch installation guide for novices **WITH LUKS encryption and SecureBoot** (More complex) who want a working system to game on that's straight forward, encrypted, with a DE that is most like Windows
+This is a Arch installation guide for novices **WITH LUKS encryption, TPM2 and SecureBoot** (More complex) who want a working secure system to game on that's straight forward, encrypted, with a DE that is most like Windows
 and usually the one most people want to use because of that, at least for their first DE. I've used every DE and WM that is both trendy and some obscure,
 I started with KDE Plasma and Arch Linux. I always come back to both eventually. It's fun to try out new things, but KDE Plasma is OP at the moment I am writing 
 this. It's fully featured, they finally have a good process in eliminating bugs which plagued the DE before, and it's very easy to customize. Most DEs and WMs have
@@ -72,7 +72,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - zsh default shell
 - systemd-boot with UKIs
 - zswap with a 16 GiB swap file
-- Encrypted with LUKS and SecureBoot enabled
+- Encrypted with LUKS and SecureBoot + TPM2 enabled
 - EXT4 for `/`
 - AMD CPU + NVIDIA GPU w/ `nvidia-open-dkms` 
 **NOTE:** This tutorial assumes you have a Turing (NV160/TUXXX) and newer	card for current driver. Check your card first.
@@ -101,16 +101,13 @@ If you use an English lang keyboard you can ignore all of it, but it's worth kno
 
 ### TUTORIAL PROPER
 
-**GPT Auto-Mount + KDE Plasma (Wayland) + NVIDIA**
-
-> **Prerequisites:** This guide assumes you have an AMD processor with NVIDIA graphics. For Intel CPUs, replace `amd-ucode` with `intel-ucode` throughout the installation.
-For AMDGPU or Intel GPU you should look either up at the Arch Wiki and replace the corresponding packages with those. I'd rather not clutter up the guide with a bunch of different setups, especially if I've never used those. It just confuses new users, like placeholders.
+**GPT Auto-Mount + KDE Plasma (Wayland) + LUKS + SecureBoot + TPM2**
 
 
+## Step 0: Boot from ISO with SecureBoot off
 
-## Step 0: Boot from ISO
-
-Set up your keyboard layou if you're not on an US keyboard, and verify UEFI boot:
+* Turn SecureBoot off, Arch’s installer does not boot with SecureBoot. We will set it up only after the install is done at 4.8a.
+* Set up your keyboard layout if you're not on an US keyboard, and verify UEFI boot:
 
 ```bash
 # Set your keyboard layout, you can skip this is u use a normal keyboard (US)
@@ -584,6 +581,7 @@ editor no
 bootctl --esp-path=/efi list
 ```
 
+
 ### 4.9 Create swap file & Configure Zswap
 
 ```bash
@@ -650,8 +648,7 @@ GDK_DEBUG=portals
 
 ```bash
 # Enable network, display manager, and timesyncd
-# Include systemd-boot-update.service here if you aren't planning on using the hook
-systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer
+systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer systemd-boot-update.service
 ```
 
 ## Step 5: Complete Installation
@@ -663,46 +660,102 @@ exit
 # Unmount all partitions
 umount -R /mnt
 
-# Reboot into new system
-reboot
-
-# If you see a very generic type of screen, dont worry. That happens to me on every install.
-#
-# To fix, log in to the system and launch "System Settings" from the Start Menu (Application launcher)
-# 
-# Navigate to Colors & Themes -> Login Screen (SDDM) -> then select "Breeze" and hit Apply
-# It will then have applied it and on next reboot and others after it will persist
-# 
-# This is also the way to fix if the taskbar (panel) appears on the wrong monitor, simply go to Global Theme
-# Press Breeze or Breeze-Dark, select BOTH checkboxes and hit apply. Wait and then it will correctly apply
-# This will also persist on reboots as well. Two odd bugs I've ran into but not something that persists afterwards.
+# Reboot into the firmware
+systemctl reboot --firmware-setup
 ```
 
-## Post-Installation Verification
+### 4.8a, switch firmware to Setup Mode in firmware
 
-After rebooting, verify everything is working correctly:
+* Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
+  
+* Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.”
+  
+* Do not enable Secure Boot yet. Boot back into your just-installed Arch system.
+
+### 4.8b, install sbctl and create signing keys
+
+sbctl creates Platform Key, KEK, and db for you. 
 
 ```bash
-# Check mounted filesystems
-findmnt -o TARGET,SOURCE,FSTYPE | grep -E '/ |/home|/boot'
+pacman -S --needed sbctl
 
+# sanity
+sbctl status    # should say: secure boot disabled, setup mode, etc.
 
-# Check zswap is active
-dmesg | grep -i zswap
-# Expect: "zswap: loaded using pool zstd/zsmalloc"
-cat /sys/module/zswap/parameters/enabled
-cat /sys/module/zswap/parameters/max_pool_percent
-cat /sys/module/zswap/parameters/shrinker_enabled
-swapon --show
+# make a PK/KEK/db set
+sbctl create-keys
 ```
 
-> **Expected Results:**
->
-> * KDE Plasma (Wayland) login screen should appear
-> * Zswap swap active
-> * Auto-mounted root and boot partitions
-> * Network connectivity via NetworkManager
-> * LUKS Encryption with systemd-gpt-auto-generator
+### 4.8c, enroll keys including Microsoft’s
+
+Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
+```bash
+# safest for dual-boot and firmware updates
+sbctl enroll-keys -m -f
+```
+
+### 4.8d, sign the whole boot chain (systemd-boot and UKIs)
+
+Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
+
+1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service. 
+```bash
+# sign the bootloader in its source location
+sbctl sign -s \
+  -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
+  /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+
+# optional: also sign the fallback BOOTX64.EFI if present
+if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
+  sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
+fi
+```
+
+2. Sign the UKIs you generated with mkinitcpio:
+```bash
+# adjust names if you changed them in your presets
+sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
+sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
+```
+
+3. Quick sweep for anything else that needs signing:
+```bash
+# list anything unsigned that sbctl tracks, then sign it
+sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
+```
+
+### 4.8e, enable Secure Boot and verify
+
+Reboot into firmware, enable Secure Boot
+
+```bash
+# Reboot into the firmware
+systemctl reboot --firmware-setup
+
+#Enable SecureBoot
+```
+
+Then reboot back into Arch. Verify:
+
+```bash
+sbctl status   # should show: Secure Boot enabled, and files signed
+```
+
+### Enroll TPM2 for LUKS after Secure Boot is active
+Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state. The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs. If SB is off during enrollment, the TPM policy will not match once SB is on. The Arch Wiki explicitly says to enroll TPM after signing and enabling SB. The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor. With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
+
+```bash
+# optional but strongly recommended
+systemd-cryptenroll --recovery-key /dev/nvme0n1p2
+
+# verify a TPM is visible
+systemd-cryptenroll --tpm2-device=list
+
+# enroll TPM2 bound to PCR 7 (SB state). You can add +15 if you want firmware config sensitivity.
+systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
+# or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
+# systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
+```
 
 ---
 
@@ -713,28 +766,6 @@ swapon --show
 ```bash
 # Bring everything to the latest version
 sudo pacman -Syu
-```
-
----
-
-## 1.5 LUKS Post-Install
-
-#### Optional: Add a Recovery Key
-After installation and first boot, you can add a recovery key:
-
-```bash
-sudo systemd-cryptenroll --recovery-key /dev/nvme0n1p2
-```
-
-#### Optional: TPM2 Auto-Unlock (if you have TPM)
-After setting up Secure Boot, you can enroll TPM to auto-unlock:
-
-```bash
-# Check for TPM
-sudo systemd-cryptenroll --tpm2-device=list
-
-# Enroll TPM (binds to current Secure Boot state)
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 ```
 
 ## 2 · Install AUR Helper (yay)
