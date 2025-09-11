@@ -750,11 +750,17 @@ EOF
 ```
 Basic packages:
 ```bash
-# mainly good stuff to have.
-yay -S --needed --noconfirm firefox informant \
+# essential stuff to have.
+yay -S --needed --noconfirm informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 noto-fonts-cjk noto-fonts-extra systemd-timer-notify rebuild-detector \
 python-pip kdeconnect journalctl-desktop-notification
+
+# browser
+yay -S --needed --noconfirm firefox
+
+# or anything else
+yay -S --needed --noconfirm chromium   # example of "anything else"
 
 ```
 
