@@ -585,11 +585,11 @@ sudo pacman -S --needed base-devel git  # when you run pacman -S with the --need
 
 ### 2.2 Build and install yay
 ```bash
-cd /tmp
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd ~ && rm -rf /tmp/yay
+cd /tmp                                      # go to the temporary directory
+git clone https://aur.archlinux.org/yay.git  # clone the yay pkgbuild from the aur
+cd yay                                       # enter the cloned folder
+makepkg -si                                  # build the package, then install it and deps
+cd ~ && rm -rf /tmp/yay                      # go home, remove the temporary build folder
 
 yay --version  # quick test | NOTE: Whenever you run any 'yay' command, do not use 'sudo' before it.
 yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms the endless
