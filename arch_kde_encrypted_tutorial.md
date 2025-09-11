@@ -687,7 +687,8 @@ sudo pacman -S --needed python-zstandard
 
 ### 8.5.2 Install the certs-local DKMS helpers
 
-After install, those files live under `/usr/src/certs-local`
+`arch-sign-modules` are signed (In Tree & Out of Tree) Kernel Modules for `linux` `linux-lts` `linux-hardened` `linux-zen` `linux-rt` + AUR kernels
+We are using the `linux-zen` and `linux-lts` kernels in this tutorial.
 
 ```bash
 # build from AUR using makepkg (you already have git and base-devel)
