@@ -65,7 +65,7 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - zsh default shell
 - systemd-boot
 - zswap
-- EXT4 for `/` and `/home`
+- EXT4 for `/`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open-dkms`)
 
 
@@ -378,7 +378,8 @@ nano /etc/mkinitcpio.conf
 # Remove 'kms' from HOOKS=() also if you use nvidia, AMDGPU can ignore this however
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# IF you do not remove udev and if you do not replace it with systemd THEN YOUR SYSTEM WILL NOT BOOT
+#
+# NOTE: IF you do not remove udev and if you do not replace it with systemd THEN YOUR SYSTEM WILL NOT BOOT
 # This is the only pitfall with systemd-gpt-autogenerator,
 # so it's worth doublechecking if your system isn't booting post-install
 
@@ -503,7 +504,7 @@ sysctl --system
 
 ```bash
 # Enable network, display manager, and timesyncd
-# Include systemd-boot-update.service if you aren't using the hook
+# Include systemd-boot-update.service here if you aren't planning on using the hook
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer
 ```
 
@@ -539,8 +540,6 @@ After rebooting, verify everything is working correctly:
 # Check mounted filesystems
 findmnt -o TARGET,SOURCE,FSTYPE | grep -E '/ |/home|/boot'
 
-# Verify NVIDIA drivers are loaded
-lsmod | grep nvidia
 
 # Check zswap is active
 dmesg | grep -i zswap
@@ -555,8 +554,7 @@ swapon --show
 >
 > * KDE Plasma (Wayland) login screen should appear
 > * Zswap swap active
-> * Auto-mounted root and home partitions
-> * NVIDIA drivers loaded and functional
+> * Auto-mounted root and boot partitions
 > * Network connectivity via NetworkManager
 
 ---
