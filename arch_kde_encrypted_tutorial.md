@@ -830,6 +830,10 @@ Reboot into firmware, enable Secure Boot
 systemctl reboot --firmware-setup
 
 # Enable SecureBoot #
+1. Turn off Setup Mode
+2. Enable SecureBoot in your BIOS
+3. Remove ArchISO (USB)
+4. Reboot
 ```
 
 * And now you can finally reboot after removing your ArchISO USB into your actual system.
