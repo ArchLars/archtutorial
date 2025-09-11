@@ -56,7 +56,7 @@ Container-Friendly: Tools like systemd-nspawn can automatically set up filesyste
 
 Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
 
-## What we will be using/setting:
+## What we will mainly be using/setting:
 
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
@@ -68,8 +68,9 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - EXT4 for `/`
 - AMD CPU + NVIDIA GPU (4070 RTX, check your own card for which driver to use. For me it's `nvidia-open-dkms`)
 
+I included some stuff for AMDGPUs too, but my system is NVIDIA so I may have missed some things.
 
-modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. POST-INSTALL GUIDE IS SUPER OPINIONATED, FOLLOW BY OWN VOLITION.
+NVIDIA modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. **POST-INSTALL GUIDE IS SUPER OPINIONATED, FOLLOW BY OWN VOLITION.**
 
 *Protip:* This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).
 If you use an English lang keyboard you can ignore all of it, but it's worth knowing if you are new and use a different keyboard like say `de-latin1` for German keyboards.
