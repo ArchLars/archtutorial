@@ -619,7 +619,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 pacman -Syu
 
 # Run Reflector again since we rebooted for SecureBoot
-reflector \ # this is a line, press enter                                      
+reflector \                                  
       --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  
       --age 12 \ 
       --protocol https \ 
