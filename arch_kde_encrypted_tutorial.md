@@ -867,4 +867,4 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 ---
 
 # OPTIONAL: Post-Install Tutorial
-Head to `arch_kde_tutorial.md` to do the post-install tutorial.
+Head to `arch_post_tutorial.md` to do the post-install tutorial.
