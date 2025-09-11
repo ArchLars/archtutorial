@@ -945,52 +945,6 @@ style=Breeze
 EOF
 ```
 
-#### Force Breeze for GTK 3 and GTK 4 apps by writing settings.ini.
-```bash
-#    Use directory names, not pretty names. Breeze GTK uses "Breeze" (theme dir),
-#    Breeze icons dir is "breeze".
-mkdir -p ~/.config/gtk-3.0 ~/.config/gtk-4.0
-cat > ~/.config/gtk-3.0/settings.ini << 'EOF'
-[Settings]
-gtk-theme-name = Breeze
-gtk-icon-theme-name = breeze
-gtk-font-name = Noto Sans 10
-gtk-cursor-theme-name = breeze_cursors
-gtk-cursor-theme-size = 24
-EOF
-
-# And for GTK 4.0
-cat > ~/.config/gtk-4.0/settings.ini << 'EOF'
-[Settings]
-gtk-theme-name = Breeze
-gtk-icon-theme-name = breeze
-gtk-font-name = Noto Sans 10
-gtk-cursor-theme-name = breeze_cursors
-gtk-cursor-theme-size = 24
-EOF
-```
-
-#### If you still run any GTK2 apps, set ~/.gtkrc-2.0 as well.
-```bash
-cat > ~/.gtkrc-2.0 << 'EOF'
-gtk-theme-name="Breeze"
-gtk-icon-theme-name="breeze"
-gtk-font-name="Noto Sans 10"
-gtk-cursor-theme-name="breeze_cursors"
-gtk-cursor-theme-size=24
-EOF
-```
-
-#### Make sure the X11 cursor is Breeze everywhere (including login shells that ignore GTK files).
-```bash
-#    Either location below is fine; ~/.local/share/icons/default has priority in XDG spec.
-mkdir -p ~/.local/share/icons/default
-cat > ~/.local/share/icons/default/index.theme << 'EOF'
-[Icon Theme]
-Inherits=breeze_cursors
-EOF
-```
-
 #### Openbox config file for the LXQt session exists at ~/.config/openbox/lxqt-rc.xml (LXQt uses this if present).
 ```bash
 #    Create a minimal one so Openbox has sane keybinds and a neutral theme reference.
