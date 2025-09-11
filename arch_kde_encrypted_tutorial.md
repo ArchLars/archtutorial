@@ -175,7 +175,7 @@ cryptsetup luksFormat --type luks2 --sector-size 4096 /dev/nvme0n1p2
 # (these will apply automatically at every boot, including gpt-auto unlock)
 # This creates /dev/mapper/root which we'll format in the next step
 cryptsetup open \
-  --allow-discards \
+  --allow-discards \  # n.b - This can leak usage patterns. Trade-off.
   --perf-no_read_workqueue \
   --perf-no_write_workqueue \
   --perf-submit_from_crypt_cpus \
