@@ -428,10 +428,12 @@ nano /etc/mkinitcpio.conf
 
 ```bash
 # Install systemd-boot
-# NOTE: include `--variables=yes` flag. Why:
-# Starting with systemd version 257, bootctl began detecting environments like arch-chroot as containerized environments.
-# This is an intended change. Without it, it silently skips the step of writing EFI variables to NVRAM.
+#
+# NOTE: Remember to include `--variables=yes` flag. - Here's why:
+# Starting with systemd version 257, bootctl began detecting environments like arch-chroot as containers.
+# This is an intended change and without it, it silently skips the step of writing EFI variables to NVRAM.
 # For non-nerds: This prevents issues where the boot entry might not appear in the firmware's boot menu.
+#
 bootctl install --variables=yes
 
 # Minimal cmdline with kernel option(s)
