@@ -41,7 +41,7 @@ systemd won't auto-mount these, giving you control over when and where they moun
 Same Disk Only: Auto-mounting only works for partitions on the same physical disk as your root partition.
 
 Boot Loader Dependency: The boot loader must set the `LoaderDevicePartUUID` EFI variable for root partition detection to work. systemd-boot (used in this guide) supports this. Check if the bootloader you wish to use does.
-For GRUB to set the LoaderDevicePartUUID UEFI variable load the bli module in grub.cfg:
+For GRUB to set the `LoaderDevicePartUUID` UEFI variable load the bli module in grub.cfg:
 ```ini
 if [ "$grub_platform" = "efi" ]; then
   insmod bli
@@ -67,12 +67,14 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
 - NVME SSD
-- `linux-zen` default kernel which is a kernel optimized for desktop use, `linux-lts` for a fallback and debug kernel
+- `linux-zen` default kernel which is a kernel optimized for desktop use.
+- `linux-lts` for a fallback and debug kernel
 - zsh default shell
-- systemd-boot
-- zswap
+- systemd-boot with UKIs
+- zswap with a 16 GiB swap file
 - EXT4 for `/`
-- AMD CPU + NVIDIA GPU (This tutorial is not compatible with older drivers due to dkms. For Turing or later NVIDIA, follow guide by using: `nvidia-open-dkms`)
+- AMD CPU + NVIDIA GPU w/ `nvidia-open-dkms` 
+**NOTE:** This tutorial assumes you have a Turing (NV160/TUXXX) and newer	card for current driver. Check your card first.
 
 I included some stuff for AMDGPUs too, but my system is NVIDIA so I may have missed some things.
 
