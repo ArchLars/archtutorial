@@ -186,7 +186,7 @@ reflector \ # this is a line, press enter
       --save /etc/pacman.d/mirrorlist  # then when pressing enter here w/o "\" it will run all the lines
 ```
 
-and then install the base of Arch Linux! :
+and then **Install the base of Arch Linux!** :
 
 ```bash
 # IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
@@ -194,8 +194,12 @@ and then install the base of Arch Linux! :
 # The reason why is that it provides free, open-source font files that are metrically compatible with
 # proprietary Microsoft fonts. This ensures that documents will render with consistent layout and
 # text appearance across different systems and applications.
-#
+
+# For AMD CPUs:
 pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
+
+For Intel CPUs:
+pacstrap /mnt base linux-zen linux-lts linux-firmware intel-ucode nano sudo zsh
 ```
 
 ## Step 4: System Configuration
