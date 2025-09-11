@@ -918,13 +918,15 @@ sudo pacman -S --needed xorg-server lxqt openbox picom breeze breeze-icons breez
 
 #### Make LXQt use Openbox as its window manager (X11 session).
 ```bash
-#    This is the canonical LXQt way to pick the WM.
+#    This is the canonical LXQt way to pick the WM. - create:
 mkdir -p ~/.config/lxqt
 
-cat > ~/.config/lxqt/session.conf << 'EOF'
+# create
+sudo nano ~/.config/lxqt/session.conf
+
+## add/change to session.conf
 [General]
 window_manager=openbox
-EOF
 ```
 
 #### Set LXQt appearance via config.
@@ -933,67 +935,40 @@ EOF
 #    - style is the Qt widget style "Breeze" (capitalization matters for Qt styles).
 #    This is read by LXQt and applied to Qt apps through the lxqt-qtplugin.
 #    If lxqt.conf exists already, just ensure these keys exist or are updated.
-grep -qi '^\[General\]' ~/.config/lxqt/lxqt.conf 2>/dev/null || echo "[General]" >> ~/.config/lxqt/lxqt.conf
+sudo nano ~/.config/lxqt/lxqt.conf
 
-# Remove any previous icon_theme/style lines to avoid duplicates
-sed -i '/^icon_theme\s*=/d;/^style\s*=/d' ~/.config/lxqt/lxqt.conf
-
-# Append our choices
-cat >> ~/.config/lxqt/lxqt.conf << 'EOF'
+## add/change to lxqt.conf
 icon_theme=breeze
 style=Breeze
-EOF
-```
-
-#### Openbox config file for the LXQt session exists at ~/.config/openbox/lxqt-rc.xml (LXQt uses this if present).
-```bash
-#    Create a minimal one so Openbox has sane keybinds and a neutral theme reference.
-#    You can later replace <theme><name> with any Openbox theme you like, or leave as-is.
-mkdir -p ~/.config/openbox
-
-cat > ~/.config/openbox/lxqt-rc.xml << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<openbox_config xmlns="http://openbox.org/3.4/rc">
-  <theme>
-    <name>Clearlooks</name>
-    <titleLayout>NLIMC</titleLayout>
-    <keepBorder>yes</keepBorder>
-    <animateIconify>no</animateIconify>
-  </theme>
-  <mouse>
-    <dragThreshold>4</dragThreshold>
-  </mouse>
-  <keyboard>
-    <!-- Example hotkeys; LXQt Global Keys override conflicts -->
-    <keybind key="W-t"><action name="Execute"><command>kitty</command></action></keybind>
-  </keyboard>
-</openbox_config>
-EOF
 ```
 
 #### Autostart picom only in LXQt, not in Plasma Wayland.
 ```bash
-#    XDG Autostart honors OnlyShowIn=LXQt.
-#    This makes it only autostart on LXQt (important)
-#    Adjust picom flags to taste.
+#    ensure autostart is created
 mkdir -p ~/.config/autostart
 
-cat > ~/.config/autostart/picom.desktop << 'EOF'
+# then create/edit picom.desktop
+sudo nano ~/.config/autostart/picom.desktop
+
+## add/change to picom.desktop
 [Desktop Entry]
 Type=Application
 Name=picom
 Comment=X11 compositor
-Exec=picom --config ~/.config/picom/picom.conf --vsync
-OnlyShowIn=LXQt;
+Exec=picom --config ~/.config/picom/picom.conf --vsync     # vsync for tearfree
+OnlyShowIn=LXQt;    # This makes it only autostart on LXQt (important)
 X-GNOME-Autostart-enabled=true
-EOF
 ```
 
 #### Provide a simple picom.conf. Start with Arch defaults then tweak.
 ```bash
+# create
 mkdir -p ~/.config/picom
 
-cat > ~/.config/picom/picom.conf << 'EOF'
+# then create
+sudo nano ~/.config/picom/picom.conf
+
+## and finally add to picom.conf
 backend = "glx";
 vsync = true;
 unredir-if-possible = true;
@@ -1011,20 +986,17 @@ inactive-opacity = 0.95;
 # Respect Openbox stacking
 detect-client-leader = true;
 detect-transient = true;
-EOF
 ```
 
 #### Make sure an X11 LXQt session appears in your greeter.
 ```bash
-#    Installing 'lxqt' provides /usr/share/xsessions/lxqt.desktop.
-#    In SDDM, select "LXQt" from the session chooser when you need X11 fallback.
 #    Nothing to write here; just verify the entry exists:
 grep -H . /usr/share/xsessions/*lxqt*.desktop
 ```
 
 #### Test run: log out of Plasma, pick "LXQt" in SDDM, log in.
 ```bash
-#    Verify that you're on X11 and LXQt picked Openbox and Breeze:
+#    Verify in LXQt that you're on X11 and LXQt picked Openbox and Breeze:
 #    - echo $XDG_SESSION_TYPE should print "x11"
 #    - ps aux | grep -E 'openbox|picom' should show both running
 #    - Qt apps and LXQt panel should look like Breeze, GTK apps should use Breeze and breeze icons
