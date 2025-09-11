@@ -105,6 +105,17 @@ Set up Norwegian keyboard layout and verify UEFI boot:
 ```bash
 # Set your keyboard layout, you can skip this is u use a normal keyboard (US)
 # each line in these code blocks is a separate line in the terminal FYI
+
+# # List all keymaps (scrollable):
+localectl list-keymaps | less
+
+# or filter by country code by writing:
+localectl list-keymaps | grep -i -E '^no($|[-0-9])|jis'    # Norway example
+                                                           # "no" is our ISO-639 code. Find yours by googling first
+                                                           # Then replace 'no' with your country code                 
+
+# For Norway it's "no-latin1". On Arch it's usually "*-latin1" and not just the country code.
+# Test out your keyboard after this, if it is wrong try another on the list.
 loadkeys no-latin1
 
 # Verify UEFI firmware, write it out and if it says that at the end there
