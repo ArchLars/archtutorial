@@ -579,8 +579,8 @@ sudo pacman -Syu
 
 ### Essential build tools, you already installed these during install but just to be sure
 ```bash
-sudo pacman -S --needed base-devel git  # when you run pacman -S with the --needed flag it will skip
-                                        # installing any package that is already on the system.
+sudo pacman -S --needed base-devel git  # when you run pacman with the --needed flag it will skip
+                                        # any package that is already on the system. Try it.
 ```
 
 ### 2.2 Build and install yay
@@ -592,18 +592,21 @@ makepkg -si                                  # build the package, then install i
 cd ~ && rm -rf /tmp/yay                      # go home, remove the temporary build folder
 
 yay --version  # quick test | NOTE: Whenever you run any 'yay' command, do not use 'sudo' before it.
-yay -S --needed --noconfirm fastfetch   # Important: the --noconfirm flag makes it auto confirms the endless
+yay -S --needed --noconfirm fastfetch   # The --noconfirm flag makes it auto confirms the endless
                                         # questions if you want to install something or not.
 ```
 
 ### 2.5 Shell and terminal bliss
 ```bash
+# Oh-my-zsh makes your terminal nicer, zsh-autosuggestions and the other are plugins
+# More on them later.
 yay -S --needed --noconfirm oh-my-zsh-git zsh-autosuggestions zsh-syntax-highlighting
 ```
 
 ### Copy .zshrc default template config
 
 ```bash
+# This makes it so you don't have to write out a buncha crap
 cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 ```
 
