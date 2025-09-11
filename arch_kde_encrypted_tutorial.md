@@ -426,6 +426,12 @@ nano /etc/kernel/cmdline
 #
 ## /etc/kernel/cmdline
 rw rootflags=noatime
+
+# FOR NVIDIA: Arch’s kernels do not enable lockdown by default.
+# Signature enforcement is opt-in with module.sig_enforce=1
+# Lockdown can be added via lockdown=integrity if you want that policy as well.
+## /etc/kernel/cmdline
+rw rootflags=noatime module.sig_enforce=1
 ```
 
 #### Step 4.7.3 Make the ESP directory
@@ -603,7 +609,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 
 ---
 
-# Step 8 Install the System
+## Step 8 Install the System
 
 ```bash
 # Update package database
@@ -667,6 +673,66 @@ sudo pacman -S --needed \
   base-devel
 ```
 
+## Step 8.5, DKMS signing for NVIDIA (certs-local)
+when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
+
+In this guide we will use the `certs-local` method for this, which assumes the kernel trusts your out-of-tree certificate, and DKMS auto-signs with it. Kernels do not use your UEFI db/PK for module verification. The kernel validates modules against its own keyrings, not the platform keyring, which is why just enrolling keys with sbctl is not enough for out-of-tree modules. 
+
+#### 8.5.1 Install prerequisites
+```bash
+# DKMS itself and helper for zstd-compressed modules
+sudo pacman -S --needed dkms python-zstandard
+```
+
+### 8.5.2 Install the certs-local DKMS helpers
+
+After install, those files live under `/usr/src/certs-local`
+
+```bash
+# build from AUR using makepkg (you already have git and base-devel)
+git clone https://aur.archlinux.org/arch-sign-modules.git
+cd arch-sign-modules
+makepkg -si
+cd ..
+rm -rf arch-sign-modules
+
+# copy the DKMS helper files into /etc/dkms
+sudo install -D /usr/src/certs-local/dkms/kernel-sign.conf /etc/dkms/kernel-sign.conf
+sudo install -D /usr/src/certs-local/dkms/kernel-sign.sh   /etc/dkms/kernel-sign.sh
+sudo chmod 755 /etc/dkms/kernel-sign.sh
+```
+
+### 8.5.3 Tell DKMS to auto-sign NVIDIA builds
+
+The certs-local method uses ln -s kernel-sign.conf module_name.conf. 
+Create one symlink per DKMS module name so DKMS runs the signer:
+
+```bash
+cd /etc/dkms
+# NVIDIA’s DKMS module name is "nvidia"
+sudo ln -sf kernel-sign.conf nvidia.conf
+```
+
+### 8.5.4 Rebuild and sign the NVIDIA modules for all installed kernels
+
+DKMS compiles per installed headers and runs the post-build signer you just set. 
+
+```bash
+# build for zen and lts in one go
+sudo dkms autoinstall
+```
+
+### 8.5.5 Verify signatures
+
+`modinfo` exposes the module’s signer field, and the kernel’s module-signing facility validates on load. 
+
+```bash
+# show the signer recorded in the module
+modinfo -F signer nvidia
+
+# you can also look for signature messages
+dmesg | grep -i 'module.*sign'
+```
 
 ### Step 9 Create swap file & Configure Zswap
 
