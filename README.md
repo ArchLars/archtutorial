@@ -594,6 +594,18 @@ nano /etc/xdg-desktop-portal/kde-portals.conf
 default=kde;gtk;
 ```
 
+#### Force GTK to use Portals
+```bash
+# This is important for file pickers etc
+# Sometimes programs insist on using the wrong ones.
+#
+nano ~/.config/environment.d/gtk-portal.conf
+```
+```ini
+GTK_USE_PORTAL=1
+GDK_DEBUG=portals
+```
+
 ### 4.10 Enable Essential Services
 
 ```bash
