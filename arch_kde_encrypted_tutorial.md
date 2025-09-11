@@ -376,7 +376,7 @@ EDITOR=nano visudo
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
 # Example for MODULES:
-# MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
 #
 # Example for HOOKS (with LUKS encryption)
 HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block sd-encrypt filesystems fsck)
