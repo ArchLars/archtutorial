@@ -493,6 +493,12 @@ umount -R /mnt
 
 # Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
 systemctl reboot --firmware-setup
+
+# Set SecureBoot to Setup Mode
+# This is different for every BIOS/Firmware. Look up how to do it for yours
+
+# Reboot
+# Reboot back into the ArchISO (USB), NOT your current install
 ```
 
 * Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.” Do not enable Secure Boot yet.
