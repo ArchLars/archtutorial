@@ -351,7 +351,7 @@ pacman -S --needed \
   base-devel
 ```
 
-AMD:
+or for AMDGPU:
 ```bash
 sudo pacman -S --needed \
   networkmanager reflector \
@@ -369,19 +369,21 @@ sudo pacman -S --needed \
 
 
 
-### 4.7 Configure NVIDIA in Initramfs
+### 4.7 Configure Initramfs
 
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
 # MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
-# Remove 'kms' from HOOKS=() also if you use nvidia
+# Remove 'kms' from HOOKS=() also if you use nvidia, AMDGPU can ignore this however
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
-# If you do not remove udev and add systemd your system will not boot.
+# IF you do not remove udev and if you do not replace it with systemd THEN YOUR SYSTEM WILL NOT BOOT
+# This is the only pitfall with systemd-gpt-autogenerator,
+# so it's worth doublechecking if your system isn't booting post-install
 
-# Ensure microcode is in HOOKS=()
-# Replace keymap and consolefont with sd-vconsole in HOOKS=()
+# Finally ensure microcode is in HOOKS=(), we will leave it out of initrd with UKIs
+# And replace BOTH keymap and consolefont with sd-vconsole in HOOKS=() since we are using systemd
 ```
 
 ### 4.8 Install UKIs and Configure Bootloader
