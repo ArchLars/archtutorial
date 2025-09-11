@@ -1,7 +1,6 @@
 # Complete Arch Linux Tutorial (KDE Plasma + Wayland + LUKS + SecureBoot + TPM2 w/ Automounting Partitions)
 
-This is a Arch installation guide for novices **WITH LUKS encryption, TPM2 and SecureBoot** (More complex) who want a working secure system to game on that's straight forward, encrypted, with a DE that is most like Windows
-and usually the one most people want to use because of that, at least for their first DE. I am assuming you have already read and understood `arch_kde_tutorial.md` before tackling this one.
+This is a Arch installation guide for novices **WITH LUKS encryption, TPM2 and SecureBoot** (More complex) who want a working secure system to game on that's straight forward & encrypted. I am assuming you have already read and understood `arch_kde_tutorial.md` before tackling this one.
 
 ---
 
