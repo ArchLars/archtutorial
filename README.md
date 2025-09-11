@@ -224,28 +224,36 @@ hwclock --systohc
 ### 4.3 Configure Locale
 
 ```bash
-# Edit locale generation file
+# Now we are going to configure our system language.
+# I am going to have my system be in English,
+# but my time and date will be set as it is in Norway.
+# So an English system with a DD/MM/YYYY and 00:00 "military clock".
+#
 nano /etc/locale.gen
-Uncomment: en_US.UTF-8 UTF-8
-Uncomment: nb_NO.UTF-8 UTF-8 # Optional if you need second language
 
-# Generate locales
+# Go down the list and uncomment both:
+Uncomment: en_US.UTF-8 UTF-8 # English
+Uncomment: nb_NO.UTF-8 UTF-8 # Bokmål Norwegian (replace with your own or leave out)
+
+# Then generate locales
 locale-gen
 
 # Set system locale
 nano /etc/locale.conf
 
 # add
-LANG=en_US.UTF-8
-LC_TIME=nb_NO.UTF-8 # Optional if you want to set the date & time to a specific LANG default
+LANG=en_US.UTF-8    # LANG for system language
+LC_TIME=nb_NO.UTF-8 # LC_TIME for date & time to my specific LANG default
 
 
-# Set console keymap. This even U.S keyboards has to set!
+# Set console keymap & font
 nano /etc/vconsole.conf
 
 # add
-KEYMAP=no-latin1
-FONT=ter-118n
+KEYMAP=no-latin1 # Skip this if US keyboard
+FONT=ter-118n  # But add this.
+               # This is a console font which makes it larger,
+               # and more easily readable on boot
 
 ```
 
