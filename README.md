@@ -555,6 +555,16 @@ vm.watermark_scale_factor = 125
 sysctl --system
 ```
 
+#### Make KDE the first choice for portals, and GTK the fallback
+
+```bash
+nano /etc/xdg-desktop-portal/kde-portals.conf
+
+# kde-portals.conf
+[preferred]
+default=kde;gtk;
+```
+
 ### 4.10 Enable Essential Services
 
 ```bash
