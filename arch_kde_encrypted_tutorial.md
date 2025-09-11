@@ -644,7 +644,7 @@ sudo pacman -S --needed \
 ---
 
 ## Step 8.5, DKMS signing for NVIDIA (certs-local)
-when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
+**IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
 
 In this guide we will use the `certs-local` method for this, which assumes the kernel trusts your out-of-tree certificate, and DKMS auto-signs with it. Kernels do not use your UEFI db/PK for module verification. The kernel validates modules against its own keyrings, not the platform keyring, which is why just enrolling keys with sbctl is not enough for out-of-tree modules. 
 
