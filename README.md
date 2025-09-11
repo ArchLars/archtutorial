@@ -165,10 +165,14 @@ I won't do a swap partition, don't need hibernation personally. If you do you wi
 Create filesystems and mount them in the correct order:
 
 ```bash
-# Format partitions, if you are not using nvme, you remove the 'p' from formatting
+# Format partitions
+# If you are using sda, hda, or a different number for the nvme drive,-
+# -then replace bottom with that instead.
+#
+# if you are not using nvme, you remove the 'p' from formatting
 d=/dev/nvme0n1
-mkfs.fat -F32 -n EFI ${d}p1
-mkfs.ext4 -L root ${d}p2
+mkfs.fat -F32 -n EFI ${d}p1  # remove p here if you use sda drive so it becomes 'sda1' instead for example
+mkfs.ext4 -L root ${d}p2     # 'sda2'
 
 # Mount root partition first
 mount /dev/disk/by-label/root /mnt
