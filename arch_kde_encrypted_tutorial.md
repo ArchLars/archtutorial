@@ -370,7 +370,7 @@ EDITOR=nano visudo
 
 
 
-### 4.7 Configure Initramfs
+### 4.6 Configure Initramfs
 
 ```bash
 # Edit mkinitcpio configuration
@@ -397,7 +397,7 @@ HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block sd-e
 
 ```
 
-### 4.8 Install UKIs and Configure Bootloader
+### 4.7 Install UKIs and Configure Bootloader
 
 ```bash
 # Install systemd-boot
@@ -428,13 +428,13 @@ nano /etc/kernel/cmdline
 rw rootflags=noatime
 ```
 
-#### Make the ESP directory
+#### Step 4.7.3 Make the ESP directory
 ```bash
 # Make ESP directory
 mkdir -p /efi/EFI/Linux
 ```
 
-#### Edit the mkinitcpio presets so they write UKIs to the ESP
+#### Step 4.7.5 Edit the mkinitcpio presets so they write UKIs to the ESP
 
 ```bash
 # If you followed where I mounted boot, then this is correct
@@ -453,7 +453,7 @@ fallback_uki="/efi/EFI/Linux/arch-linux-zen-fallback.efi"
 fallback_options="-S autodetect"
 ```
 
-#### Repeat for LTS:
+#### Step 4.8 Repeat for LTS:
 
 ```bash
 nano /etc/mkinitcpio.d/linux-lts.preset
@@ -468,13 +468,13 @@ fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
 fallback_options="-S autodetect"
 ```
 
-#### Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
+#### Step 4.8.5 Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
 
 ```bash
 mkinitcpio -P
 ```
 
-#### Configure bootloader
+#### Step 4.9 Configure bootloader
 
 ```bash
 # write the loader
@@ -489,7 +489,7 @@ editor no
 bootctl --esp-path=/efi list
 ```
 
-## SecureBoot Install
+## Step 5 SecureBoot Install
   
 ```bash
 
@@ -506,7 +506,7 @@ systemctl reboot --firmware-setup
 * Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.” Do not enable Secure Boot yet.
 * Boot back into the ArchISO USB.
 
-### Install sbctl and create signing keys
+### Step 5.5 Install sbctl and create signing keys
 
 sbctl creates Platform Key, KEK, and db for you. 
 
@@ -524,7 +524,7 @@ sbctl status    # should say: secure boot disabled, setup mode, etc.
 sbctl create-keys
 ```
 
-### Enroll keys including Microsoft’s
+### Step 6 Enroll keys including Microsoft’s
 
 Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
 ```bash
@@ -536,7 +536,7 @@ sbctl enroll-keys -m
 sbctl enroll-keys -m -f
 ```
 
-## Sign the whole boot chain (systemd-boot and UKIs)
+## Step 6.5 Sign the whole boot chain (systemd-boot and UKIs)
 
 Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
 
@@ -567,7 +567,7 @@ sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
 sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 ```
 
-## 4.5.5 Package Choice
+## Step 7 Package Choice
 
 ### Info:
 I have taken the liberty to make some decisions for a few packages you will install, some of them are technically "optional" but
@@ -604,7 +604,7 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 
 ---
 
-# 4.6 Install the System
+# Step 8 Install the System
 
 ```bash
 # Update package database
@@ -669,7 +669,7 @@ sudo pacman -S --needed \
 ```
 
 
-### 4.9 Create swap file & Configure Zswap
+### Step 9 Create swap file & Configure Zswap
 
 ```bash
 # Create a swap file (zswap needs a backing swap device)
@@ -731,14 +731,14 @@ GTK_USE_PORTAL=1
 GDK_DEBUG=portals
 ```
 
-### 4.10 Enable Essential Services
+### Step 10 Enable Essential Services
 
 ```bash
 # Enable network, display manager, and timesyncd
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer systemd-boot-update.service
 ```
 
-## Step 5: Complete Install
+## Step 11: Complete Pre-SecureBoot Install
 
 ```bash
 # Exit chroot environment
@@ -748,7 +748,7 @@ exit
 umount -R /mnt
 ```
 
-### Enable Secure Boot and verify
+## Step 12. Enable SecureBoot and verify It
 
 Reboot into firmware, enable Secure Boot
 
@@ -766,7 +766,7 @@ systemctl reboot --firmware-setup
 sbctl status   # should show: Secure Boot enabled, and files signed
 ```
 
-### Enroll TPM2 for LUKS after Secure Boot is active
+### Step 13. Enroll TPM2 for LUKS after Secure Boot is active
 * Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
 * The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
 * If SB is off during enrollment, the TPM policy will not match once SB is on.
