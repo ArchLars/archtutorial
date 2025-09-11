@@ -41,6 +41,12 @@ systemd won't auto-mount these, giving you control over when and where they moun
 Same Disk Only: Auto-mounting only works for partitions on the same physical disk as your root partition.
 
 Boot Loader Dependency: The boot loader must set the `LoaderDevicePartUUID` EFI variable for root partition detection to work. systemd-boot (used in this guide) supports this. Check if the bootloader you wish to use does.
+For GRUB to set the LoaderDevicePartUUID UEFI variable load the bli module in grub.cfg:
+```ini
+if [ "$grub_platform" = "efi" ]; then
+  insmod bli
+fi
+```
 
 First Partition Rule: systemd mounts the first partition of each type it finds. If you have multiple 8302 partitions on the same disk, **then only the first one gets auto-mounted.**
 
