@@ -444,9 +444,13 @@ nano /etc/mkinitcpio.conf
 # Install systemd-boot
 #
 # NOTE: Remember to include `--variables=yes` flag. - Here's why:
-# Starting with systemd version 257, bootctl began detecting environments like arch-chroot as containers.
-# This is an intended change and without it, it silently skips the step of writing EFI variables to NVRAM.
-# For non-nerds: This prevents issues where the boot entry might not appear in the firmware's boot menu.
+# Starting with systemd version 257, bootctl began detecting
+# environments like arch-chroot as containers...
+# This is an intended change and without it, it silently skips
+# the step of writing EFI variables to NVRAM...
+#
+# For non-nerds: This prevents issues where the boot entry
+# might not appear in the firmware's boot menu...
 #
 bootctl install --variables=yes
 
@@ -518,10 +522,12 @@ editor no
 bootctl list
 ```
 
-### 4.9 Configure Zswap
+### 4.9 Create swap file & Configure Zswap
 
 ```bash
 # Create a swap file (zswap needs a backing swap device)
+# This swap file will be 16 GiB. Change 'count=16' if you want less.
+#
 dd if=/dev/zero of=/swapfile bs=1G count=16 status=progress
 chmod 600 /swapfile
 mkswap /swapfile
@@ -550,6 +556,8 @@ systemctl enable swapfile.swap
 Optimizations for swap use:
 
 ```bash
+# These are optimizations taken from the wiki.
+# Generally considered to be optimal.
 nano /etc/sysctl.d/99-zswap.conf
 
 # add
@@ -565,6 +573,10 @@ sysctl --system
 #### Make KDE the first choice for portals, and GTK the fallback
 
 ```bash
+# This should in theory push KDE file selectors first
+# But allow for GTK when the KDE portal doesn't work.
+# Emphasis on: In theory.
+#
 nano /etc/xdg-desktop-portal/kde-portals.conf
 
 # kde-portals.conf
