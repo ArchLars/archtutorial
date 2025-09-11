@@ -158,7 +158,7 @@ sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
 * `/dev/nvme0n1p1` — 1GB EFI System Partition
 * `/dev/nvme0n1p2` — Root partition
 
-I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop because Arch is a complete distribution of Linux, and I don't do any encryption because the one time I did I ended up being locked out of my computer because of stupidity. If you need encryption for security sensitive systems then look elsewhere.
+I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop as Arch is a complete distribution of Linux.
 
 ## Step 2: Format and Mount Partitions
 
