@@ -758,7 +758,8 @@ systemctl reboot --firmware-setup
 # Enable SecureBoot #
 ```
 
-Then reboot back into Arch. Verify:
+* And now you can finally reboot after removing your ArchISO USB into your actual system.
+* After hopefully being able to successfully boot. Verify:
 
 ```bash
 sbctl status   # should show: Secure Boot enabled, and files signed
