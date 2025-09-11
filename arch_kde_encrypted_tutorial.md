@@ -680,8 +680,9 @@ In this guide we will use the `certs-local` method for this, which assumes the k
 
 #### 8.5.1 Install prerequisites
 ```bash
-# DKMS itself and helper for zstd-compressed modules
-sudo pacman -S --needed dkms python-zstandard
+# Install the helper for zstd-compressed modules
+# nvidia-open-dkms already pulled in dkms itself
+sudo pacman -S --needed python-zstandard
 ```
 
 ### 8.5.2 Install the certs-local DKMS helpers
@@ -704,8 +705,8 @@ sudo chmod 755 /etc/dkms/kernel-sign.sh
 
 ### 8.5.3 Tell DKMS to auto-sign NVIDIA builds
 
-The certs-local method uses ln -s kernel-sign.conf module_name.conf. 
-Create one symlink per DKMS module name so DKMS runs the signer:
+* The certs-local method uses `ln -s kernel-sign.conf module_name.conf`. 
+* Create one symlink per DKMS module name so DKMS runs the signer:
 
 ```bash
 cd /etc/dkms
