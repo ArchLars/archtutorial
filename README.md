@@ -430,11 +430,14 @@ nano /etc/mkinitcpio.conf
 
 # IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
 #
-# NOTE: IF you do not remove udev and if you do not replace it with systemd THEN YOUR SYSTEM WILL NOT BOOT
-# This is the only pitfall with systemd-gpt-autogenerator,
-# so it's worth doublechecking if your system isn't booting post-install
+# NOTE: IF you do not remove udev and if you do not replace it with systemd,
+# THEN YOUR SYSTEM WILL NOT BOOT.
+# This is the only pitfall with systemd-gpt-auto-generator,
+#
+# It's worth doublechecking.
+# Check this again if your system isn't booting post-install.
 
-# Finally ensure microcode is in HOOKS=(), we will leave it out of initrd with UKIs
+# Finally ensure microcode is in HOOKS=()
 # And replace BOTH keymap and consolefont with sd-vconsole in HOOKS=() since we are using systemd
 ```
 
@@ -446,6 +449,7 @@ nano /etc/mkinitcpio.conf
 # NOTE: Remember to include `--variables=yes` flag. - Here's why:
 # Starting with systemd version 257, bootctl began detecting
 # environments like arch-chroot as containers...
+#
 # This is an intended change and without it, it silently skips
 # the step of writing EFI variables to NVRAM...
 #
@@ -457,7 +461,13 @@ bootctl install --variables=yes
 # Minimal cmdline with kernel option(s)
 nano /etc/kernel/cmdline
 
-## add to cmdline, the minimal options gpt auto loader
+# These are the only kernel flags needed for this setup
+# With GPT Autoloader you do not need to specify UUIDs here
+#
+# rootflags add options to the root filesystem, like noatime
+# noatime is a typical optimization for EXT4 systems.
+#
+## /etc/kernel/cmdline
 rw rootflags=noatime
 ```
 
