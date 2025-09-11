@@ -176,7 +176,9 @@ mount /dev/disk/by-label/EFI /mnt/boot
 
 ## Step 3: Base System Install
 
-First update mirrorlist for optimal download speeds, obv replace Norway and Germany:
+First update mirrorlist for optimal download speeds, obv replace Norway and Germany.
+A good rule of thumb here is doing your country + closest neighbours and then a few larger neighbours after that.
+So for me it's Norway,Sweden,Denmark then Germany,Netherlands:
 
 ```bash
 # Update mirrorlist before install so you install with fastest mirrors
