@@ -690,7 +690,11 @@ sbctl create-keys
 
 Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
 ```bash
-# safest for dual-boot and firmware updates
+# Enroll your keys, with Microsoft's keys, to the UEFI:
+sbctl enroll-keys -m
+
+# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
+# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
 sbctl enroll-keys -m -f
 ```
 
