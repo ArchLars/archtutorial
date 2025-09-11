@@ -374,7 +374,7 @@ bootctl install --variables=yes
 # Minimal cmdline with kernel option(s)
 nano /etc/kernel/cmdline
 
-# minimal for gpt auto loader
+## add to cmdline, the minimal options gpt auto loader
 rw rootflags=noatime
 ```
 
@@ -422,9 +422,10 @@ mkinitcpio -P
 #### Configure bootloader
 
 ```bash
+# write the loader
 nano /boot/loader/loader.conf
 
-# add
+## add to loader
 timeout 10
 console-mode auto
 editor no
