@@ -123,6 +123,9 @@ localectl list-keymaps | grep -i -E '^no($|[-0-9])|jis'    # Norway example
 
 # For Norway it's "no-latin1". On Arch it's usually "*-latin1" and not just the country code.
 # Test out your keyboard after this, if it is wrong try another on the list.
+#
+# To write "-" on US keyboard which you will need to do to be able to write this command,
+# it's usually the first key left of backspace. For Norwegian/Nordic keyboard that's: \.
 loadkeys no-latin1
 
 # Verify UEFI firmware, write it out and if it says that at the end there
