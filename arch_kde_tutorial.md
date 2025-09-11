@@ -834,8 +834,14 @@ touch /mnt/data/it-works
 
 ---
 
+# OPTIONAL: Post-Install Tutorial
+Head to `arch_post_tutorial.md` to do the post-install tutorial.
+
+
 
 # OPTIONAL: How to fix those annoying 'missing firmware' warnings in mkinitcpio
 
 * Whenever you write `mkinitcpio -P` you keep being annoyed by firmware that you are supposedly missing.
 * If this bothers you, check out my tutorial, `mkinitcpio-fix.md` to remove those
+
+---
