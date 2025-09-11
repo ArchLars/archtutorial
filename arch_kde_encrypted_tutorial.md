@@ -156,7 +156,7 @@ sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
 * `/dev/nvme0n1p1` — 1GB EFI System Partition
 * `/dev/nvme0n1p2` — Root partition
 
-I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop because Arch is a complete distribution of Linux, and I don't do any encryption because the one time I did I ended up being locked out of my computer because of stupidity. If you need encryption for security sensitive systems then look elsewhere.
+I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop because Arch is a complete distribution of Linux.
 
 ## Step 1.5: Set up LUKS Encryption (NEW ENCRYPTION SECTION)
 *Important:* This maintains compatibility with `systemd-gpt-auto-generator`. 
@@ -437,10 +437,6 @@ mkdir -p /efi/EFI/Linux
 #### Step 4.7.5 Edit the mkinitcpio presets so they write UKIs to the ESP
 
 ```bash
-# If you followed where I mounted boot, then this is correct
-# Where we mounted was: /boot/EFI/
-# But if not, modify to where you did
-
 nano /etc/mkinitcpio.d/linux-zen.preset
 
 # Content:
@@ -511,7 +507,10 @@ systemctl reboot --firmware-setup
 sbctl creates Platform Key, KEK, and db for you. 
 
 ```bash
-# chroot back in
+# re-open LUKS, mount and chroot back in to resume installation
+cryptsetup open /dev/nvme0n1p2 root
+mount /dev/mapper/root /mnt
+mount /dev/disk/by-label/EFI /mnt/efi
 arch-chroot /mnt
 
 # Install sbctl
