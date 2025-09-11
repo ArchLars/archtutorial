@@ -965,9 +965,7 @@ cat > ~/.config/openbox/lxqt-rc.xml << 'EOF'
   </mouse>
   <keyboard>
     <!-- Example hotkeys; LXQt Global Keys override conflicts -->
-    <keybind key="W-Return"><action name="Execute"><command>qterminal</command></action></keybind>
-    <keybind key="W-e"><action name="Execute"><command>pcmanfm-qt</command></action></keybind>
-    <keybind key="W-q"><action name="Close"/></keybind>
+    <keybind key="W-t"><action name="Execute"><command>kitty</command></action></keybind>
   </keyboard>
 </openbox_config>
 EOF
@@ -975,7 +973,9 @@ EOF
 
 #### Autostart picom only in LXQt, not in Plasma Wayland.
 ```bash
-#    XDG Autostart honors OnlyShowIn=LXQt. Adjust picom flags to taste.
+#    XDG Autostart honors OnlyShowIn=LXQt.
+#    This makes it only autostart on LXQt (important)
+#    Adjust picom flags to taste.
 mkdir -p ~/.config/autostart
 
 cat > ~/.config/autostart/picom.desktop << 'EOF'
