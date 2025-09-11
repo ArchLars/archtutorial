@@ -732,7 +732,7 @@ Reboot into firmware, enable Secure Boot
 # Reboot into the firmware
 systemctl reboot --firmware-setup
 
-#Enable SecureBoot
+# Enable SecureBoot #
 ```
 
 Then reboot back into Arch. Verify:
@@ -742,7 +742,12 @@ sbctl status   # should show: Secure Boot enabled, and files signed
 ```
 
 ### Enroll TPM2 for LUKS after Secure Boot is active
-Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state. The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs. If SB is off during enrollment, the TPM policy will not match once SB is on. The Arch Wiki explicitly says to enroll TPM after signing and enabling SB. The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor. With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
+* Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
+* The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
+* If SB is off during enrollment, the TPM policy will not match once SB is on.
+* The Arch Wiki explicitly says to enroll TPM after signing and enabling SB.
+* The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor.
+* With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
 
 ```bash
 # optional but strongly recommended
