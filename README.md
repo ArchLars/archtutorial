@@ -631,7 +631,7 @@ nano ~/.zshrc
 #
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
 
-# Also add any aliases here
+# Also optionally add any aliases here
 #
 # Here is one for installing packages:
 # alias pacin='yay -S --needed --noconfirm'
