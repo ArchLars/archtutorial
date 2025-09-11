@@ -651,7 +651,7 @@ GDK_DEBUG=portals
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer systemd-boot-update.service
 ```
 
-## Step 5: Complete Installation
+## Step 5: Complete Install Before SecureBoot Install
 
 ```bash
 # Exit chroot environment
@@ -664,7 +664,7 @@ umount -R /mnt
 systemctl reboot --firmware-setup
 ```
 
-### 4.8a, switch firmware to Setup Mode in firmware
+## Step 6 SecureBoot Install
 
 * Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
   
@@ -672,7 +672,7 @@ systemctl reboot --firmware-setup
   
 * Do not enable Secure Boot yet. Boot back into your just-installed Arch system.
 
-### 4.8b, install sbctl and create signing keys
+### Install sbctl and create signing keys
 
 sbctl creates Platform Key, KEK, and db for you. 
 
@@ -686,7 +686,7 @@ sbctl status    # should say: secure boot disabled, setup mode, etc.
 sbctl create-keys
 ```
 
-### 4.8c, enroll keys including Microsoft’s
+### Enroll keys including Microsoft’s
 
 Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
 ```bash
@@ -694,7 +694,7 @@ Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when
 sbctl enroll-keys -m -f
 ```
 
-### 4.8d, sign the whole boot chain (systemd-boot and UKIs)
+### Sign the whole boot chain (systemd-boot and UKIs)
 
 Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
 
@@ -724,7 +724,7 @@ sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
 sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 ```
 
-### 4.8e, enable Secure Boot and verify
+### Enable Secure Boot and verify
 
 Reboot into firmware, enable Secure Boot
 
