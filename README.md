@@ -107,7 +107,7 @@ For AMDGPU or Intel GPU you should look either up at the Arch Wiki and replace t
 
 ## Step 0: Boot from ISO
 
-Set up Norwegian keyboard layout and verify UEFI boot:
+Set up your keyboard layou if you're not on an US keyboard, and verify UEFI boot:
 
 ```bash
 # Set your keyboard layout, you can skip this is u use a normal keyboard (US)
@@ -128,8 +128,10 @@ localectl list-keymaps | grep -i -E '^no($|[-0-9])|jis'    # Norway example
 # it's usually the first key left of backspace. For Norwegian/Nordic keyboard that's: \.
 loadkeys no-latin1
 
-# Verify UEFI firmware, write it out and if it says that at the end there
-# then ur good
+# Verify UEFI firmware, write it all out including && and echo.
+# It's just going to be a bunch of random variables that's confusing, however...
+#
+# If it says the quote at the end there then you are good.
 ls /sys/firmware/efi/efivars && echo "UEFI firmware detected"
 
 # Sync system clock
