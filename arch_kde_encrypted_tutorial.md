@@ -6,12 +6,6 @@ I started with KDE Plasma and Arch Linux. I always come back to both eventually.
 this. It's fully featured, they finally have a good process in eliminating bugs which plagued the DE before, and it's very easy to customize. Most DEs and WMs have
 some caveat, KDE Plasma does not. That is why I use it.
 
-
-## NOTE (ACTUALLY READ THIS): 
-
-So, I like to use something called `systemd-gpt-auto-generator`. I acknowledge that this is a super opinionated decision for a noob tutorial, and I debated whether or not to use it in this tutorial, but I feel it's so cromulent and underrated that I decided to make a big decision to teach you how to use it as well. If you follow this guide correctly and use it you'll see why it's very convenient.
-It is not usually done on Linux and it is kind of new(?), at least relative to `fstab`, however it is a modern way of mounting partitions that are also used by other operating systems you may already be familiar with. 
-
 ---
 
 # INTRODUCTION - How GPT Auto-Mounting Works
