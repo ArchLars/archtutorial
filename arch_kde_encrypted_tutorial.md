@@ -736,7 +736,10 @@ WantedBy=swap.target
 then:
 ```bash
 # This is all that is neeeded for swap to be enabled on Arch.
-# Officially supported kernels like linux-lts and linux-zewn have zswap enabled by default.
+# Officially supported kernels like linux-lts and linux-zen have zswap enabled by default.
+#
+# Be aware that any unofficial kernel may not, however. To enable zswap on those kernels
+# add zswap.enabled=1 to the kernel parameters.
 #
 systemctl enable swapfile.swap
 ```
