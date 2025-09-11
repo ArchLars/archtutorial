@@ -368,6 +368,121 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
+## Step 6 SecureBoot Install
+  
+```bash
+
+# Exit chroot environment
+exit
+
+# Unmount all partitions
+umount -R /mnt
+
+# Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
+systemctl reboot --firmware-setup
+```
+
+* Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.” Do not enable Secure Boot yet.
+* Boot back into the ArchISO USB.
+
+### Install sbctl and create signing keys
+
+sbctl creates Platform Key, KEK, and db for you. 
+
+```bash
+# chroot back in
+arch-chroot /mnt
+
+# Install sbctl
+pacman -S --needed sbctl
+
+# sanity
+sbctl status    # should say: secure boot disabled, setup mode, etc.
+
+# make a PK/KEK/db set
+sbctl create-keys
+```
+
+### Enroll keys including Microsoft’s
+
+Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
+```bash
+# Enroll your keys, with Microsoft's keys, to the UEFI:
+sbctl enroll-keys -m
+
+# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
+# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
+sbctl enroll-keys -m -f
+```
+
+### Sign the whole boot chain (systemd-boot and UKIs)
+
+Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
+
+1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service. 
+```bash
+# sign the bootloader in its source location
+sbctl sign -s \
+  -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
+  /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+
+# optional: also sign the fallback BOOTX64.EFI if present
+if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
+  sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
+fi
+```
+
+2. Sign the UKIs you generated with mkinitcpio:
+```bash
+# adjust names if you changed them in your presets
+sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
+sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
+```
+
+3. Quick sweep for anything else that needs signing:
+```bash
+# list anything unsigned that sbctl tracks, then sign it
+sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
+```
+
+### Enable Secure Boot and verify
+
+Reboot into firmware, enable Secure Boot
+
+```bash
+# Reboot into the firmware
+systemctl reboot --firmware-setup
+
+# Enable SecureBoot #
+```
+
+Then reboot back into Arch. Verify:
+
+```bash
+sbctl status   # should show: Secure Boot enabled, and files signed
+```
+
+### Enroll TPM2 for LUKS after Secure Boot is active
+* Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
+* The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
+* If SB is off during enrollment, the TPM policy will not match once SB is on.
+* The Arch Wiki explicitly says to enroll TPM after signing and enabling SB.
+* The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor.
+* With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
+
+```bash
+# optional but strongly recommended
+systemd-cryptenroll --recovery-key /dev/nvme0n1p2
+
+# verify a TPM is visible
+systemd-cryptenroll --tpm2-device=list
+
+# enroll TPM2 bound to PCR 7 (SB state). You can add +15 if you want firmware config sensitivity.
+systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
+# or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
+# systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
+```
+
 ## 4.5.5 Package Choice
 
 ### Info:
@@ -410,11 +525,20 @@ Same for Blu-Rays. After you have installed the system and configured an AUR hel
 ```bash
 # Update package database
 pacman -Syu
+
+# Run Reflector again since we rebooted for SecureBoot
+reflector \ # this is a line, press enter                                      
+      --country 'Norway,Sweden,Denmark,Germany,Netherlands' \  
+      --age 12 \ 
+      --protocol https \ 
+      --sort rate \
+      --latest 10 \
+      --save /etc/pacman.d/mirrorlist
 ```
 
-**EITHER**
+**EITHER:**
 
-NVIDIA: 
+- NVIDIA: 
 ```bash
 # pipe commands, like before type out each pipe line, press enter on each until base-devel
 # then when u press enter it installs it all
@@ -428,7 +552,7 @@ pacman -S --needed \
   base-devel
 ```
 
-or AMDGPU:
+- or AMDGPU:
 ```bash
 sudo pacman -S --needed \
   networkmanager reflector \
@@ -444,7 +568,7 @@ sudo pacman -S --needed \
   base-devel
 ```
 
-or Intel GPUs (I think):
+- or Intel GPUs:
 ```bash
 sudo pacman -S --needed \
   networkmanager reflector \
@@ -651,7 +775,7 @@ GDK_DEBUG=portals
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer systemd-boot-update.service
 ```
 
-## Step 5: Complete Install Before SecureBoot Install
+## Step 5: Complete Install
 
 ```bash
 # Exit chroot environment
@@ -660,112 +784,9 @@ exit
 # Unmount all partitions
 umount -R /mnt
 
-# Reboot into the firmware
-systemctl reboot --firmware-setup
+# Reboot
+reboot
 ```
-
-## Step 6 SecureBoot Install
-
-* Reboot into UEFI setup. The sbctl workflow expects Setup Mode before enrolling.
-  
-* Find Secure Boot, choose “Reset to Setup Mode” or “Delete all Secure Boot keys.”
-  
-* Do not enable Secure Boot yet. Boot back into your just-installed Arch system.
-
-### Install sbctl and create signing keys
-
-sbctl creates Platform Key, KEK, and db for you. 
-
-```bash
-pacman -S --needed sbctl
-
-# sanity
-sbctl status    # should say: secure boot disabled, setup mode, etc.
-
-# make a PK/KEK/db set
-sbctl create-keys
-```
-
-### Enroll keys including Microsoft’s
-
-Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
-```bash
-# Enroll your keys, with Microsoft's keys, to the UEFI:
-sbctl enroll-keys -m
-
-# For some PCs, for example with a Framework laptop, it is recommended to also include the OEM firmware's built-in certificates.
-# If you want to retain the ability to upgrade the firmware and run others boot applications provided by OEM. In this case run instead:
-sbctl enroll-keys -m -f
-```
-
-### Sign the whole boot chain (systemd-boot and UKIs)
-
-Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
-
-1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service. 
-```bash
-# sign the bootloader in its source location
-sbctl sign -s \
-  -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
-  /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-
-# optional: also sign the fallback BOOTX64.EFI if present
-if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
-  sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
-fi
-```
-
-2. Sign the UKIs you generated with mkinitcpio:
-```bash
-# adjust names if you changed them in your presets
-sbctl sign -s /efi/EFI/Linux/arch-linux-zen.efi
-sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
-```
-
-3. Quick sweep for anything else that needs signing:
-```bash
-# list anything unsigned that sbctl tracks, then sign it
-sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
-```
-
-### Enable Secure Boot and verify
-
-Reboot into firmware, enable Secure Boot
-
-```bash
-# Reboot into the firmware
-systemctl reboot --firmware-setup
-
-# Enable SecureBoot #
-```
-
-Then reboot back into Arch. Verify:
-
-```bash
-sbctl status   # should show: Secure Boot enabled, and files signed
-```
-
-### Enroll TPM2 for LUKS after Secure Boot is active
-* Do this only after Secure Boot is enabled, so the binding to PCR 7 reflects your real Secure Boot state.
-* The reason why is that when you bind to PCR 7, the TPM ties the secret to the Secure Boot state and enrolled certs.
-* If SB is off during enrollment, the TPM policy will not match once SB is on.
-* The Arch Wiki explicitly says to enroll TPM after signing and enabling SB.
-* The HOOKS=(... systemd ... sd-encrypt ...) are correct for LUKS with systemd’s decryptor.
-* With a same-disk layout and the 8304 “Linux x86-64 root” type, the systemd-gpt-auto-generator approach is valid, so you still do not need cryptdevice kernel args.
-
-```bash
-# optional but strongly recommended
-systemd-cryptenroll --recovery-key /dev/nvme0n1p2
-
-# verify a TPM is visible
-systemd-cryptenroll --tpm2-device=list
-
-# enroll TPM2 bound to PCR 7 (SB state). You can add +15 if you want firmware config sensitivity.
-systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
-# or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
-# systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
-```
-
 ---
 
 # OPTIONAL: Post-Install Tutorial
