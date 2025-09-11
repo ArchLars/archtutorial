@@ -627,6 +627,11 @@ nano ~/.zshrc
 # Replace "Lars" with your own name and add this to the very bottom of ~/.zshrc:
 #
 PROMPT='%F{white}%B[%F{#1793d1}Arch%F{white}Lars%F{white}] %F{cyan}%~ %f%(!.#.$) '
+
+# Optional alias for installing packages: alias pacin='yay -S --needed --noconfirm'
+# with this you can just write 'pacin' and then package to install anything
+# Example: pacin firefox
+# Reason why this is optional is because some might consider it risky
 ```
 
 ### Reload & Guide
