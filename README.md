@@ -374,6 +374,22 @@ sudo pacman -S --needed \
   base-devel
 ```
 
+And finally for Intel GPUs (I think):
+```bash
+sudo pacman -S --needed \
+  networkmanager reflector \
+  pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
+  plasma-meta dolphin konsole kitty xdg-desktop-portal-gtk kio-admin \
+  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
+  linux-firmware \
+  mesa \
+  vulkan-icd-loader vulkan-intel \
+  libva intel-media-driver libvdpau-va-gl \
+  terminus-font pkgstats hunspell hunspell-en_us \
+  pacman-contrib git wget ttf-dejavu \
+  base-devel
+```
+
 
 
 ### 4.7 Configure Initramfs
