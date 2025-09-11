@@ -1,4 +1,4 @@
-# Quick Arch Linux Tutorial (KDE Plasma + NVIDIA + Wayland w/ Automounting)
+# Complete Arch Linux Tutorial (KDE Plasma + Wayland w/ Automounting Partitions)
 
 This is a quick Arch installation guide for noobs that just want a working system to game on that's straight forward with a DE that is most like Windows
 and usually the one most people want to use because of that, at least for their first DE. I've used every DE and WM that is both trendy and some obscure,
