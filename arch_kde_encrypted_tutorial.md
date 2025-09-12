@@ -154,9 +154,10 @@ When systemd-gpt-auto-generator detects a partition with type 8304 that contains
 #
 cryptsetup luksFormat --type luks2 --sector-size 4096 /dev/nvme0n1p2
 ```
+Open it and persist the useful runtime flags in the LUKS2 header:
+
 ```bash
-# Open it and persist the useful runtime flags in the LUKS2 header
-# (these will apply automatically at every boot, including gpt-auto unlock)
+# These will apply automatically at every boot, including gpt-auto unlock.
 # This creates /dev/mapper/root which we'll format in the next step
 cryptsetup open \
   --allow-discards \  # n.b - This can leak usage patterns. 
