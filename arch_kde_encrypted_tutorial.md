@@ -139,10 +139,11 @@ When systemd-gpt-auto-generator detects a partition with type 8304 that contains
 * Mounts the unlocked volume as root
 
 #### Create the LUKS container on the root partition:
-```bash
-# 1) Set up LUKS2 encryption on the root partition
-# You'll be prompted to enter YES (in capitals) and create a passphrase
 
+* Here you will set up LUKS2 encryption on the root partition.
+* You'll be prompted to enter YES (in capitals) and create a passphrase.
+
+```bash
 # 4K encryption sectors are set at format time.
 # LUKS2 with 4 KiB encryption sectors is valid and often faster,
 # it is the optimal sector size according to the Arch Wiki
@@ -165,7 +166,10 @@ cryptsetup open \
   --persistent \
   /dev/nvme0n1p2 root
 ```
-# 2) Verify the LUKS header was created successfully
+
+Verify the LUKS header was created successfully:
+
+```bash
 cryptsetup luksDump /dev/nvme0n1p2
 
 # Optional 'Flags' sanity check specifically
