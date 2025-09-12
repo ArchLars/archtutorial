@@ -635,73 +635,114 @@ sudo pacman -S --needed \
 ## Step 8.5, DKMS signing for NVIDIA (certs-local)
 **IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
 
-In this guide we will use the `certs-local` method for this, which assumes the kernel trusts your out-of-tree certificate, and DKMS auto-signs with it. Kernels do not use your UEFI db/PK for module verification. The kernel validates modules against its own keyrings, not the platform keyring, which is why just enrolling keys with sbctl is not enough for out-of-tree modules. 
+We will be using DKMS’s Native signing method by setting mok_signing_key and mok_certificate so that nvidia-open-dkms builds come out pre-signed. Then we enroll that cert with mokutil. This works on stock kernels with signature enforcement turned on (module.sig_enforce=1, which you already added in Step 4.7). shim is a Microsoft-signed first-stage bootloader. When you boot through shim and enroll your Machine Owner Key (MOK), the kernel can trust modules signed with that key. DKMS can sign every module it builds if you point it at your private key and certificate. That way nvidia-open-dkms is always signed, so with module.sig_enforce=1 the driver loads cleanly. We will: install shim and tools, generate a MOK keypair, tell DKMS to use it, rebuild the NVIDIA modules, enroll the cert, and verify. 
 
-#### 8.5.1 Install prerequisites
+#### 8.5.1 Install shim and tools
+
+* mokutil manages the MOK database that shim uses.
+* sbsigntools provides sbsign which you may use later to sign EFI binaries if needed.
+* DKMS is the framework that builds the NVIDIA open modules and will sign them for us.
+  
 ```bash
-# Install the helper for zstd-compressed modules
-# nvidia-open-dkms already pulled in dkms itself
-pacman -S --needed python-zstandard
+# You already have base-devel and git from Step 8.
+# Build shim from AUR (no AUR helper needed):
+cd /root
+git clone https://aur.archlinux.org/shim-signed.git
+cd shim-signed
+makepkg -si
+
+# Tools to sign and enroll, plus dkms if it is not present:
+pacman -S --needed sbsigntools mokutil dkms
 ```
 
 ### 8.5.2 Install the certs-local DKMS helpers
 
-* `arch-sign-modules` are signed (In Tree & Out of Tree) Kernel Modules for `linux` `linux-lts` `linux-hardened` `linux-zen` `linux-rt` + AUR kernels.
-* We are using the `linux-zen` and `linux-lts` kernels in this tutorial.
+* shim looks for a file named grubx64.efi by default. We keep systemd-boot, we just let shim launch it by using that filename. Your ESP is /efi from earlier.
+* This follows the Arch Wiki’s shim setup: copy shimx64.efi and mmx64.efi, and use grubx64.efi as the next stage so shim finds it reliably. We are using systemd-boot’s binary at that name.
+* Tip: leave your existing systemd-boot boot entry in place for recovery. Your firmware will try the new “Shim (MOK) [Arch]” entry first once you move it up in boot order.
 
 ```bash
-# build from AUR using makepkg (you already have git and base-devel)
-git clone https://aur.archlinux.org/arch-sign-modules.git
-cd arch-sign-modules
-makepkg -si
-cd ..
-rm -rf arch-sign-modules
+# Make a standard fallback path and copy shim:
+mkdir -p /efi/EFI/BOOT
+cp /usr/share/shim-signed/shimx64.efi /efi/EFI/BOOT/BOOTX64.EFI
+cp /usr/share/shim-signed/mmx64.efi   /efi/EFI/BOOT/
 
-# copy the DKMS helper files into /etc/dkms
-install -D /usr/src/certs-local/dkms/kernel-sign.conf /etc/dkms/kernel-sign.conf
-install -D /usr/src/certs-local/dkms/kernel-sign.sh   /etc/dkms/kernel-sign.sh
-chmod 755 /etc/dkms/kernel-sign.sh
+# Let shim chainload systemd-boot under the name grubx64.efi:
+cp /efi/EFI/systemd/systemd-bootx64.efi /efi/EFI/BOOT/grubx64.efi
 
-# Build and install kernels with your OOT cert compiled into the kernel keyring
-abk -u linux-zen   # update PKGBUILD and inject certs-local config
-abk -b linux-zen   # build
-abk -i linux-zen   # install
-
-abk -u linux-lts
-abk -b linux-lts
-abk -i linux-lts
+# Add an NVRAM entry that boots shim
+efibootmgr --create --disk /dev/nvme0n1 --part 1 \
+  --label "Shim (MOK) [Arch]" \
+  --loader '\EFI\BOOT\BOOTX64.EFI'
+efibootmgr -v  # sanity check
 ```
 
-### 8.5.3 Tell DKMS to auto-sign NVIDIA builds
+### 8.5.3 Make a MOK keypair (PEM for DKMS, DER for enrollment)
 
-* The certs-local method uses `ln -s kernel-sign.conf module_name.conf`. 
-* Create one symlink per DKMS module name so DKMS runs the signer:
+* Create a private key and X.509 certificate. 
+* DKMS will use the PEM files, shim/MokManager wants DER for enrollment.
+* The shim + MOK workflow expects a 2048-bit RSA key.
+* MokManager wants the certificate in DER format for import. 
 
 ```bash
-cd /etc/dkms
-# NVIDIA’s DKMS module name is "nvidia"
-ln -sf kernel-sign.conf nvidia.conf
+# Create a directory for your MOK
+mkdir -p /root/secureboot/mok
+cd /root/secureboot/mok
+
+# Generate 2048-bit RSA MOK (recommended for shim)
+openssl req -new -x509 -newkey rsa:2048 -nodes -days 36500 \
+  -keyout MOK.key \
+  -out    MOK.crt \
+  -subj "/CN=Arch DKMS MOK/"
+
+# Convert certificate to DER for mokutil enrollment
+openssl x509 -in MOK.crt -outform DER -out MOK.cer
+
+chmod 400 MOK.key
 ```
 
-### 8.5.4 Rebuild and sign the NVIDIA modules for all installed kernels
+### 8.5.4 Tell DKMS to sign with your MOK (Native DKMS method)
 
-DKMS compiles per installed headers and runs the post-build signer you just set. 
+* DKMS natively signs what it builds if you point it to your key and cert in /etc/dkms/framework.conf (or a drop-in). 
+* Also make sure sign-file comes from the kernel headers. On Arch’s stock kernels, headers provide scripts/sign-file.
+* This is exactly the “Native DKMS method” described on the Arch Wiki’s Signed kernel modules page, and DKMS’s upstream README documents these mok_* variables.
 
 ```bash
-# build for zen and lts in one go
+mkdir -p /etc/dkms/framework.conf.d
+
+cat >/etc/dkms/framework.conf.d/10-mok.conf <<'EOF'
+mok_signing_key=/root/secureboot/mok/MOK.key
+mok_certificate=/root/secureboot/mok/MOK.crt
+sign_file=/lib/modules/${kernelver}/build/scripts/sign-file
+EOF
+```
+
+### 8.5.5 Rebuild NVIDIA modules so they are signed
+
+* Now rebuild nvidia-open-dkms for both kernels you installed (zen and lts). The DKMS hooks will sign as it builds.
+* After this, each built .ko should have an embedded signature. We will verify after enrollment. 
+
+```bash
+# Make sure headers for both kernels are present (you installed them earlier).
+# Reinstall to trigger a DKMS rebuild and signing:
+pacman -S --needed nvidia-open-dkms
+
+# Check DKMS status
+dkms status
+
+# Optional: force a rebuild for all installed kernels
 dkms autoinstall
 ```
 
-### 8.5.5 Verify signatures
+### 8.5.6 Enroll the MOK certificate
 
-`modinfo` exposes the module’s signer field, and the kernel’s module-signing facility validates on load. 
+* Queue the DER certificate for enrollmen.
 
 ```bash
-# show the signer recorded in the module
-modinfo -F signer nvidia
+# Queue the cert for shim to enroll
+mokutil --import /root/secureboot/mok/MOK.cer
 
-# you can also look for signature messages
-dmesg | grep -i 'module.*sign'
+# You will be asked for a one-time password. Set it & REMEMBER it.
 ```
 ---
 
@@ -799,7 +840,19 @@ Reboot into firmware, enable Secure Boot
 # Reboot into the firmware
 systemctl reboot --firmware-setup
 
-# Enable SecureBoot #
+# If on NVIDIA / Enable SecureBoot #
+1. Turn off Setup Mode
+2. Enable SecureBoot in your BIOS
+3. Remove ArchISO
+4. Choose your “Shim (MOK) [Arch]” boot entry
+5. Boot from it.
+6. On reboot, MokManager appears, pick Enroll MOK.
+7. Then pick Continue.
+8. Then pick Yes.
+9. Then enter the password you set with `mokutil --import`
+10. Then reboot.
+
+# If on AMDGPU / Enable SecureBoot #
 1. Turn off Setup Mode
 2. Enable SecureBoot in your BIOS
 3. Remove ArchISO (USB)
@@ -811,6 +864,10 @@ systemctl reboot --firmware-setup
 
 ```bash
 sbctl status   # should show: Secure Boot enabled, and files signed
+
+If NVIDIA:
+bootctl status | sed -n '1,25p'   # look for: Secure Boot: enabled (user)
+mokutil --list-enrolled | grep 'Arch DKMS MOK'
 ```
 
 ### Step 13. Enroll TPM2 for LUKS after Secure Boot is active
