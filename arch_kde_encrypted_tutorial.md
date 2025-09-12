@@ -560,6 +560,18 @@ sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
 sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 ```
 
+## Step 6.6 Export sbctl's db certificate for MOK enrollment
+
+If you are using NVIDIA you will need to to make shim trust sbctl's signatures:
+```bash
+# Export sbctl's db certificate to DER format for MOK enrollment
+openssl x509 -in /usr/share/secureboot/keys/db/db.pem \
+  -outform DER -out /root/secureboot/mok/sbctl_db.cer
+
+# Verify the certificate was exported correctly
+openssl x509 -in /root/secureboot/mok/sbctl_db.cer -inform DER -text -noout | grep Subject
+```
+
 ## Step 7 Package Choice
 
 * I removed `pkgstats` from this install considering the nature of it.
@@ -817,9 +829,15 @@ dkms autoinstall
 
 ```bash
 # Queue the cert for shim to enroll
+# First, enroll the DKMS MOK for module signing
 mokutil --import /root/secureboot/mok/MOK.cer
 
-# You will be asked for a one-time password. Set it & REMEMBER it.
+# Set and remember a password for DKMS MOK #
+
+# Then, enroll sbctl's db certificate so shim trusts systemd-boot
+mokutil --import /root/secureboot/mok/sbctl_db.cer
+
+# Set and remember a password for sbctl db cert #
 ```
 ---
 
@@ -845,13 +863,26 @@ systemctl reboot --firmware-setup
 1. Turn off Setup Mode
 2. Enable SecureBoot in your BIOS
 3. Remove ArchISO
-4. Choose your “Shim (MOK) [Arch]” boot entry
-5. Boot from it.
-6. On reboot, MokManager appears, pick Enroll MOK.
-7. Then pick Continue.
-8. Then pick Yes.
-9. Then enter the password you set with `mokutil --import`
-10. Then reboot.
+4. Choose your "Shim (MOK) [Arch]" boot entry
+5. Boot from it
+6. MokManager appears - you'll need to enroll BOTH certificates:
+   
+   First enrollment (DKMS MOK):
+   a. Select "Enroll MOK"
+   b. Select MOK.cer
+   c. View key to verify it's your DKMS MOK
+   d. Confirm enrollment
+   e. Enter the password you set for DKMS MOK
+   
+   Second enrollment (sbctl db):
+   f. Select "Enroll MOK" again
+   g. Select sbctl_db.cer  
+   h. View key to verify it's sbctl's db certificate
+   i. Confirm enrollment
+   j. Enter the password you set for sbctl db
+   
+7. Select "Continue boot"
+8. System will reboot
 
 # If on AMDGPU / Enable SecureBoot #
 1. Turn off Setup Mode
@@ -868,7 +899,15 @@ sbctl status   # should show: Secure Boot enabled, and files signed
 
 If NVIDIA:
 bootctl status | sed -n '1,25p'   # look for: Secure Boot: enabled (user)
-mokutil --list-enrolled | grep 'Arch DKMS MOK'
+
+# Check that both MOKs are enrolled
+mokutil --list-enrolled | grep -E "CN=Arch DKMS MOK|CN=Platform Key"
+
+# Verify shim can load systemd-boot
+sbverify --list /efi/EFI/BOOT/grubx64.efi
+
+# Verify NVIDIA modules are signed and loadable
+modinfo nvidia | grep signature
 ```
 
 ### Step 13. Enroll TPM2 for LUKS after Secure Boot is active
