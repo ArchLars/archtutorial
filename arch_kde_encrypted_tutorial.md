@@ -149,25 +149,22 @@ When systemd-gpt-auto-generator detects a partition with type 8304 that contains
 #
 # N.B: 1) that changing this later requires a *FULL* re-encrypt
 #
-# 2) that using an encryption sector size like 4 KiB that's larger
-# than a physical sector size could risk data corruption on a sudden power loss.
-# Most NVMe's will be fine, but please be aware of this before following.
-#
-# And 3) that the partitions have been aligened correctly before proceeding.
+# 2) that the partitions have been aligened correctly before proceeding.
 #
 cryptsetup luksFormat --type luks2 --sector-size 4096 /dev/nvme0n1p2
-
+```
+```bash
 # Open it and persist the useful runtime flags in the LUKS2 header
 # (these will apply automatically at every boot, including gpt-auto unlock)
 # This creates /dev/mapper/root which we'll format in the next step
 cryptsetup open \
-  --allow-discards \  # n.b - This can leak usage patterns. Important trade-off.
-  --perf-no_read_workqueue \
+  --allow-discards \  # n.b - This can leak usage patterns. 
+  --perf-no_read_workqueue \  
   --perf-no_write_workqueue \
   --perf-submit_from_crypt_cpus \
   --persistent \
   /dev/nvme0n1p2 root
-
+```
 # 2) Verify the LUKS header was created successfully
 cryptsetup luksDump /dev/nvme0n1p2
 
