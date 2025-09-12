@@ -354,7 +354,7 @@ EDITOR=nano visudo
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
-# Example for MODULES if you use nvidia:
+# Example for MODULES if you use amdgpu:
 MODULES=(amdgpu)
 
 # Example for MODULES if you use nvidia:
