@@ -354,8 +354,11 @@ EDITOR=nano visudo
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
-# Example for MODULES:
-MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
+# Example for MODULES if you use nvidia:
+MODULES=(amdgpu)
+
+# Example for MODULES if you use nvidia:
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 #
 # Example for HOOKS (with LUKS encryption)
 HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block sd-encrypt filesystems fsck)
@@ -403,10 +406,7 @@ nano /etc/kernel/cmdline
 # rootflags add options to the root filesystem, like noatime
 # noatime is a typical optimization for EXT4 systems.
 #
-## /etc/kernel/cmdline
-rw rootflags=noatime
-
-# FOR NVIDIA: Arch’s kernels do not enable lockdown by default.
+# Arch’s kernels do not enable lockdown by default.
 # Signature enforcement is opt-in with module.sig_enforce=1
 # Lockdown can be added via lockdown=integrity if you want that policy as well.
 ## /etc/kernel/cmdline
