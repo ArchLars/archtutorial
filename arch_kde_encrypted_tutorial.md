@@ -604,7 +604,7 @@ reflector \
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb efibootmgr \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu libva-utils \
@@ -616,7 +616,7 @@ pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb efibootmgr \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode linux-firmware \
   mesa \
@@ -632,7 +632,7 @@ sudo pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb efibootmgr \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   linux-firmware \
   mesa \
