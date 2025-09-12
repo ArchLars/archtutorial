@@ -641,7 +641,7 @@ In this guide we will use the `certs-local` method for this, which assumes the k
 ```bash
 # Install the helper for zstd-compressed modules
 # nvidia-open-dkms already pulled in dkms itself
-sudo pacman -S --needed python-zstandard
+pacman -S --needed python-zstandard
 ```
 
 ### 8.5.2 Install the certs-local DKMS helpers
@@ -658,9 +658,18 @@ cd ..
 rm -rf arch-sign-modules
 
 # copy the DKMS helper files into /etc/dkms
-sudo install -D /usr/src/certs-local/dkms/kernel-sign.conf /etc/dkms/kernel-sign.conf
-sudo install -D /usr/src/certs-local/dkms/kernel-sign.sh   /etc/dkms/kernel-sign.sh
-sudo chmod 755 /etc/dkms/kernel-sign.sh
+install -D /usr/src/certs-local/dkms/kernel-sign.conf /etc/dkms/kernel-sign.conf
+install -D /usr/src/certs-local/dkms/kernel-sign.sh   /etc/dkms/kernel-sign.sh
+chmod 755 /etc/dkms/kernel-sign.sh
+
+# Build and install kernels with your OOT cert compiled into the kernel keyring
+abk -u linux-zen   # update PKGBUILD and inject certs-local config
+abk -b linux-zen   # build
+abk -i linux-zen   # install
+
+abk -u linux-lts
+abk -b linux-lts
+abk -i linux-lts
 ```
 
 ### 8.5.3 Tell DKMS to auto-sign NVIDIA builds
@@ -671,7 +680,7 @@ sudo chmod 755 /etc/dkms/kernel-sign.sh
 ```bash
 cd /etc/dkms
 # NVIDIA’s DKMS module name is "nvidia"
-sudo ln -sf kernel-sign.conf nvidia.conf
+ln -sf kernel-sign.conf nvidia.conf
 ```
 
 ### 8.5.4 Rebuild and sign the NVIDIA modules for all installed kernels
@@ -680,7 +689,7 @@ DKMS compiles per installed headers and runs the post-build signer you just set.
 
 ```bash
 # build for zen and lts in one go
-sudo dkms autoinstall
+dkms autoinstall
 ```
 
 ### 8.5.5 Verify signatures
