@@ -108,8 +108,13 @@ lsblk -l  # To confirm, replace if it says anything else
 
 sgdisk --zap-all /dev/nvme0n1
 
-sgdisk -n1:0:+1G -t1:EF00 -c1:"EFI system" /dev/nvme0n1
-sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
+# When using 4096-byte sectors in LUKS, the partition size must be a multiple of 4096 bytes (8 sectors of 512 bytes).
+# The device mapper will fail if the partition isn't properly aligned.
+# -I makes sgdisk align partition ends, and -a 1M is explicit MiB alignment.
+# Using +1GiB avoids decimal vs binary confusion.
+#
+sgdisk -I -a 1M -n1:0:+1GiB -t1:EF00 -c1:"EFI system" /dev/nvme0n1
+sgdisk -I -a 1M -n2:0:0 -t2:8304 -c2:"Linux root (x86-64)" /dev/nvme0n1
 ```
 
 **Partition Layout:**
