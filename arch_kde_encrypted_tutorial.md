@@ -891,6 +891,13 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 # systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
 ```
 
+### Step 14. Pacman hook for NVIDIA DKMS on Systemd Update
+
+When systemd-boot updates, bootctl will refresh EFI/systemd/systemd-bootx64.efi and prefer the .efi.signed file
+but your EFI/BOOT/grubx64.efi copy will not be touched. For this we will add a tiny pacman hook that, after systemd updates, 
+copies the freshly signed /usr/lib/.../systemd-bootx64.efi.signed to EFI/BOOT/grubx64.efi. The “.efi.signed preference” is 
+documented in the man page and ArchWiki.
+
 * Add a tiny pacman hook that runs after any systemd update.
 * It copies the already-signed systemd-boot from /usr/lib/.../systemd-bootx64.efi.signed
 * to the filename shim expects, /efi/EFI/BOOT/grubx64.efi
