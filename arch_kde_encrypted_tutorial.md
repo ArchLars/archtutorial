@@ -657,7 +657,7 @@ pacman -S --needed sbsigntools mokutil dkms
 
 ### 8.5.2 Install the certs-local DKMS helpers
 
-* shim looks for a file named grubx64.efi by default. We keep systemd-boot, we just let shim launch it by using that filename. Your ESP is /efi from earlier.
+* shim looks for a file named grubx64.efi by default. We keep systemd-boot, we just let shim launch it by using that filename. Your ESP is /efi from earlier that we signed.
 * This follows the Arch Wiki’s shim setup: copy shimx64.efi and mmx64.efi, and use grubx64.efi as the next stage so shim finds it reliably. We are using systemd-boot’s binary at that name.
 * Tip: leave your existing systemd-boot boot entry in place for recovery. Your firmware will try the new “Shim (MOK) [Arch]” entry first once you move it up in boot order.
 
@@ -667,8 +667,8 @@ mkdir -p /efi/EFI/BOOT
 cp /usr/share/shim-signed/shimx64.efi /efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/share/shim-signed/mmx64.efi   /efi/EFI/BOOT/
 
-# Let shim chainload systemd-boot under the name grubx64.efi:
-cp /efi/EFI/systemd/systemd-bootx64.efi /efi/EFI/BOOT/grubx64.efi
+# Let shim chainload systemd-boot entry that we signed way earlier under the name grubx64.efi:
+cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed /efi/EFI/BOOT/grubx64.efi
 
 # Add an NVRAM entry that boots shim
 efibootmgr --create --disk /dev/nvme0n1 --part 1 \
@@ -890,6 +890,40 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 # or, with an explicit policy including PCR 15 all-zero to reduce brittleness:
 # systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
 ```
+
+* Add a tiny pacman hook that runs after any systemd update.
+* It copies the already-signed systemd-boot from /usr/lib/.../systemd-bootx64.efi.signed
+* to the filename shim expects, /efi/EFI/BOOT/grubx64.efi
+
+```bash
+# Create hook
+install -d /etc/pacman.d/hooks
+nano /etc/pacman.d/hooks/ZZ-copy-sdboot-to-grubx64.hook
+
+## add
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = systemd
+
+[Action]
+Description = Copy signed systemd-boot to ESP/EFI/BOOT/grubx64.efi
+When = PostTransaction
+# Run late and only do work if the signed binary exists and ESP is mounted
+Exec = /bin/sh -c '\
+  SRC="/usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed"; \
+  DST="/efi/EFI/BOOT/grubx64.efi"; \
+  [ -d /efi ] || exit 0; \
+  if [ -f "$SRC" ]; then \
+    install -Dm0644 "$SRC" "$DST"; \
+  else \
+    # fallback if you ever drop .efi.signed (not recommended)
+    install -Dm0644 /usr/lib/systemd/boot/efi/systemd-bootx64.efi "$DST"; \
+  fi'
+Depends = sh
+```
+
 
 ---
 
