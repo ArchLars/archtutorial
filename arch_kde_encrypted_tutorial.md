@@ -10,57 +10,18 @@ This is an Arch installation guide for novices **WITH LUKS encryption, TPM2 and 
 
 **SecureBoot** ensures that only signed, trusted code can run during the boot process. We'll be signing our own bootloader and kernel images, creating what's called a "chain of trust." If Secure Boot is disabled or its key databases are tampered with, the TPM will not release the key to unlock the encrypted partition.
 
----
+We will be using systemd-gpt-auto-generator in this tutorial too, and it comes with an added benefit for LUKS setups. When systemd-gpt-auto-generator detects a partition with type 8304 that contains LUKS, it automatically:
 
-# INTRODUCTION - How GPT Auto-Mounting Works
+* Creates /dev/gpt-auto-root-luks symlink pointing to the encrypted partition
+* Attempts to unlock it using systemd-cryptsetup
+* Creates /dev/gpt-auto-root symlink pointing to the unlocked volume
+* Mounts the unlocked volume as root
 
-Modern systemd uses `systemd-gpt-auto-generator` to automatically discover and mount partitions based on specific 128-bit **UUIDs,** eliminating the need for manual `/etc/fstab` entries. This system is useful for centralizing file system configuration in the partition table and making configuration in `/etc/fstab` or on the kernel command line unnecessary. This is similar to the OS you probably switched away from and are more familiar with; Windows. - Windows identifies volumes by what they call "GUIDs" (Volume{GUID} paths). Now for your sake all you need to know is that a GUID is functionally the same thing as the specific 128-bit UUIDs that we will use on Linux, but instead of mounting to `boot` or `root` they mount their "GUIDs" to set drives defined by a letter, so `C:` drives and `D:` drives. That is why some letters are reserved for largely depreciated functions, as mounting on Windows is identified by a set identifier just like your system's UUIDs will do.
-
-Your drive partitions like `boot` and `root` will not be mounted by `fstab`, instead they will automount entirely by using UUIDs by using `systemd-gpt-auto-generator`. This is preferable in my opinion to `fstab` which feels like a hack and places too much control of system reliance upon a single text based config. This is anecdotal, but I have heard of what happens when some package or update randomly decides to destroy your `fstab` and it is **NOT** fun to troubleshoot if it happens. It's often difficult to know what is going wrong and many hours will be wasted until you realize your fstab for whatever reason is empty or has some typos.
-
-Now this is still unconventional which is part of the fun of using this as it justifies the manual install, but since it is unique it's worth familiarizing yourself with how this works before following my guide. 
-
-## The UUIDs
-
-When you use the partition type codes in this guide:
-- `EF00` (EFI System Partition)
-- `8304` (Linux x86-64 root)  
-
-systemd automatically creates mount units based on these partition type UUIDs. Each hex code corresponds to a specific 128-bit UUID that tells the system exactly what that partition is for. The system recognizes these GUIDs and then mounts accordingly, just like a modern system should. This approach is similar to how partitioning works on other systems.
-For extra storage you can use the generic Linux filesystem code:
-- `8300`
-
-systemd won't auto-mount these, giving you control over when and where they mount which again to me is ideal, if need be you can mount them on boot with a systemd service. This allows you to avoid `fstab` issues forever. No more random issues where it's suddenly overwritten for some reason or anything else, mounting is seperate and automated.
+This is much less tedious than a manual setup. For more on how GPT Auto-Mounting works in general, read the intro to `arch_kde_tutorial.md`
 
 ---
 
-# - CONS: -
-
-Same Disk Only: Auto-mounting only works for partitions on the same physical disk as your root partition.
-
-Boot Loader Dependency: The boot loader must set the `LoaderDevicePartUUID` EFI variable for root partition detection to work. systemd-boot (used in this guide) supports this. Check if the bootloader you wish to use does.
-For GRUB to set the `LoaderDevicePartUUID` UEFI variable load the bli module in grub.cfg:
-```ini
-if [ "$grub_platform" = "efi" ]; then
-  insmod bli
-fi
-```
-
-First Partition Rule: systemd mounts the first partition of each type it finds. If you have multiple 8302 partitions on the same disk, **then only the first one gets auto-mounted.**
-
-No Multi-Disk Support: This won't work on systems where the root filesystem is distributed across multiple disks (like BTRFS RAID).
-
-# - PROS: -
-
-Portability: Your disk image can boot on different hardware without `fstab` changes
-
-Self-Describing: The partition table contains all mounting information
-
-Container-Friendly: Tools like systemd-nspawn can automatically set up filesystems from GPT images
-
-Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random updates doing weird stuff messing with it.
-
-## What I will mainly be using/setting:
+## What I will personally be using/setting:
 
 - systemd-automount for GPT partitions 
 - KDE Plasma on Wayland
@@ -78,6 +39,8 @@ Reduced Maintenance: No broken boots from typos in `/etc/fstab` or random update
 I included some stuff for AMDGPUs too, but my system is NVIDIA so I may have missed some things.
 
 NVIDIA modeset is set by default, and according to the wiki setting fbdev manually is now unnecessary so I will not set those. PLEASE check the wiki before install for anything. **POST-INSTALL GUIDE IS SUPER OPINIONATED, FOLLOW BY OWN VOLITION.**
+
+---
 
 *Protip:* This tutorial uses Norwegian keymaps and locale/timezone settings. Simply replace those with your own (e.g. keymap, `LANG`, `TZ`).
 If you use an English lang keyboard you can ignore all of it, but it's worth knowing if you are new and use a different keyboard like say `de-latin1` for German keyboards.
