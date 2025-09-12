@@ -632,7 +632,7 @@ sudo pacman -S --needed \
 ```
 ---
 
-## Step 8.5, DKMS signing for NVIDIA (certs-local)
+## Step 8.5, DKMS signing for NVIDIA on SecureBoot
 **IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
 
 We will be using DKMS’s Native signing method by setting mok_signing_key and mok_certificate so that nvidia-open-dkms builds come out pre-signed. Then we enroll that cert with mokutil. This works on stock kernels with signature enforcement turned on (module.sig_enforce=1, which you already added in Step 4.7). shim is a Microsoft-signed first-stage bootloader. When you boot through shim and enroll your Machine Owner Key (MOK), the kernel can trust modules signed with that key. DKMS can sign every module it builds if you point it at your private key and certificate. That way nvidia-open-dkms is always signed, so with module.sig_enforce=1 the driver loads cleanly. We will: install shim and tools, generate a MOK keypair, tell DKMS to use it, rebuild the NVIDIA modules, enroll the cert, and verify. 
