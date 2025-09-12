@@ -115,6 +115,9 @@ sgdisk --zap-all /dev/nvme0n1
 #
 sgdisk -I -a 1M -n1:0:+1GiB -t1:EF00 -c1:"EFI system" /dev/nvme0n1
 sgdisk -I -a 1M -n2:0:0 -t2:8304 -c2:"Linux root (x86-64)" /dev/nvme0n1
+
+# This test should afterwards report zero
+test $(( $(blockdev --getsize64 /dev/nvme0n1p2) % 4096 )) -eq 0 && echo OK || echo NOT_ALIGNED
 ```
 
 **Partition Layout:**
