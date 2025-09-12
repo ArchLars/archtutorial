@@ -109,7 +109,7 @@ lsblk -l  # To confirm, replace if it says anything else
 sgdisk --zap-all /dev/nvme0n1
 
 # When using 4096-byte sectors in LUKS, the partition size must be a multiple of 4096 bytes (8 sectors of 512 bytes).
-# The device mapper will fail if the partition isn't properly aligned.
+# The device mapper will fail if the partition isn't properly aligned. This makes resizing particularily challenging.
 # -I makes sgdisk align partition ends, and -a 1M is explicit MiB alignment.
 # Using +1GiB avoids decimal vs binary confusion.
 #
