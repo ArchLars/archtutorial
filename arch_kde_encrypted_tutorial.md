@@ -903,11 +903,39 @@ documented in the man page and ArchWiki.
 * to the filename shim expects, /efi/EFI/BOOT/grubx64.efi
 
 ```bash
-# Create hook
-install -d /etc/pacman.d/hooks
-nano /etc/pacman.d/hooks/ZZ-copy-sdboot-to-grubx64.hook
+# create the helper
+sudo install -Dm0755 /dev/stdin /usr/local/bin/copy-sdboot-to-grubx64 <<'EOF'
+#!/bin/sh
+set -eu
 
-## add
+SRC="/usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed"
+ALT="/usr/lib/systemd/boot/efi/systemd-bootx64.efi"
+DST="/efi/EFI/BOOT/grubx64.efi"
+
+# need ESP mounted at /efi
+mountpoint -q /efi || exit 0
+
+# prefer the signed artifact, fallback to unsigned if needed
+if [ -f "$SRC" ]; then
+  install -Dm0644 "$SRC" "$DST"
+elif [ -f "$ALT" ]; then
+  install -Dm0644 "$ALT" "$DST"
+else
+  # nothing to copy
+  exit 0
+fi
+
+# optional sanity if sbverify is present
+if command -v sbverify >/dev/null 2>&1 && [ -f "$SRC" ]; then
+  sbverify --list "$DST" >/dev/null 2>&1 || true
+fi
+EOF
+```
+
+```bash
+# hook that calls the helper on systemd update
+sudo install -d /etc/pacman.d/hooks
+sudo tee /etc/pacman.d/hooks/99-sdboot-to-grubx64.hook >/dev/null <<'EOF'
 [Trigger]
 Operation = Install
 Operation = Upgrade
@@ -917,18 +945,9 @@ Target = systemd
 [Action]
 Description = Copy signed systemd-boot to ESP/EFI/BOOT/grubx64.efi
 When = PostTransaction
-# Run late and only do work if the signed binary exists and ESP is mounted
-Exec = /bin/sh -c '\
-  SRC="/usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed"; \
-  DST="/efi/EFI/BOOT/grubx64.efi"; \
-  [ -d /efi ] || exit 0; \
-  if [ -f "$SRC" ]; then \
-    install -Dm0644 "$SRC" "$DST"; \
-  else \
-    # fallback if you ever drop .efi.signed (not recommended)
-    install -Dm0644 /usr/lib/systemd/boot/efi/systemd-bootx64.efi "$DST"; \
-  fi'
-Depends = sh
+Depends = systemd
+Exec = /usr/local/bin/copy-sdboot-to-grubx64
+EOF
 ```
 
 
