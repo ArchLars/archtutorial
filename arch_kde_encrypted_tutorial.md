@@ -1,6 +1,14 @@
 # Complete Arch Linux Tutorial (KDE Plasma + Wayland + LUKS + SecureBoot + TPM2 w/ Automounting Partitions)
 
-This is a Arch installation guide for novices **WITH LUKS encryption, TPM2 and SecureBoot** (More complex) who want a working secure system to game on that's straight forward & encrypted. I am assuming you have already read and understood `arch_kde_tutorial.md` before tackling this one.
+This is an Arch installation guide for novices **WITH LUKS encryption, TPM2 and SecureBoot** (More complex) who want a working secure system to game on that's straight forward & encrypted. I am assuming you have already read and understood `arch_kde_tutorial.md` before tackling this one. For this we are going to be building a system that's as secure as it is functional, but without the usual hassle that comes with hardcore security setups. Think of it like having bank-level security that actually gets out of your way instead of constantly asking for passwords.
+
+### The Trio: LUKS + SecureBoot + TPM2
+
+**LUKS encryption** protects your data at rest 
+
+**TPM2** (Trusted Platform Module 2.0) a security chip on your motherboard that can securely store encryption keys and only release them when your system is in a "trusted state." The TPM will automatically unlock your drive as long as your boot chain hasn't been tampered with.
+
+**SecureBoot** ensures that only signed, trusted code can run during the boot process. We'll be signing our own bootloader and kernel images, creating what's called a "chain of trust." If Secure Boot is disabled or its key databases are tampered with, the TPM will not release the key to unlock the encrypted partition.
 
 ---
 
