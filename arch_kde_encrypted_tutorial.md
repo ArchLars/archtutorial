@@ -592,7 +592,7 @@ reflector \
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu libva-utils \
@@ -604,7 +604,7 @@ pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode linux-firmware \
   mesa \
@@ -620,7 +620,7 @@ sudo pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
+  plasma-meta dolphin konsole kitty kio-admin wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   linux-firmware \
   mesa \
@@ -629,120 +629,6 @@ sudo pacman -S --needed \
   terminus-font hunspell hunspell-en_us \
   pacman-contrib git wget ttf-dejavu \
   base-devel
-```
----
-
-## Step 8.5, DKMS signing for NVIDIA on SecureBoot
-**IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
-
-We will be using DKMS’s Native signing method by setting mok_signing_key and mok_certificate so that nvidia-open-dkms builds come out pre-signed. Then we enroll that cert with mokutil. This works on stock kernels with signature enforcement turned on (module.sig_enforce=1, which you already added in Step 4.7). shim is a Microsoft-signed first-stage bootloader. When you boot through shim and enroll your Machine Owner Key (MOK), the kernel can trust modules signed with that key. DKMS can sign every module it builds if you point it at your private key and certificate. That way nvidia-open-dkms is always signed, so with module.sig_enforce=1 the driver loads cleanly. We will: install shim and tools, generate a MOK keypair, tell DKMS to use it, rebuild the NVIDIA modules, enroll the cert, and verify. 
-
-#### 8.5.1 Install shim and tools
-
-* mokutil manages the MOK database that shim uses.
-* sbsigntools provides sbsign which you may use later to sign EFI binaries if needed.
-* DKMS is the framework that builds the NVIDIA open modules and will sign them for us.
-  
-```bash
-# You already have base-devel and git from Step 8.
-# Build shim from AUR (no AUR helper needed):
-cd /root
-git clone https://aur.archlinux.org/shim-signed.git
-cd shim-signed
-makepkg -si
-
-# Tools to sign and enroll, plus dkms if it is not present:
-pacman -S --needed sbsigntools mokutil dkms
-```
-
-### 8.5.2 Install the certs-local DKMS helpers
-
-* shim looks for a file named grubx64.efi by default. We keep systemd-boot, we just let shim launch it by using that filename. Your ESP is /efi from earlier that we signed.
-* This follows the Arch Wiki’s shim setup: copy shimx64.efi and mmx64.efi, and use grubx64.efi as the next stage so shim finds it reliably. We are using systemd-boot’s binary at that name.
-* Tip: leave your existing systemd-boot boot entry in place for recovery. Your firmware will try the new “Shim (MOK) [Arch]” entry first once you move it up in boot order.
-
-```bash
-# Make a standard fallback path and copy shim:
-mkdir -p /efi/EFI/BOOT
-cp /usr/share/shim-signed/shimx64.efi /efi/EFI/BOOT/BOOTX64.EFI
-cp /usr/share/shim-signed/mmx64.efi   /efi/EFI/BOOT/
-
-# Let shim chainload systemd-boot entry that we signed way earlier under the name grubx64.efi:
-cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed /efi/EFI/BOOT/grubx64.efi
-
-# Add an NVRAM entry that boots shim
-efibootmgr --create --disk /dev/nvme0n1 --part 1 \
-  --label "Shim (MOK) [Arch]" \
-  --loader '\EFI\BOOT\BOOTX64.EFI'
-efibootmgr -v  # sanity check
-```
-
-### 8.5.3 Make a MOK keypair (PEM for DKMS, DER for enrollment)
-
-* Create a private key and X.509 certificate. 
-* DKMS will use the PEM files, shim/MokManager wants DER for enrollment.
-* The shim + MOK workflow expects a 2048-bit RSA key.
-* MokManager wants the certificate in DER format for import. 
-
-```bash
-# Create a directory for your MOK
-mkdir -p /root/secureboot/mok
-cd /root/secureboot/mok
-
-# Generate 2048-bit RSA MOK (recommended for shim)
-openssl req -new -x509 -newkey rsa:2048 -nodes -days 36500 \
-  -keyout MOK.key \
-  -out    MOK.crt \
-  -subj "/CN=Arch DKMS MOK/"
-
-# Convert certificate to DER for mokutil enrollment
-openssl x509 -in MOK.crt -outform DER -out MOK.cer
-
-chmod 400 MOK.key
-```
-
-### 8.5.4 Tell DKMS to sign with your MOK (Native DKMS method)
-
-* DKMS natively signs what it builds if you point it to your key and cert in /etc/dkms/framework.conf (or a drop-in). 
-* Also make sure sign-file comes from the kernel headers. On Arch’s stock kernels, headers provide scripts/sign-file.
-* This is exactly the “Native DKMS method” described on the Arch Wiki’s Signed kernel modules page, and DKMS’s upstream README documents these mok_* variables.
-
-```bash
-mkdir -p /etc/dkms/framework.conf.d
-
-cat >/etc/dkms/framework.conf.d/10-mok.conf <<'EOF'
-mok_signing_key=/root/secureboot/mok/MOK.key
-mok_certificate=/root/secureboot/mok/MOK.crt
-sign_file=/lib/modules/${kernelver}/build/scripts/sign-file
-EOF
-```
-
-### 8.5.5 Rebuild NVIDIA modules so they are signed
-
-* Now rebuild nvidia-open-dkms for both kernels you installed (zen and lts). The DKMS hooks will sign as it builds.
-* After this, each built .ko should have an embedded signature. We will verify after enrollment. 
-
-```bash
-# Make sure headers for both kernels are present (you installed them earlier).
-# Reinstall to trigger a DKMS rebuild and signing:
-pacman -S --needed nvidia-open-dkms
-
-# Check DKMS status
-dkms status
-
-# Optional: force a rebuild for all installed kernels
-dkms autoinstall
-```
-
-### 8.5.6 Enroll the MOK certificate
-
-* Queue the DER certificate for enrollmen.
-
-```bash
-# Queue the cert for shim to enroll
-mokutil --import /root/secureboot/mok/MOK.cer
-
-# You will be asked for a one-time password. Set it & REMEMBER it.
 ```
 ---
 
@@ -821,6 +707,121 @@ GDK_DEBUG=portals
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer \
 reflector.timer systemd-boot-update.service
 ```
+
+
+## Step 10.5, DKMS signing for NVIDIA on SecureBoot
+**IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
+
+We will be using DKMS’s Native signing method by setting mok_signing_key and mok_certificate so that nvidia-open-dkms builds come out pre-signed. Then we enroll that cert with mokutil. This works on stock kernels with signature enforcement turned on (module.sig_enforce=1, which you already added in Step 4.7). shim is a Microsoft-signed first-stage bootloader. When you boot through shim and enroll your Machine Owner Key (MOK), the kernel can trust modules signed with that key. DKMS can sign every module it builds if you point it at your private key and certificate. That way nvidia-open-dkms is always signed, so with module.sig_enforce=1 the driver loads cleanly. We will: install shim and tools, generate a MOK keypair, tell DKMS to use it, rebuild the NVIDIA modules, enroll the cert, and verify. 
+
+#### 10.5.1 Install shim and tools
+
+* mokutil manages the MOK database that shim uses.
+* sbsigntools provides sbsign which you may use later to sign EFI binaries if needed.
+* DKMS is the framework that builds the NVIDIA open modules and will sign them for us.
+  
+```bash
+# You already have base-devel and git from Step 8.
+# Build shim from AUR (no AUR helper needed):
+cd /root
+git clone https://aur.archlinux.org/shim-signed.git
+cd shim-signed
+makepkg -si
+
+# Tools to sign and enroll, plus dkms if it is not present:
+pacman -S --needed sbsigntools mokutil dkms
+```
+
+### 10.5.2 Install the certs-local DKMS helpers
+
+* shim looks for a file named grubx64.efi by default. We keep systemd-boot, we just let shim launch it by using that filename. Your ESP is /efi from earlier that we signed.
+* This follows the Arch Wiki’s shim setup: copy shimx64.efi and mmx64.efi, and use grubx64.efi as the next stage so shim finds it reliably. We are using systemd-boot’s binary at that name.
+* Tip: leave your existing systemd-boot boot entry in place for recovery. Your firmware will try the new “Shim (MOK) [Arch]” entry first once you move it up in boot order.
+
+```bash
+# Make a standard fallback path and copy shim:
+mkdir -p /efi/EFI/BOOT
+cp /usr/share/shim-signed/shimx64.efi /efi/EFI/BOOT/BOOTX64.EFI
+cp /usr/share/shim-signed/mmx64.efi   /efi/EFI/BOOT/
+
+# Let shim chainload systemd-boot entry that we signed way earlier under the name grubx64.efi:
+cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed /efi/EFI/BOOT/grubx64.efi
+
+# Add an NVRAM entry that boots shim
+efibootmgr --create --disk /dev/nvme0n1 --part 1 \
+  --label "Shim (MOK) [Arch]" \
+  --loader '\EFI\BOOT\BOOTX64.EFI'
+efibootmgr -v  # sanity check
+```
+
+### 10.5.3 Make a MOK keypair (PEM for DKMS, DER for enrollment)
+
+* Create a private key and X.509 certificate. 
+* DKMS will use the PEM files, shim/MokManager wants DER for enrollment.
+* The shim + MOK workflow expects a 2048-bit RSA key.
+* MokManager wants the certificate in DER format for import. 
+
+```bash
+# Create a directory for your MOK
+mkdir -p /root/secureboot/mok
+cd /root/secureboot/mok
+
+# Generate 2048-bit RSA MOK (recommended for shim)
+openssl req -new -x509 -newkey rsa:2048 -nodes -days 36500 \
+  -keyout MOK.key \
+  -out    MOK.crt \
+  -subj "/CN=Arch DKMS MOK/"
+
+# Convert certificate to DER for mokutil enrollment
+openssl x509 -in MOK.crt -outform DER -out MOK.cer
+
+chmod 400 MOK.key
+```
+
+### 10.5.4 Tell DKMS to sign with your MOK (Native DKMS method)
+
+* DKMS natively signs what it builds if you point it to your key and cert in /etc/dkms/framework.conf (or a drop-in). 
+* Also make sure sign-file comes from the kernel headers. On Arch’s stock kernels, headers provide scripts/sign-file.
+* This is exactly the “Native DKMS method” described on the Arch Wiki’s Signed kernel modules page, and DKMS’s upstream README documents these mok_* variables.
+
+```bash
+mkdir -p /etc/dkms/framework.conf.d
+
+cat >/etc/dkms/framework.conf.d/10-mok.conf <<'EOF'
+mok_signing_key=/root/secureboot/mok/MOK.key
+mok_certificate=/root/secureboot/mok/MOK.crt
+sign_file=/lib/modules/${kernelver}/build/scripts/sign-file
+EOF
+```
+
+### 10.5.5 Rebuild NVIDIA modules so they are signed
+
+* Now rebuild nvidia-open-dkms for both kernels you installed (zen and lts). The DKMS hooks will sign as it builds.
+* After this, each built .ko should have an embedded signature. We will verify after enrollment. 
+
+```bash
+# Make sure headers for both kernels are present (you installed them earlier).
+# Reinstall to trigger a DKMS rebuild and signing:
+pacman -S --needed nvidia-open-dkms
+
+# Check DKMS status
+dkms status
+
+# Optional: force a rebuild for all installed kernels
+dkms autoinstall
+```
+
+### 10.5.6 Enroll the MOK certificate
+
+* Queue the DER certificate for enrollmen.
+
+```bash
+# Queue the cert for shim to enroll
+mokutil --import /root/secureboot/mok/MOK.cer
+
+# You will be asked for a one-time password. Set it & REMEMBER it.
+```
+---
 
 ## Step 11: Complete Pre-SecureBoot Install
 
