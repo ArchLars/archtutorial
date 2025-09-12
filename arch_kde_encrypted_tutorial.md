@@ -560,7 +560,7 @@ sbctl sign -s /efi/EFI/Linux/arch-linux-lts.efi
 sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 ```
 
-## Step 6.6 Export sbctl's db certificate for MOK enrollment
+## Step 6.6 ONLY FOR NVIDIA: Export sbctl's db certificate for MOK enrollment
 
 If you are using NVIDIA you will need to to make shim trust sbctl's signatures:
 ```bash
@@ -712,7 +712,7 @@ GTK_USE_PORTAL=1
 GDK_DEBUG=portals
 ```
 
-### Step 10 Enable Essential Services
+### Step 9.5 Enable Essential Services
 
 ```bash
 # Enable network, display manager, and timesyncd
@@ -721,12 +721,12 @@ reflector.timer systemd-boot-update.service
 ```
 
 
-## Step 10.5, DKMS signing for NVIDIA on SecureBoot
+## Step 10 ONLY FOR NVIDIA: DKMS signing for NVIDIA on SecureBoot
 **IMPORTANT EXTRA STEP FOR NVIDIA USERS:** when `nvidia-open-dkms` builds its kernel modules, DKMS signs them with your key, and the running kernel accepts them when module signature enforcement is on. The kernel will only load signed modules once you turned on `module.sig_enforce=1`. In-tree modules are already signed and fine. Out-of-tree modules like NVIDIA need to be signed with a key the kernel trusts. 
 
 We will be using DKMS’s Native signing method by setting mok_signing_key and mok_certificate so that nvidia-open-dkms builds come out pre-signed. Then we enroll that cert with mokutil. This works on stock kernels with signature enforcement turned on (module.sig_enforce=1, which you already added in Step 4.7). shim is a Microsoft-signed first-stage bootloader. When you boot through shim and enroll your Machine Owner Key (MOK), the kernel can trust modules signed with that key. DKMS can sign every module it builds if you point it at your private key and certificate. That way nvidia-open-dkms is always signed, so with module.sig_enforce=1 the driver loads cleanly. We will: install shim and tools, generate a MOK keypair, tell DKMS to use it, rebuild the NVIDIA modules, enroll the cert, and verify. 
 
-#### 10.5.1 Install shim and tools
+### 10.5.1 Install shim and tools
 
 * mokutil manages the MOK database that shim uses.
 * sbsigntools provides sbsign which you may use later to sign EFI binaries if needed.
@@ -931,7 +931,7 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 # systemd-cryptenroll /dev/nvme0n1p2 --tpm2-device=auto --tpm2-pcrs=7+15:sha256=$(printf '0%.0s' {1..64})
 ```
 
-### Step 14. Pacman hook for NVIDIA DKMS on Systemd Update
+### Step 14. ONLY FOR NVIDIA: Pacman hook for NVIDIA DKMS on Systemd Update
 
 When systemd-boot updates, bootctl will refresh EFI/systemd/systemd-bootx64.efi and prefer the .efi.signed file
 but your EFI/BOOT/grubx64.efi copy will not be touched. For this we will add a tiny pacman hook that, after systemd updates, 
