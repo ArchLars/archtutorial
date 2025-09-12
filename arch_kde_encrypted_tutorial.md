@@ -541,7 +541,7 @@ sbctl sign -s \
   -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed \
   /usr/lib/systemd/boot/efi/systemd-bootx64.efi
 
-# optional only for AMDGPU (No shims)
+# optional only for AMDGPU (No shim)
 # also sign the fallback BOOTX64.EFI if present:
 #
 if [ -f /efi/EFI/BOOT/BOOTX64.EFI ]; then
