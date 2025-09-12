@@ -534,7 +534,7 @@ sbctl enroll-keys -m -f
 Your ESP is at /efi and your UKIs live in /efi/EFI/Linux. Sign both the bootloader and the UKIs.
 
 1. Sign the systemd-boot binary in /usr/lib and emit a .efi.signed. On update, bootctl will prefer the signed copy automatically. Signing the /usr/lib copy avoids a gap with systemd-boot-update.service.
-*  The reason why is if you use systemd-boot and systemd-boot-update.service, the boot loader is only updated after a reboot, and the sbctl pacman hook will therefore not sign the new file. So as a workaround, it can be useful to sign the boot loader directly in /usr/lib/. A bootctl install and update will automatically recognize and copy .efi.signed files to the ESP if present, instead of the normal .efi file.
+*  The reason why is if you use systemd-boot and systemd-boot-update.service, the boot loader is only updated after a reboot, and the sbctl pacman hook will therefore not sign the new file. So as a workaround, it can be useful to sign the boot loader directly in /usr/lib/. A bootctl install and update will automatically recognize and copy .efi.signed files to the ESP if present, instead of the normal .efi file. 
 ```bash
 # sign the bootloader in its source location
 sbctl sign -s \
@@ -592,7 +592,7 @@ reflector \
 pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda terminus-font hunspell hunspell-en_us  \
   pacman-contrib git wget ttf-dejavu libva-utils \
@@ -604,7 +604,7 @@ pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode linux-firmware \
   mesa \
@@ -620,7 +620,7 @@ sudo pacman -S --needed \
 sudo pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
+  plasma-meta dolphin konsole kitty kio-admin sbsigntools wireless-regdb \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   linux-firmware \
   mesa \
