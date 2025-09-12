@@ -101,7 +101,7 @@ timedatectl set-ntp true
 
 ## Step 1: Partition the NVMe Drive
 
-Create a GPT partition table with three partitions AFTER checking your drive name with `lsblk -l` :
+Create a GPT partition table with two partitions AFTER checking your drive name with `lsblk -l` :
 
 ```bash
 lsblk -l  # To confirm, replace if it says anything else
