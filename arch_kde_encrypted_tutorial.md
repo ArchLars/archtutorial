@@ -811,6 +811,7 @@ systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 
 # 1) OPTIONAL: Post-Install Tutorial
 Head to `arch_post_tutorial.md` to do the post-install tutorial.
+(NOTE: I am currently writing the version of adding a new drive that's encrypted for this tutorial, don't do the one that's there now)
 
 ---
 
