@@ -540,7 +540,7 @@ ls -la *.esl 2>/dev/null
 pacman -S --needed sbsigntools
 ```
 
-# Convert and inspect the certificates (if they exist)
+#### Convert and inspect the certificates (if they exist)
 ```bash
 for esl in *.esl; do
     [ -f "$esl" ] || continue
@@ -555,6 +555,11 @@ done
 
 # Alternative: use sbctl to check what vendor keys are available
 sbctl list-enrolled-keys 2>/dev/null
+```
+
+```bash
+# Return to previous directory
+cd /mnt
 ```
 
 ### Step 6 Enroll keys including Microsoft’s
