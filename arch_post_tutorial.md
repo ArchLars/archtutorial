@@ -365,11 +365,44 @@ sudo systemctl enable --now nohang-desktop.service
 [Journal]
 SystemMaxUse=50M
 ```
+## Video Playback
 
-### MPV hardware acceleration:
+My advice is pick one here, you can do both but it's best to not clutter your system.
+
+### Option 1) VLC
+
+#### VLC Install:
 ```bash
-# install mpv (audio / video)
-yay -S --needed --noconfirm mpv
+# VLC is the only officially supported third-party player with official Phonon support on KDE.
+# It's more fully featured than MPV, MPV requires more manual config to look better.
+#
+# install vlc (video)
+yay -S --needed --noconfirm vlc vlc-plugin-ffmpeg vlc-plugins-all
+
+# Hardware Acceleration:
+## VLC automatically tries to use an available API
+## You can override it by going to Tools > Preferences > Input & Codecs.
+## Choose the suitable option under Hardware-accelerated decoding,
+
+# Phonon backend (for integration within KDE):
+yay -S --needed phonon-qt6-vlc
+
+# OPTIONAL: Plugin to allow you to click on the video inside VLC's window
+# and it will be paused or resumed. This is a commonly expected behavior:
+yay -S --needed vlc-pause-click-plugin
+```
+
+### Option 2) MPV
+#### MPV Install:
+```bash
+# Has become more popular in recent years, is very powerful but a bit nerdy
+# If you care about manual configs and stuff use MPV, otherwise use VLC
+#
+# install mpv (video)
+yay -S --needed --noconfirm mpv  
+
+# (Third-party) Phonon Support for mpv
+yay -S --needed --noconfirm phonon-qt6-mpv
 
 # You have to do this if you want GPU acceleration for your wholesome entertainment
 mkdir -p ~/.config/mpv
