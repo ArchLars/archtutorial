@@ -523,8 +523,8 @@ cd /root/existing_keys_backup
 
 #### Read and backup all existing keys in ESL format
 ```bash
-# write out all of this and press enter after 'done'
-for var in PK KEK db dbx; do 
+# write out all of this and press enter after each 'do' and 'done' to run.
+for var in PK KEK db dbx; do  # Press enter here to go down to 2nd line
     efi-readvar -v $var -o old_${var}.esl 2>/dev/null  # Press Tab for code indentation
 done
 ```
