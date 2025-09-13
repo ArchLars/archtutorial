@@ -377,12 +377,12 @@ NVIDIA:
 # pipe commands, like before type out each pipe line, press enter on each until base-devel
 # then when u press enter it installs it all
 pacman -S --needed \
-  networkmanager reflector \
+  networkmanager reflector pkgstats \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin \
-  sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  nvidia-open-dkms nvidia-utils libva-nvidia-driver cuda pkgstats hunspell hunspell-en_us  \
-  pacman-contrib git wget libva-utils \
+  plasma-meta dolphin konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs  \
+  linux-zen-headers linux-lts-headers \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
+  pacman-contrib git wget hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-emoji terminus-font ttf-dejavu \
   base-devel
 ```
