@@ -525,7 +525,7 @@ cd /root/existing_keys_backup
 ```bash
 # write out all of this and press enter after 'done'
 for var in PK KEK db dbx; do 
-    efi-readvar -v $var -o old_${var}.esl 2>/dev/null
+    efi-readvar -v $var -o old_${var}.esl 2>/dev/null  # Press Tab for code indentation
 done
 ```
 
@@ -542,6 +542,7 @@ pacman -S --needed sbsigntools
 
 #### Convert and inspect the certificates (if they exist)
 ```bash
+# write out all of this and press enter after 'done'
 for esl in *.esl; do
     [ -f "$esl" ] || continue
     base=$(basename "$esl" .esl)
@@ -571,6 +572,8 @@ Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when
 sbctl enroll-keys -m --export esl
 ls -la *.esl  # Review what would be enrolled
 rm *.esl      # Clean up the preview files
+
+---
 
 # OPTION 1: Standard setup (most common)
 # Use this for most desktop systems and custom-built PCs
