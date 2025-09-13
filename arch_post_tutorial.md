@@ -525,10 +525,20 @@ As of now there is an issue on Wayland with NVIDIA where the power state goes do
 ### 0) confirm driver + tool exist
 ```bash
 nvidia-smi || { echo "nvidia-smi not found or driver not loaded"; exit 1; }
+
+# try idling a bit in firefox wait 5 seconds then scroll
+# you will see a noticable jump or lag when doing so, esp on 4k.
+
+# try it again and this time run this in another monitor on a terminal:
+nvidia-smi --query-gpu=clocks.mem,clocks.gr,pstate,power.draw,temperature.gpu \
+  --format=csv -l 1
+
+# you will see the jump happens from when the clocks readjust from a very low point
 ```
 
 ### 1) create the clock-locking script
 ```bash
+# to solve this we will set minimum clock speed
 # what it does: installs /usr/local/sbin/lock-nvidia-mem.sh with a safe, dynamic min/max picker
 sudo nano /usr/local/sbin/lock-nvidia-mem.sh
 ```
@@ -667,6 +677,12 @@ nvidia-smi -i "${GPU:-0}" -q -d CLOCK | head -n 80
 ```bash
 # what it does: prints chosen MIN/MAX and applies lock interactively
 sudo /usr/local/sbin/lock-nvidia-mem.sh
+
+# now test again with the script from step 0 and see the difference
+nvidia-smi --query-gpu=clocks.mem,clocks.gr,pstate,power.draw,temperature.gpu \
+  --format=csv -l 1
+
+# this also allows you to keep an eye on temps and power.
 ```
 
 ---
