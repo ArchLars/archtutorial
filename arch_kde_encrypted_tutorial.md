@@ -507,10 +507,10 @@ arch-chroot /mnt
 # Install sbctl
 pacman -S --needed sbctl
 
-# sanity
+# to confirm
 sbctl status    # should say: secure boot disabled, setup mode, etc.
 
-# make a PK/KEK/db set
+# if ok make a PK/KEK/db set
 sbctl create-keys
 
 # Install efitools to read existing keys
@@ -554,7 +554,7 @@ Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when
 ```bash
 # Check what keys will be enrolled before committing
 # You can export/preview what will be enrolled without actually enrolling
-sbctl enroll-keys -m --export esl
+sbctl enroll-keys -m -f --export esl
 ls -la *.esl  # Review what would be enrolled
 rm *.esl      # Clean up the preview files
 
@@ -566,7 +566,6 @@ sbctl enroll-keys -m
 
 # OPTION 2: Laptop/OEM system with vendor firmware
 # Use this for laptops (especially Framework, Dell, HP, Lenovo)
-# or if you found OEM certificates above
 sbctl enroll-keys -m -f
 ```
 
