@@ -431,7 +431,7 @@ MODULES=(amdgpu)
 # Example for MODULES if you use nvidia:
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 #
-# Example for HOOKS (with LUKS encryption)
+# Example for HOOKS
 HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block filesystems fsck)
 
 # Key changes:
