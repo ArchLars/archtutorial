@@ -512,46 +512,15 @@ sbctl status    # should say: secure boot disabled, setup mode, etc.
 
 # if ok make a PK/KEK/db set
 sbctl create-keys
-
-# Install efitools to read existing keys
-pacman -S --needed efitools
-
-# Create a backup directory for existing keys
-mkdir -p /root/existing_keys_backup
-
-cd /root/existing_keys_backup
-```
-
-#### Read and backup all existing keys in ESL format
-
-```bash
-# write out all of this and press enter after each 'do' and 'done' to run.
-for var in PK KEK db dbx; do  # Press enter here to go down to 2nd line
-    efi-readvar -v $var -o old_${var}.esl 2>/dev/null  # Press Tab for code indentation
-done
-```
-
-#### use sbctl to check what vendor keys are available
-
-```bash
-sbctl list-enrolled-keys 2>/dev/null
-```
-
-#### Check if any keys were successfully backed up
-
-```bash
-ls -la *.esl 2>/dev/null
-```
-
-```bash
-# Return to previous directory
-cd /mnt
 ```
 
 ### Step 6 Enroll keys including Microsoft’s
 
 Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
 ```bash
+# Install efitools to read existing keys
+pacman -S --needed efitools
+
 # Check what keys will be enrolled before committing
 # You can export/preview what will be enrolled without actually enrolling
 sbctl enroll-keys -m -f --export esl
