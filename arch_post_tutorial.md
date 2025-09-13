@@ -610,7 +610,7 @@ sudo nano /etc/default/nvidia-lock
 ```
 
 ```bash
-# ----- BEGIN /etc/default/nvidia-lock -----
+# ----- /etc/default/nvidia-lock -----
 # GPU index and percentile
 GPU=0
 PCT=0.70
