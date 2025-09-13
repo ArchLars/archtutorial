@@ -512,20 +512,68 @@ sbctl status    # should say: secure boot disabled, setup mode, etc.
 
 # make a PK/KEK/db set
 sbctl create-keys
+
+# Install efitools to read existing keys
+pacman -S --needed efitools
+
+# Create a backup directory for existing keys
+mkdir -p /root/existing_keys_backup
+cd /root/existing_keys_backup
+```
+
+#### Read and backup all existing keys in ESL format
+```bash
+# write out all of this and press enter after 'done'
+for var in PK KEK db dbx; do 
+    efi-readvar -v $var -o old_${var}.esl 2>/dev/null
+done
+```
+
+#### Check if any keys were successfully backed up
+```bash
+ls -la *.esl 2>/dev/null
+```
+
+```bash
+# Convert ESL files to human-readable certificates to inspect them
+# This helps identify if there are OEM-specific certificates
+pacman -S --needed sbsigntools
+```
+
+# Convert and inspect the certificates (if they exist)
+```bash
+for esl in *.esl; do
+    [ -f "$esl" ] || continue
+    base=$(basename "$esl" .esl)
+    sig-list-to-certs "$esl" "$base" 2>/dev/null
+done
+
+# Check for vendor-specific certificates
+find . -name "*.der" -type f 2>/dev/null | while read cert; do
+    openssl x509 -in "$cert" -inform DER -text -noout | grep -E "Subject:|Issuer:" || true
+done
+
+# Alternative: use sbctl to check what vendor keys are available
+sbctl list-enrolled-keys 2>/dev/null
 ```
 
 ### Step 6 Enroll keys including Microsoft’s
 
 Enroll your keys and add Microsoft’s as well. The Arch Wiki recommends -m when you need Microsoft’s certs. -f additionally keeps OEM certificates, which can help on some laptops. Some device firmware and Windows boot components are validated with Microsoft’s CAs. Excluding them can break boot paths or firmware flashes when Secure Boot is on.
 ```bash
-# Enroll your keys, with Microsoft's keys, to the UEFI:
+# Check what keys will be enrolled before committing
+# You can export/preview what will be enrolled without actually enrolling
+sbctl enroll-keys -m --export esl
+ls -la *.esl  # Review what would be enrolled
+rm *.esl      # Clean up the preview files
+
+# OPTION 1: Standard setup (most common)
+# Use this for most desktop systems and custom-built PCs
 sbctl enroll-keys -m
 
-# For some PCs, for example with a Framework laptop, it is recommended
-# to also include the OEM firmware's built-in certificates.
-#
-# If you want to retain the ability to upgrade the firmware and
-# run others boot applications provided by OEM. In this case run instead:
+# OPTION 2: Laptop/OEM system with vendor firmware
+# Use this for laptops (especially Framework, Dell, HP, Lenovo)
+# or if you found OEM certificates above
 sbctl enroll-keys -m -f
 ```
 
