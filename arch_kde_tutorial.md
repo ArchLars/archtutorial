@@ -420,15 +420,25 @@ sudo pacman -S --needed \
 
 
 
-### 4.7 Configure Initramfs
+### 4.6 Configure Initramfs
 
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
-# MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm) if you use nvidia
-# Remove 'kms' from HOOKS=() also if you use nvidia, AMDGPU can ignore this however
+# Example for MODULES if you use amdgpu:
+MODULES=(amdgpu)
 
-# IMPORTANT: Remove 'udev' from HOOKS=() and add 'systemd' E.g. : HOOKS=(base systemd ... )
+# Example for MODULES if you use nvidia:
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+#
+# Example for HOOKS (with LUKS encryption)
+HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block filesystems fsck)
+
+# Key changes:
+# - MUST use 'systemd' instead of 'udev' 
+# - Use 'sd-vconsole' instead of 'keymap' and 'consolefont'
+# - Remove 'kms' from HOOKS=() also if you use nvidia, AMDGPU can ignore this however
+# - Ensure microcode is in HOOKS=()
 #
 # NOTE: IF you do not remove udev and if you do not replace it with systemd,
 # THEN YOUR SYSTEM WILL NOT BOOT.
@@ -437,8 +447,6 @@ nano /etc/mkinitcpio.conf
 # It's worth doublechecking.
 # Check this again if your system isn't booting post-install.
 
-# Finally ensure microcode is in HOOKS=()
-# And replace BOTH keymap and consolefont with sd-vconsole in HOOKS=() since we are using systemd
 ```
 
 ### 4.8 Install UKIs and Configure Bootloader
@@ -665,15 +673,5 @@ Head to `arch_post_tutorial.md` to do the post-install tutorial.
 
 * Whenever you write `mkinitcpio -P` you might notice it keeps warning you about firmware that you are supposedly missing.
 * If this bothers you, check out my tutorial, `mkinitcpio-fix.md` to fix this.
-
----
-
-# 3) OPTIONAL: Add LXQt with Openbox + picom for a Lightweight backup X11 session
-
-Since X11 has been depreciated with Plasma (though you can still try to use it I wouldn't recc it) 
-I would instead choose to use something like LXQt (which works well with SDDM as well) for your backup
-session with X11.
-
-Head to `lxqt-post-install.md` for this tutorial.
 
 ---
