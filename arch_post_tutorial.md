@@ -214,7 +214,10 @@ widget.use-xdg-desktop-portal.file-picker → 1 (always)
 #### (Optional) - Add all buttons to Firefox
 ```bash
 # Sometimes Firefox does not have the minimize and maximize buttons
-# The only remedy is to install:
+# You can try this remedy:
+gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
+
+# If that still doesn't work, then try:
 yay -S --needed --noconfirm xdg-desktop-portal-gtk
 ```
 
