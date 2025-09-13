@@ -518,10 +518,12 @@ pacman -S --needed efitools
 
 # Create a backup directory for existing keys
 mkdir -p /root/existing_keys_backup
+
 cd /root/existing_keys_backup
 ```
 
 #### Read and backup all existing keys in ESL format
+
 ```bash
 # write out all of this and press enter after each 'do' and 'done' to run.
 for var in PK KEK db dbx; do  # Press enter here to go down to 2nd line
@@ -529,33 +531,16 @@ for var in PK KEK db dbx; do  # Press enter here to go down to 2nd line
 done
 ```
 
+#### use sbctl to check what vendor keys are available
+
+```bash
+sbctl list-enrolled-keys 2>/dev/null
+```
+
 #### Check if any keys were successfully backed up
+
 ```bash
 ls -la *.esl 2>/dev/null
-```
-
-```bash
-# Convert ESL files to human-readable certificates to inspect them
-# This helps identify if there are OEM-specific certificates
-pacman -S --needed sbsigntools
-```
-
-#### Convert and inspect the certificates (if they exist)
-```bash
-# write out all of this and press enter after 'done'
-for esl in *.esl; do
-    [ -f "$esl" ] || continue
-    base=$(basename "$esl" .esl)
-    sig-list-to-certs "$esl" "$base" 2>/dev/null
-done
-
-# Check for vendor-specific certificates
-find . -name "*.der" -type f 2>/dev/null | while read cert; do
-    openssl x509 -in "$cert" -inform DER -text -noout | grep -E "Subject:|Issuer:" || true
-done
-
-# Alternative: use sbctl to check what vendor keys are available
-sbctl list-enrolled-keys 2>/dev/null
 ```
 
 ```bash
