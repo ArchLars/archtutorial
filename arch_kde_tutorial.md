@@ -119,7 +119,7 @@ Set up your keyboard layou if you're not on an US keyboard, and verify UEFI boot
 localectl list-keymaps | less
 
 # or filter by country code by writing:
-localectl list-keymaps | grep -i -E '^no($|[-0-9])|jis'    # Norway example
+localectl list-keymaps | grep -i -E 'no'                   # Norway example
                                                            # "no" is our ISO-639 code. Find yours by googling first
                                                            # Then replace 'no' with your country code                 
 
