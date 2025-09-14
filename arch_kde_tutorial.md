@@ -477,9 +477,17 @@ nano /etc/kernel/cmdline
 #
 # rootflags add options to the root filesystem, like noatime
 # noatime is a typical optimization for EXT4 systems.
+# nowatchdog is also optimization. Both of them are unneeded for single use desktops.
+# they are on for "over-security"/kernel default reasons only.
+# many distros ship with nowatchdog and noatime, EOS for example.
+#
+# if you really are worried about if you need them (you probably dont) then you can
+# research them independently
+#
+# loglevel=3 just increases verbosity in logging.
 #
 ## /etc/kernel/cmdline
-rw rootflags=noatime
+rw rootflags=noatime nowatchdog loglevel=3
 ```
 
 #### Make the ESP directory
