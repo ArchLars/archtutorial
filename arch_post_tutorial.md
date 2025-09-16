@@ -383,8 +383,8 @@ ACTION=="add", SUBSYSTEM=="usb", ATTR{product}!="*Mouse", ATTR{product}!="*Keybo
 ```
 Apply and retrigger, then recheck:
 ```bash
-sudo udevadm control --reload
-sudo udevadm trigger -s usb
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=usb --action=add
 grep -H . /sys/bus/usb/devices/*/power/{control,runtime_status}
 ```
 
