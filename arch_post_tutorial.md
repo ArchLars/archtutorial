@@ -379,12 +379,7 @@ udev rules based on whitelist or blacklist filtering can help to mitigate the pr
 /etc/udev/rules.d/50-usb_power_save.rules
 ```
 ```bash
-# Match HID keyboards and mice by class/protocol, then set auto for everything else
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{bInterfaceClass}=="03", ATTRS{bInterfaceSubClass}=="01", ATTRS{bInterfaceProtocol}=="01|02", GOTO="usb_pm_end"
-
-# Enable autosuspend where supported
-ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="auto"
-LABEL="usb_pm_end"
+ACTION=="add", SUBSYSTEM=="usb", ATTR{product}!="*Mouse", ATTR{product}!="*Keyboard", TEST=="power/control", ATTR{power/control}="auto"
 ```
 Apply and retrigger, then recheck:
 ```bash
