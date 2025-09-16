@@ -431,6 +431,16 @@ nano /etc/mkinitcpio.conf
 # Example for MODULES if you use amdgpu:
 MODULES=(amdgpu)
 
+# or if you have radeon as well
+# do this so amdgpu loads first:
+MODULES=(amdgpu radeon)
+
+# Officially supported kernels enable AMDGPU support for cards of the Southern Islands (GCN 1, released in 2012)
+# and Sea Islands (GCN 2, released in 2013).
+#
+# The amdgpu kernel driver needs to be loaded before the radeon one.
+# You can check which kernel driver is loaded by running lspci -k.
+
 # Example for MODULES if you use nvidia:
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 #
@@ -485,6 +495,12 @@ nano /etc/kernel/cmdline
 # research them independently
 #
 # loglevel=3 just increases verbosity in logging.
+#
+# If you are using AMDGPU and Radeon and it insists on using Radeon instead,
+# You can add either of these depending on your card here to force the loading of AMDGPU:
+#
+# Southern Islands (SI): radeon.si_support=0 amdgpu.si_support=1
+# Sea Islands (CIK): radeon.cik_support=0 amdgpu.cik_support=1
 #
 ## /etc/kernel/cmdline
 rw rootflags=noatime nowatchdog loglevel=3
