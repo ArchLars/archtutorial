@@ -368,6 +368,19 @@ sudo systemctl enable --now nohang-desktop.service
 [Journal]
 SystemMaxUse=50M
 ```
+
+### USB autosuspend
+The Linux kernel can automatically suspend USB devices when they are not in use. 
+This can sometimes save quite a bit of power, however some USB devices are not compatible with USB power saving and start to misbehave (common for USB mice/keyboards). 
+udev rules based on whitelist or blacklist filtering can help to mitigate the problem.
+
+#### The example is enabling autosuspend for all USB devices except for keyboards and mice: 
+```bash
+/etc/udev/rules.d/50-usb_power_save.rules
+```
+```bash
+ACTION=="add", SUBSYSTEM=="usb", ATTR{product}!="*Mouse", ATTR{product}!="*Keyboard", TEST=="power/control", ATTR{power/control}="auto"
+```
 ## Video Playback
 
 My advice is pick one here, you can do both but it's best to not clutter your system.
