@@ -370,7 +370,7 @@ SystemMaxUse=50M
 ```
 
 ### USB autosuspend
-The Linux kernel can automatically suspend USB devices when they are not in use. 
+The Linux kernel automatically suspend USB devices when they are not in use. 
 This can sometimes save quite a bit of power, however some USB devices are not compatible with USB power saving and start to misbehave (common for USB mice/keyboards). 
 udev rules based on whitelist or blacklist filtering can help to mitigate the problem.
 
