@@ -675,7 +675,9 @@ exit
 umount -R /mnt
 
 # Reboot into new system
-reboot
+shutdown now
+
+# Remove ArchISO USB from computer then boot back into it
 
 # If you see a very generic type of screen, dont worry. That happens to me on every install.
 #
