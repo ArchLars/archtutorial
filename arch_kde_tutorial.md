@@ -213,8 +213,8 @@ mkfs.ext4 -L root ${d}p2     # and 'sda2' here. for nvmen0n1 it becomes nvme0n1p
 mount /dev/disk/by-label/root /mnt
 
 # Create and mount EFI directory
-mkdir -p /mnt/boot
-mount /dev/disk/by-label/EFI /mnt/boot
+mkdir -p /mnt/efi
+mount /dev/disk/by-label/EFI /mnt/efi
 ```
 
 ## Step 3: Base System Install
@@ -542,23 +542,19 @@ rw rootflags=noatime nowatchdog loglevel=3
 #### Make the ESP directory
 ```bash
 # Make ESP directory
-mkdir -p esp/EFI/Linux
+mkdir -p /efi/EFI/Linux
 ```
 
 #### Edit the mkinitcpio presets so they write UKIs to the ESP
 
 ```bash
-# If you followed where I mounted boot, then this is correct
-# Where we mounted was: /boot/EFI/
-# But if not, modify to where you did
-
 nano /etc/mkinitcpio.d/linux-zen.preset
 
-# add the mkinitcpio preset for linux-zen to linux-zen.preset:
+# Content:
 ALL_kver="/boot/vmlinuz-linux-zen"
 PRESETS=('default')
 
-default_uki="esp/EFI/Linux/arch-linux-zen.efi"
+default_uki="/efi/EFI/Linux/arch-linux-zen.efi"
 ```
 
 #### Repeat for LTS:
@@ -566,11 +562,11 @@ default_uki="esp/EFI/Linux/arch-linux-zen.efi"
 ```bash
 nano /etc/mkinitcpio.d/linux-lts.preset
 
-# mkinitcpio preset for linux-lts to linux-lts.preset:
+# Content:
 ALL_kver="/boot/vmlinuz-linux-lts"
 PRESETS=('default')
 
-default_uki="esp/EFI/Linux/arch-linux-lts.efi"
+default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
 
 ```
 
