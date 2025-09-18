@@ -523,12 +523,9 @@ nano /etc/mkinitcpio.d/linux-zen.preset
 
 # add the mkinitcpio preset for linux-zen to linux-zen.preset:
 ALL_kver="/boot/vmlinuz-linux-zen"
-PRESETS=('default' 'fallback')
+PRESETS=('default')
 
 default_uki="esp/EFI/Linux/arch-linux-zen.efi"
-
-fallback_uki="esp/EFI/Linux/arch-linux-zen-fallback.efi"
-fallback_options="-S autodetect"
 ```
 
 #### Repeat for LTS:
@@ -538,12 +535,10 @@ nano /etc/mkinitcpio.d/linux-lts.preset
 
 # mkinitcpio preset for linux-lts to linux-lts.preset:
 ALL_kver="/boot/vmlinuz-linux-lts"
-PRESETS=('default' 'fallback')
+PRESETS=('default')
 
 default_uki="esp/EFI/Linux/arch-linux-lts.efi"
 
-fallback_uki="esp/EFI/Linux/arch-linux-lts-fallback.efi"
-fallback_options="-S autodetect"
 ```
 
 #### Build the UKIs / This writes both kernel *.efi's into ESP/EFI/Linux/:
