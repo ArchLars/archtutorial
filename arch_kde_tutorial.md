@@ -138,6 +138,40 @@ ls /sys/firmware/efi/efivars && echo "UEFI firmware detected"
 
 # Sync system clock
 timedatectl set-ntp true
+
+# --- Web Test (wired & Wi-Fi) ---
+
+# See your links & their state (names like enpXsY for Ethernet, wlan0 for Wi-Fi)
+ip link           # interface listing
+networkctl list   # networkd's view; "configured" with DHCP is what you want
+
+# If you're on Ethernet, DHCP should be automatic on the ISO.
+# You can confirm an IPv4/IPv6 address like:
+networkctl status | sed -n '1,80p'   # look for "Address:" and "Gateway:"
+
+# If you're on Wi-Fi, (1) make sure nothing is soft-blocked, (2) connect with iwctl.
+rfkill list
+rfkill unblock all         # if you see "Soft blocked: yes" for wlan      (safe to run always)
+
+# Discover your wireless device name (often "wlan0" on ISO)
+iwctl device list          # copies device name from first column
+DEV="$(iwctl device list | awk 'NR>1{print $1; exit}')"   # pick first Wi-Fi device
+
+# Scan & connect (replace SSID if your AP name has spaces keep the quotes)
+iwctl station "$DEV" scan
+iwctl station "$DEV" get-networks
+iwctl station "$DEV" connect "YOUR-SSID"   # iwctl will prompt for passphrase
+
+# DNS & IP sanity checks (these distinguish raw IP reachability vs DNS resolution)
+ping -c 3 1.1.1.1            # raw IP reachability (no DNS involved)
+resolvectl query archlinux.org
+ping -c 3 archlinux.org
+
+# HTTPS test (TLS & HTTP working)
+curl -I https://archlinux.org  # expect "HTTP/2 200" (or 301/302)
+
+# Time sync sanity (NTP via systemd-timesyncd)
+timedatectl status | sed -n '1,12p'  # look for "System clock synchronized: yes"
 ```
 
 ## Step 1: Partition the NVMe Drive
