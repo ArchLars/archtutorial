@@ -348,7 +348,7 @@ ff02::2 ip6-allrouters
 passwd
 
 # Create user with necessary groups
-useradd -m -G wheel,audio,video,input lars
+useradd -m -G wheel lars
 passwd lars
 
 # Set zsh as default shell for user and root
