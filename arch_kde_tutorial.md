@@ -510,7 +510,7 @@ HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block file
 # For non-nerds: This prevents issues where the boot entry
 # might not appear in the firmware's boot menu...
 #
-bootctl install --variables=yes
+bootctl install --esp-path=/efi --variables=yes
 
 # Minimal cmdline with kernel option(s)
 nano /etc/kernel/cmdline
