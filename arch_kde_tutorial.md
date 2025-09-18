@@ -145,11 +145,15 @@ timedatectl set-ntp true
 ip link           # interface listing
 networkctl list   # networkd's view; "configured" with DHCP is what you want
 
+---
+
 Ethernet:
 
 # If you're on Ethernet, DHCP should be automatic on the ISO.
 # You can confirm an IPv4/IPv6 address like:
 networkctl status | sed -n '1,80p'   # look for "Address:" and "Gateway:"
+
+---
 
 Wi-Fi:
 
