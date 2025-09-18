@@ -402,8 +402,11 @@ This adds the audiocd:/ KIO worker so Dolphin and other KDE apps can read and ri
 ### libdvdread, libdvdnav, and libdvdcss
 This is the same as above but for DVD playback. This is needed on any DE.
 
-### libbluray, libaacs
+### libbluray and libaacs
 Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
+
+### bluez and bluez-utils
+For Bluetooth support if you use Bluetooth. You will also need to enable bluetooth.service then at the end of the tutorial.
 
 ---
 
@@ -668,6 +671,7 @@ GDK_DEBUG=portals
 ```bash
 # Enable network, display manager, and timesyncd
 # Include systemd-boot-update.service here if you aren't planning on using the hook
+# Include bluetooth.service for Bluetooth if you installed bluez and bluez-utils
 systemctl enable NetworkManager sddm systemd-timesyncd fstrim.timer reflector.timer pkgstats.timer
 ```
 
