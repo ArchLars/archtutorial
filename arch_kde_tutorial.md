@@ -428,7 +428,7 @@ sudo pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  amd-ucode linux-firmware \
+  amd-ucode \
   mesa \
   vulkan-icd-loader vulkan-radeon \
   libva libvdpau libva-utils \
@@ -445,7 +445,6 @@ sudo pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  linux-firmware \
   mesa \
   vulkan-icd-loader vulkan-intel \
   libva libva-utils intel-media-driver libvdpau-va-gl \
