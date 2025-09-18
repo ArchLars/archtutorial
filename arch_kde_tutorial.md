@@ -733,5 +733,3 @@ Head to `arch_post_tutorial.md` to do the post-install tutorial.
 
 * Whenever you write `mkinitcpio -P` you might notice it keeps warning you about firmware that you are supposedly missing.
 * If this bothers you, check out my tutorial, `mkinitcpio-fix.md` to fix this.
-
----
