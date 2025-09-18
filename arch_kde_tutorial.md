@@ -145,9 +145,13 @@ timedatectl set-ntp true
 ip link           # interface listing
 networkctl list   # networkd's view; "configured" with DHCP is what you want
 
+Ethernet:
+
 # If you're on Ethernet, DHCP should be automatic on the ISO.
 # You can confirm an IPv4/IPv6 address like:
 networkctl status | sed -n '1,80p'   # look for "Address:" and "Gateway:"
+
+Wi-Fi:
 
 # If you're on Wi-Fi, (1) make sure nothing is soft-blocked, (2) connect with iwctl.
 rfkill list
@@ -161,6 +165,8 @@ DEV="$(iwctl device list | awk 'NR>1{print $1; exit}')"   # pick first Wi-Fi dev
 iwctl station "$DEV" scan
 iwctl station "$DEV" get-networks
 iwctl station "$DEV" connect "YOUR-SSID"   # iwctl will prompt for passphrase
+
+---
 
 # DNS & IP sanity checks (these distinguish raw IP reachability vs DNS resolution)
 ping -c 3 1.1.1.1            # raw IP reachability (no DNS involved)
