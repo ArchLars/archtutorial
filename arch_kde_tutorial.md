@@ -463,7 +463,7 @@ sudo pacman -S --needed \
   libva libva-utils intel-media-driver libvdpau-va-gl \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pkgstats hunspell hunspell-en_us \
-  pacman-contrib git wget\
+  pacman-contrib git wget \
   base-devel
 ```
 
