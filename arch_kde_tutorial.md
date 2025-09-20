@@ -430,7 +430,7 @@ pacman -S --needed \
   linux-zen-headers linux-lts-headers \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
   pacman-contrib git wget hunspell hunspell-en_us \
-  noto-fonts noto-fonts-cjk noto-fonts-emoji terminus-font ttf-dejavu \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   base-devel
 ```
 
@@ -446,7 +446,7 @@ sudo pacman -S --needed \
   vulkan-icd-loader vulkan-radeon \
   libva libvdpau libva-utils \
   pkgstats hunspell hunspell-en_us \
-  noto-fonts noto-fonts-cjk noto-fonts-emoji terminus-font ttf-dejavu \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pacman-contrib git wget \
   base-devel
 ```
@@ -461,7 +461,7 @@ sudo pacman -S --needed \
   mesa \
   vulkan-icd-loader vulkan-intel \
   libva libva-utils intel-media-driver libvdpau-va-gl \
-  noto-fonts noto-fonts-cjk noto-fonts-emoji terminus-font ttf-dejavu \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pkgstats hunspell hunspell-en_us \
   pacman-contrib git wget\
   base-devel
