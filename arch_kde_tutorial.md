@@ -426,7 +426,7 @@ NVIDIA:
 pacman -S --needed \
   networkmanager reflector pkgstats \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
-  plasma-meta dolphin konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs  \
+  plasma-meta dolphin konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs \
   linux-zen-headers linux-lts-headers \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
   pacman-contrib git wget hunspell hunspell-en_us \
