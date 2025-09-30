@@ -146,7 +146,8 @@ echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/
 # You can turn this off system wide in KDE settings, but that is a bit overkill.
 nano ~/.config/kitty/kitty.conf
 
-# Add these lines:
+# Add these lines
+# to bottom of file:
 enable_audio_bell no
 visual_bell_duration 0
 window_alert_on_bell no
