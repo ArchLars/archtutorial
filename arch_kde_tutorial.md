@@ -474,22 +474,29 @@ pacman -S --needed \
 ```bash
 # Edit mkinitcpio configuration
 nano /etc/mkinitcpio.conf
-# Example for MODULES if you use amdgpu:
+
+---
+
+# Example for MODULES if you use nvidia:
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+
+---
+
+# Example for MODULES if you use amdgpu
+# Officially supported kernels enable AMDGPU support for cards of the Southern Islands (GCN 1, released in 2012)
+# and Sea Islands (GCN 2, released in 2013).
+#
+# The amdgpu kernel driver needs to be loaded before the radeon one.
+# You can check which kernel driver is loaded by running lspci -k.
+#
 MODULES=(amdgpu)
 
 # or if you have radeon as well
 # do this so amdgpu loads first:
 MODULES=(amdgpu radeon)
 
-# Officially supported kernels enable AMDGPU support for cards of the Southern Islands (GCN 1, released in 2012)
-# and Sea Islands (GCN 2, released in 2013).
-#
-# The amdgpu kernel driver needs to be loaded before the radeon one.
-# You can check which kernel driver is loaded by running lspci -k.
+---
 
-# Example for MODULES if you use nvidia:
-MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
-#
 # Example for HOOKS
 HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block filesystems fsck)
 
