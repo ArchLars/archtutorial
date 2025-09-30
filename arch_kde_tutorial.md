@@ -442,8 +442,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode \
-  mesa \
-  ffmpeg vulkan-radeon \
+  mesa vulkan-radeon \
   libva libva-utils \
   pkgstats hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
@@ -458,8 +457,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  mesa \
-  ffmpeg vulkan-intel \
+  mesa vulkan-intel \
   libva libva-utils intel-media-driver \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pkgstats hunspell hunspell-en_us \
