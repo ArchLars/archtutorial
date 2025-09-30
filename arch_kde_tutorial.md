@@ -608,9 +608,6 @@ nano /efi/loader/loader.conf
 timeout 10
 console-mode auto
 editor no
-
-# Confirm boot entries
-bootctl list
 ```
 
 ### 4.9 Create swap file & Configure Zswap
