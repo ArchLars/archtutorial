@@ -321,7 +321,8 @@ checkrebuild
 
 ### 4.2.5 Steam
 ```bash
-# then after enabling multilib DL Steam
+# then after enabling multilib DL Steam & 32-bit versions of GStreamer plugins,
+# which are necessary for audio/video playback in 32-bit software like Steam
 yay -S --needed --noconfirm steam lib32-gst-plugins-base lib32-gst-plugins-good
 
 # Run Steam in terminal to install it:
