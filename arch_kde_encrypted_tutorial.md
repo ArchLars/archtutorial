@@ -624,7 +624,7 @@ pacman -S --needed \
 
 - or AMDGPU:
 ```bash
-sudo pacman -S --needed \
+pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin wireless-regdb efibootmgr \
@@ -640,7 +640,7 @@ sudo pacman -S --needed \
 
 - or Intel GPUs:
 ```bash
-sudo pacman -S --needed \
+pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin wireless-regdb efibootmgr \
@@ -955,7 +955,7 @@ documented in the man page and ArchWiki.
 
 ```bash
 # create the helper
-sudo install -Dm0755 /dev/stdin /usr/local/bin/copy-sdboot-to-grubx64 <<'EOF'
+install -Dm0755 /dev/stdin /usr/local/bin/copy-sdboot-to-grubx64 <<'EOF'
 #!/bin/sh
 set -eu
 
@@ -985,8 +985,8 @@ EOF
 
 ```bash
 # hook that calls the helper on systemd update
-sudo install -d /etc/pacman.d/hooks
-sudo tee /etc/pacman.d/hooks/99-sdboot-to-grubx64.hook >/dev/null <<'EOF'
+install -d /etc/pacman.d/hooks
+tee /etc/pacman.d/hooks/99-sdboot-to-grubx64.hook >/dev/null <<'EOF'
 [Trigger]
 Operation = Install
 Operation = Upgrade
