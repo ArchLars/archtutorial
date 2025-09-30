@@ -322,7 +322,7 @@ checkrebuild
 ### 4.2.5 Steam
 ```bash
 # then after enabling multilib DL Steam
-yay -S --needed --noconfirm steam
+yay -S --needed --noconfirm steam lib32-gst-plugins-base lib32-gst-plugins-good
 
 # Run Steam in terminal to install it:
 steam
