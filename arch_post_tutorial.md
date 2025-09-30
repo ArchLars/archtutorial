@@ -374,7 +374,7 @@ The Linux kernel automatically suspend USB devices when they are not in use.
 This can sometimes save quite a bit of power, however some USB devices are not compatible with USB power saving and start to misbehave (common for USB mice/keyboards). 
 udev rules based on whitelist or blacklist filtering can help to mitigate the problem. ATTR{power/control}="on" disables runtime autosuspend for the matched devices; "auto" enables it for all others.  
 
-#### 1) The example is enabling autosuspend for all USB devices except for keyboards and mice: 
+#### OPTION A) The example is enabling autosuspend for all USB devices except for keyboards and mice: 
 ```bash
 sudo nano /etc/udev/rules.d/50-usb_power_save.rules
 ```
@@ -382,7 +382,7 @@ sudo nano /etc/udev/rules.d/50-usb_power_save.rules
 ACTION=="add", SUBSYSTEM=="usb", ATTR{product}!="*Mouse", ATTR{product}!="*Keyboard", TEST=="power/control", ATTR{power/control}="auto"
 ```
 
-#### 2) For USB HID “boot” keyboards and mice:
+#### OPTION B) For USB HID “boot” keyboards and mice:
 ```bash
 sudo nano /etc/udev/rules.d/50-usb_power_save.rules
 ```
