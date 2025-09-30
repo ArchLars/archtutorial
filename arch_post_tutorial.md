@@ -155,7 +155,8 @@ bell_on_tab none
 # reload the config
 CTRL + SHIFT + F5
 
-# Test that the violation of the Geneva Convention is gone. Printing '\a' should send the BEL character which triggers it if not.
+# Test that the violation of the Geneva Convention is gone.
+# Printing '\a' should send the BEL character which triggers it if not.
 printf '%b' '\a'
 ```
 
