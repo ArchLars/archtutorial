@@ -428,7 +428,7 @@ pacman -S --needed \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs \
   linux-zen-headers linux-lts-headers \
-  nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
+  nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda ffmpeg \
   pacman-contrib git wget hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   base-devel
@@ -443,7 +443,7 @@ pacman -S --needed \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   amd-ucode \
   mesa \
-  vulkan-icd-loader vulkan-radeon \
+  ffmpeg vulkan-radeon \
   libva libva-utils \
   pkgstats hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
@@ -459,7 +459,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa \
-  vulkan-icd-loader vulkan-intel \
+  ffmpeg vulkan-intel \
   libva libva-utils intel-media-driver \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pkgstats hunspell hunspell-en_us \
