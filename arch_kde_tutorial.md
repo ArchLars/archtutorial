@@ -444,7 +444,7 @@ pacman -S --needed \
   amd-ucode \
   mesa \
   vulkan-icd-loader vulkan-radeon \
-  libva libvdpau libva-utils \
+  libva libva-utils \
   pkgstats hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pacman-contrib git wget \
@@ -460,7 +460,7 @@ pacman -S --needed \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa \
   vulkan-icd-loader vulkan-intel \
-  libva libva-utils intel-media-driver libvdpau-va-gl \
+  libva libva-utils intel-media-driver \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pkgstats hunspell hunspell-en_us \
   pacman-contrib git wget \
