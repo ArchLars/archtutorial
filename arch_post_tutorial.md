@@ -305,21 +305,16 @@ Update your system to include multilib:
 # Tip/Fun Fact: You can update your system by just writing 'yay'.
 # This is actually ideal, as pacman -Syu does not update your AUR packages.
 # Try it:
-#
-
 yay
 
 # This is a good time to teach you the habit of running `checkrebuild` after updates.
 # 'checkrebuild' checks if you need to rebuild any packages towards new dependencies.
 #
 # If you don't do that when needed, it can lead to instability.
-#
-
 checkrebuild
 
 # usually it doesn't list anything, that means you're good, but if it does you need to run
 # yay  -S <pkg> --rebuild
-#
 ```
 
 ### 4.2.5 Steam
@@ -362,7 +357,7 @@ sudo systemctl enable --now nohang-desktop.service
 ```bash
 # SUPER important, journal on desktop use fills up very quickly which takes space
 # a large one can slow down boot times after a while.
-/etc/systemd/journald.conf.d/00-journal-size.conf
+sudo nano /etc/systemd/journald.conf.d/00-journal-size.conf
 ```
 ```ini
 [Journal]
