@@ -436,7 +436,7 @@ pacman -S --needed \
 
 or AMDGPU:
 ```bash
-sudo pacman -S --needed \
+pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
@@ -453,7 +453,7 @@ sudo pacman -S --needed \
 
 or Intel GPUs (I think):
 ```bash
-sudo pacman -S --needed \
+pacman -S --needed \
   networkmanager reflector \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin konsole kitty kio-admin \
