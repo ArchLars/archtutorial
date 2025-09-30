@@ -593,7 +593,7 @@ mkinitcpio -P
 
 ```bash
 # write the loader
-nano /boot/loader/loader.conf
+nano /efi/loader/loader.conf
 
 ## add to loader
 timeout 10
