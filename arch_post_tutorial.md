@@ -415,7 +415,7 @@ My advice is pick one here, you can do both but it's best to not clutter your sy
 # It's more fully featured than MPV, MPV requires more manual config to look better.
 #
 # install vlc (video)
-yay -S --needed --noconfirm vlc vlc-plugin-ffmpeg vlc-plugins-all
+yay -S --needed --noconfirm vlc vlc-plugins-all
 
 # Hardware Acceleration:
 ## VLC automatically tries to use an available API
