@@ -429,7 +429,7 @@ pacman -S --needed \
   plasma-meta dolphin konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs \
   linux-zen-headers linux-lts-headers \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
-  pacman-contrib git wget hunspell hunspell-en_us \
+  pacman-contrib git wget hunspell hunspell-en_us quota-tools \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   base-devel
 ```
