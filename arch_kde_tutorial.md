@@ -444,7 +444,7 @@ pacman -S --needed \
   amd-ucode \
   mesa vulkan-radeon \
   libva libva-utils \
-  pkgstats hunspell hunspell-en_us \
+  pkgstats hunspell hunspell-en_us quota-tools \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pacman-contrib git wget \
   base-devel
@@ -460,7 +460,7 @@ pacman -S --needed \
   mesa vulkan-intel \
   libva libva-utils intel-media-driver \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
-  pkgstats hunspell hunspell-en_us \
+  pkgstats hunspell hunspell-en_us quota-tools \
   pacman-contrib git wget \
   base-devel
 ```
