@@ -437,14 +437,13 @@ pacman -S --needed \
 or AMDGPU:
 ```bash
 pacman -S --needed \
-  networkmanager reflector \
+  networkmanager reflector pkgstats \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin dolphin-plugins konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
-  amd-ucode \
   mesa vulkan-radeon \
   libva libva-utils \
-  pkgstats hunspell hunspell-en_us quota-tools \
+  pkgstats hunspell hunspell-en_us quota-tools hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pacman-contrib git wget \
   base-devel
@@ -453,14 +452,14 @@ pacman -S --needed \
 or Intel GPUs (I think):
 ```bash
 pacman -S --needed \
-  networkmanager reflector \
+  networkmanager reflector pkgstats \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   plasma-meta dolphin dolphin-plugins konsole kitty kio-admin \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa vulkan-intel \
   libva libva-utils intel-media-driver \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
-  pkgstats hunspell hunspell-en_us quota-tools \
+  hunspell hunspell-en_us quota-tools \
   pacman-contrib git wget \
   base-devel
 ```
