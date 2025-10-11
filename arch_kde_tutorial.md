@@ -677,10 +677,11 @@ sysctl --system
 # Sometimes programs insist on using the wrong one
 # instead of Dolphin (Your File Manager)
 #
-nano ~/.config/environment.d/gtk-portal.conf
+mkdir -p /etc/environment.d
+nano /etc/environment.d/99-portal.conf 
 ```
 ```ini
-# gtk-portal.conf
+# 99-portal.conf 
 GTK_USE_PORTAL=1
 GDK_DEBUG=portals
 ```
