@@ -443,7 +443,7 @@ pacman -S --needed \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa vulkan-radeon \
   libva libva-utils \
-  pkgstats hunspell hunspell-en_us quota-tools hunspell hunspell-en_us \
+  quota-tools hunspell hunspell-en_us \
   noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
   pacman-contrib git wget \
   base-devel
