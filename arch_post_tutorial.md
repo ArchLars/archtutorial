@@ -140,6 +140,13 @@ yay -S --needed --noconfirm nano-syntax-highlighting
 # enable all bundled syntaxes
 printf 'include "/usr/share/nano/*.nanorc"\ninclude "/usr/share/nano/extra/*.nanorc"\n' >> ~/.config/nano/nanorc
 echo 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' >> ~/.config/nano/nanorc
+
+# enable it system wide
+sudo tee -a /etc/nanorc >/dev/null <<'EOF'
+include "/usr/share/nano/*.nanorc"
+include "/usr/share/nano/extra/*.nanorc"
+include "/usr/share/nano-syntax-highlighting/*.nanorc"
+EOF
 ```
 ### Turn off that incessant beeping in kitty without doing it system wide.
 ```bash
