@@ -474,7 +474,11 @@ propietary codecs and such that Valve cannot package themselves, this helps with
 #### Reboot again into new system and you can finally sit back, relax, and use arch btw
 
 ```bash
-# before reboot it's worth learning how to find all orphaned packages (those that were installed as dependencies but are no longer needed by anything), and completely remove them, including their configuration files and any now-unused dependencies. This keeps your system without lingering dependencies you aren't using. Run it periodically.
+# before reboot it's worth learning how to find all orphaned packages
+# (those that were installed as dependencies but are no longer needed by anything),
+# and completely remove them, including their configuration files and any now-unused dependencies.
+#
+# This keeps your system without lingering dependencies you aren't using. Try to run it periodically:
 sudo pacman -Rns $(pacman -Qtdq)
 
 # reboot
