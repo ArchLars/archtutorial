@@ -366,6 +366,7 @@ sudo systemctl enable --now nohang-desktop.service
 ```bash
 # SUPER important, journal on desktop use fills up very quickly which takes space
 # a large one can slow down boot times after a while.
+sudo mkdir -p /etc/systemd/journald.conf.d
 sudo nano /etc/systemd/journald.conf.d/00-journal-size.conf
 ```
 ```ini
