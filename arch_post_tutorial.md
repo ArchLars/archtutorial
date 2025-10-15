@@ -77,9 +77,9 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 #
 nano ~/.zshrc
 
-# Add this to () in plugins:
-#
-(git zsh-syntax-highlighting zsh-autosuggestions)
+# Scroll to the bottom, add these two lines to the bottom:
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
 
 # You are also going to want to set your name in PROMPT, otherwise it will just be `~`
 # The "PROMPT" below will look like this: [ArchLars], with Arch in Arch blue and Lars in white, same with brackets.
