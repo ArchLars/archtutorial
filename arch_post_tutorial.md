@@ -165,7 +165,7 @@ printf '%b' '\a'
 Use `visudo` and add the `pwfeedback` default. This is the safe way to edit sudoers.
 ```bash
 # open a drop-in with visudo
-sudo visudo -f /etc/sudoers.d/pwfeedback
+sudo EDITOR=/usr/bin/nano visudo -f /etc/sudoers.d/pwfeedback
 
 # add exactly this line, then save and exit
 Defaults pwfeedback
@@ -196,6 +196,12 @@ yay -S --needed --noconfirm informant \
 gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly \
 systemd-timer-notify rebuild-detector \
 python-pip kdeconnect journalctl-desktop-notification
+
+# add yourself to group informant
+sudo usermod -aG informant $USER
+
+# then log out and back in and confirm you are in that group by running:
+groups
 
 # browser
 yay -S --needed --noconfirm firefox
