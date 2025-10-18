@@ -42,4 +42,4 @@ I included some stuff for AMDGPUs too, but my system is NVIDIA so I may have mis
 
 ### TUTORIAL PROPER
 - First time : Pick `arch_kde_tutorial.md`
-- More advanced user looking for an encrypted + SecureBoot setup: Pick `arch_kde_encrypted_tutorial.md`
+- More advanced user looking for an encrypted + SecureBoot setup: Pick `arch_kde_encrypted_tutorial.md` (Not made as of now, still working on it)
