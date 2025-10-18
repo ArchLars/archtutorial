@@ -252,12 +252,6 @@ reflector \ # this is a line, press enter
 and then **Install the base of Arch Linux!** :
 
 ```bash
-# IMPORTANT Note: When it asks you for what font to use type the number for ttf-liberation.
-#
-# The reason why is that it provides free, open-source font files that are metrically compatible with
-# proprietary Microsoft fonts. This ensures that documents will render with consistent layout and
-# text appearance across different systems and applications.
-
 # For AMD CPUs:
 pacstrap /mnt base linux-zen linux-lts linux-firmware amd-ucode nano sudo zsh
 
@@ -406,7 +400,10 @@ This is the same as above but for DVD playback. This is needed on any DE.
 Same for Blu-Rays. After you have installed the system and configured an AUR helper you may also wish to install **libbdplus** from the AUR if you want for BD+ playback. From there you will have to set it up with KEYS which is shown on the Arch Wiki about Blu-Ray.
 
 ### bluez and bluez-utils
-For Bluetooth support if you use Bluetooth. You will also need to enable bluetooth.service then at the end of the tutorial.
+For Bluetooth support if you use Bluetooth. You will also need to enable `bluetooth.service` then at the end of the tutorial.
+
+### cups & cups-pdf (Optional: bluez-cups for Bluetooth printers)
+If you need printer support. You will also need to enable `cups.service` at the end of the tutorial.
 
 ---
 
@@ -429,8 +426,8 @@ pacman -S --needed \
   plasma-meta dolphin dolphin-plugins konsole kitty kio-admin sddm sddm-kcm kdegraphics-thumbnailers ffmpegthumbs \
   linux-zen-headers linux-lts-headers \
   nvidia-open-dkms nvidia-utils libva-nvidia-driver libva-utils cuda \
-  pacman-contrib git wget hunspell hunspell-en_us quota-tools \
-  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
+  pacman-contrib git wget hunspell hunspell-en_us quota-tools usbutils \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu ttf-liberation \
   base-devel
 ```
 
@@ -443,8 +440,8 @@ pacman -S --needed \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa vulkan-radeon \
   libva libva-utils \
-  quota-tools hunspell hunspell-en_us \
-  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
+  quota-tools hunspell hunspell-en_us usbutils \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu ttf-liberation \
   pacman-contrib git wget \
   base-devel
 ```
@@ -458,8 +455,8 @@ pacman -S --needed \
   sddm sddm-kcm linux-zen-headers linux-lts-headers kdegraphics-thumbnailers ffmpegthumbs \
   mesa vulkan-intel \
   libva libva-utils intel-media-driver \
-  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu \
-  hunspell hunspell-en_us quota-tools \
+  noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji terminus-font ttf-dejavu ttf-liberation \
+  hunspell hunspell-en_us quota-tools usbutils \
   pacman-contrib git wget \
   base-devel
 ```
