@@ -689,7 +689,8 @@ GDK_DEBUG=portals
 # Enable network, display manager, and timesyncd
 # Include cups.service if you are using printer
 # Include bluetooth.service for Bluetooth if you installed bluez and bluez-utils
-systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service fstrim.timer reflector.timer pkgstats.timer
+systemctl enable NetworkManager sddm systemd-timesyncd systemd-boot-update.service \
+fstrim.timer reflector.timer pkgstats.timer
 ```
 
 ## Step 5: Complete Installation
