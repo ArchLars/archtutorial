@@ -130,6 +130,10 @@ localectl list-keymaps | grep -i -E 'no'                   # Norway example
 # it's usually the first key left of backspace. For Norwegian/Nordic keyboard that's: \.
 loadkeys no-latin1
 
+# the default font for an arch install is tiny and it only gets worse as you get older
+# here is how you get it to something readable
+setfont ter-118n
+
 # Verify UEFI firmware, write it all out including && and echo.
 # It's just going to be a bunch of random variables that's confusing, however...
 #
