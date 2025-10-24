@@ -264,7 +264,8 @@ reflector \ # this is a line, press enter
 
 # When you understand all of this you can use a faster version of this
 # that I like to use:
-reflector -c NO,SE,DK,DE,NL -a 12 -p https -l 10 --sort rate --save /etc/pacman.d/mirrorlist
+reflector -c NO,SE,DK,DE,NL -a 12 -p https \
+-l 10 --sort rate --save /etc/pacman.d/mirrorlist
 ```
 
 and then **Install the base of Arch Linux!** :
