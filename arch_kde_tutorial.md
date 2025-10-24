@@ -198,9 +198,7 @@ mkdir -p /tmp/repart.d
 ```bash
 # Create 10-esp.conf
 nano /tmp/repart.d/10-esp.conf
-```
 
-```bash
 # 10-esp.conf
 [Partition]
 Type=esp
@@ -213,9 +211,7 @@ SizeMaxBytes=1G
 ```bash
 # Create 20-root.conf
 nano /tmp/repart.d/20-root.conf
-```
 
-```bash
 # 20-root.conf
 [Partition]
 Type=root
