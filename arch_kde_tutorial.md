@@ -261,6 +261,10 @@ reflector \ # this is a line, press enter
       --sort rate \
       --latest 10 \
       --save /etc/pacman.d/mirrorlist  # then when pressing enter here w/o "\" it will run all the lines
+
+# When you understand all of this you can use a faster version of this
+# that I like to use:
+reflector -c NO,SE,DK,DE,NL -a 12 -p https -l 10 --sort rate --save /etc/pacman.d/mirrorlist
 ```
 
 and then **Install the base of Arch Linux!** :
