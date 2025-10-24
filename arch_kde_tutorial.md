@@ -183,42 +183,61 @@ curl -I https://archlinux.org  # expect "HTTP/2 200" (or 301/302)
 timedatectl status | sed -n '1,12p'  # look for "System clock synchronized: yes"
 ```
 
-## Step 1: Partition the NVMe Drive
-
-Create a GPT partition table with three partitions AFTER checking your drive name with `lsblk -l` :
+## Step 1: Partition the NVMe drive with systemd-repart
 
 ```bash
-lsblk -l  # To confirm, replace if it says anything else
+lsblk -l
 
-sgdisk --zap-all /dev/nvme0n1
+# Set the device you want to operate on
+d=/dev/nvme0n1   # change if lsblk shows a different path
 
-sgdisk -n1:0:+1G -t1:EF00 -c1:"EFI system" /dev/nvme0n1
-sgdisk -n2:0:0 -t2:8304 -c2:"Linux root" /dev/nvme0n1
+# Define the desired partitions for systemd-repart using nano
+mkdir -p /tmp/repart.d
 ```
 
-**Partition Layout:**
-
-* `/dev/nvme0n1p1` — 1GB EFI System Partition
-* `/dev/nvme0n1p2` — Root partition
-
-I won't do a swap partition, don't need hibernation personally. If you do you will need one. I don't do home partitions because I don't distrohop as Arch is a complete distribution of Linux.
-
-## Step 2: Format and Mount Partitions
-
-Create filesystems and mount them in the correct order:
+```bash
+# Create 10-esp.conf
+nano /tmp/repart.d/10-esp.conf
+```
 
 ```bash
-# Format partitions
-#
-# NOTE: If you are using sda, hda, or a different number for the nvme drive,-
-# -then replace alias with that instead (obviously).
-#
-# if you are not using nvme, you must remove the 'p' from formatting
-d=/dev/nvme0n1               # this sets a temporary alias during install for "d" to be the drive we want to format, makes it quicker.
-mkfs.fat -F32 -n EFI ${d}p1  # remove `p` here if you use sda drive so it becomes 'sda1' instead for example.
-mkfs.ext4 -L root ${d}p2     # and 'sda2' here. for nvmen0n1 it becomes nvme0n1p1 and nvme0n1p2 respectively.
+# 10-esp.conf
+[Partition]
+Type=esp
+Label=EFI
+Format=vfat
+SizeMinBytes=1G
+SizeMaxBytes=1G
+```
 
-# Mount root partition first
+```bash
+# Create 20-root.conf
+nano /tmp/repart.d/20-root.conf
+```
+
+```bash
+# 20-root.conf
+[Partition]
+Type=root
+Label=root
+Format=ext4
+```
+
+```bash
+# Preview the plan 
+systemd-repart --definitions=/tmp/repart.d --empty=force "$d"
+
+# Apply the changes for real
+systemd-repart --definitions=/tmp/repart.d --dry-run=no --empty=force "$d"
+
+# Optional: verify results
+lsblk -f "$d"
+```
+
+## Step 2: Mount filesystems (labels match your original layout)
+
+```bash
+# Mount root first
 mount /dev/disk/by-label/root /mnt
 
 # Create and mount EFI directory
