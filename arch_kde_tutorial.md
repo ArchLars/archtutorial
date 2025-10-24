@@ -163,12 +163,11 @@ rfkill unblock all         # if you see "Soft blocked: yes" for wlan      (safe 
 
 # Discover your wireless device name (often "wlan0" on ISO)
 iwctl device list          # copies device name from first column
-DEV="$(iwctl device list | awk 'NR>1{print $1; exit}')"   # pick first Wi-Fi device
 
 # Scan & connect (replace SSID if your AP name has spaces keep the quotes)
-iwctl station "$DEV" scan
-iwctl station "$DEV" get-networks
-iwctl station "$DEV" connect "YOUR-SSID"   # iwctl will prompt for passphrase
+iwctl station "YOUR-DEV" scan
+iwctl station "YOUR-DEV" get-networks
+iwctl station "YOUR-DEV" connect "YOUR-SSID"   # iwctl will prompt for passphrase
 
 ---
 
