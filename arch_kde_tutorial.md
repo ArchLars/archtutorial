@@ -273,18 +273,8 @@ arch-chroot /mnt
 ### 4.2 Set Timezone
 
 ```bash
-# list all timezones
-timedatectl list-timezones
-
-# Filter by continent
-# '_' is used for space, eg. America/New_York
-timedatectl list-timezones | grep '^America/'
-
-# Or filter by closest likely big city.
-timedatectl list-timezones | grep '/Oslo$'
-
 # Set timezone to your own continent and city
-timedatectl set-timezone Europe/Oslo
+ln -sf /usr/share/zoneinfo/Europe/Oslo /etc/localtime
 
 # Set hardware clock
 hwclock --systohc
