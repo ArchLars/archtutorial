@@ -134,6 +134,12 @@ loadkeys no-latin1
 # here is how you get it to something readable
 setfont ter-118n
 
+# if that is not big enough try this:
+setfont ter-132n    
+
+# and if even that is not big enough:
+setfont -d ter-132n  
+
 # Verify UEFI firmware, write it all out including && and echo.
 # It's just going to be a bunch of random variables that's confusing, however...
 #
