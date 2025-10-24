@@ -347,11 +347,8 @@ echo "BigBlue" > /etc/hostname
 nano /etc/hosts
 
 ## add to /etc/hosts:
-127.0.0.1 localhost
-::1 localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-127.0.1.1 BigBlue
+127.0.0.1 localhost BigBlue
+::1       localhost
 ```
 
 ### 4.5 Create User Account
